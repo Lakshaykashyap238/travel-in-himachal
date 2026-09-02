@@ -1,0 +1,4500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>booking</title>
+       <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+</head>
+<style>
+    *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+    }
+    body{
+      margin:0;
+      padding:0;
+        background-color:rgb(232, 226, 226);
+        overflow-x:hidden; 
+      
+    }
+ 
+     .about-nav{
+      position:fixed;
+      top:0;
+      left:0;
+   height:60px;
+    width:100%;
+    background: rgb(0, 0, 0);
+    color:white;
+    display: flex;
+    flex-direction:column;
+     text-align:center;
+    justify-content: center;
+    align-items:center;
+    z-index:99999;
+
+}
+.about-nav i{
+    position:absolute;
+    left:10px; 
+  
+   text-decoration:none;
+font-size:24px;
+color:white;
+line-height:1;
+transform:translateY(-50%);
+
+}
+.about-nav h2{
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+    color:white;
+     font-size:clamp(18px, 5vw, 30px);
+}
+.fleet-section {
+    width: 100%;
+    min-height: 100vh;
+    margin-top: 40px;
+
+    padding: 70px 5% 45px;
+  
+
+    background: linear-gradient(
+        to bottom,
+        rgb(3, 89, 164) 0%,
+        rgb(3, 89, 164) 70%,
+        #3f3e3eaf 100%,
+        #0b0b0b 0%
+    );
+
+  
+
+
+    color: #171717;
+
+    font-family:
+        "Inter",
+        "Segoe UI",
+        Arial,
+        sans-serif;
+
+    overflow: hidden;
+    position: relative;
+}
+
+
+/* =====================================================
+   TOP AREA
+===================================================== */
+
+.fleet-main {
+    max-width: 1400px;
+    margin: 0 auto;
+
+    min-height: 500px;
+
+    display: grid;
+
+    grid-template-columns:
+        42%
+        58%;
+
+    align-items: center;
+}
+
+
+/* =====================================================
+   LEFT CONTENT
+===================================================== */
+
+.fleet-intro {
+    position: relative;
+    z-index: 5;
+    padding-left: 5px;
+}
+
+
+.fleet-label {
+    display: inline-block;
+
+    margin-bottom: 18px;
+
+    font-size: 18px;
+    font-weight: 700;
+
+    letter-spacing: 1px;
+
+    color: #ea580c;
+}
+
+
+.fleet-intro h1 {
+    margin: 0;
+font-family:system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    max-width: 560px;
+
+    font-size: clamp(
+        45px,
+        4.2vw,
+        68px
+    );
+
+    line-height: 1.08;
+
+    font-weight: 750;
+
+    letter-spacing: -2px;
+
+    color: #171717;
+}
+
+
+.fleet-intro h1 span {
+    display: block;
+
+    color:white;
+
+    text-shadow: none;
+}
+
+
+.fleet-description {
+    max-width: 520px;
+
+    margin-top: 28px;
+
+    font-size: 18px;
+
+    line-height: 1.7;
+
+    color:rgb(255, 255, 255);
+}
+
+
+/* =====================================================
+   TRUST CARDS
+===================================================== */
+
+.fleet-trust {
+    display: flex;
+
+    gap: 14px;
+
+    margin-top: 32px;
+}
+
+
+.trust-card {
+    width: 255px;
+
+    min-height: 105px;
+
+    padding: 17px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    border: 1px solid #eeeeee;
+
+    border-radius: 15px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.06);
+
+    transition: 0.3s ease;
+}
+
+
+.trust-card:hover {
+    transform: translateY(-4px);
+
+    border-color: #ffc9a8;
+
+    box-shadow:
+        0 12px 30px
+        rgba(249, 115, 22, 0.10);
+}
+
+
+.trust-icon {
+    min-width: 47px;
+
+    height: 47px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(77, 78, 78, 0.879),
+            rgb(6, 6, 6)
+        );
+
+    color: #ffffff;
+
+    font-size: 23px;
+
+    box-shadow:
+        0 6px 18px
+        rgba(249, 115, 22, 0.25);
+}
+
+
+.trust-card h3 {
+    margin: 0 0 5px;
+
+    font-size: 17px;
+
+    font-weight: 650;
+
+    color: #171717;
+}
+
+
+.trust-card p {
+    margin: 0;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+
+    color: #777777;
+}
+
+
+/* =====================================================
+   CAR SHOWCASE
+===================================================== */
+
+.car-showcase {
+    min-height: 520px;
+
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+
+/* =====================================================
+   ORANGE CAR BUBBLE
+===================================================== */
+
+.car-glow {
+    position: absolute;
+
+    width: 470px;
+    height: 470px;
+    z-index: 1;
+}
+
+
+/* =====================================================
+   CAR STAGE
+===================================================== */
+
+.car-stage {
+    position: relative;
+
+    width: 680px;
+    height: 430px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 3;
+}
+
+
+.car-stage img {
+    width: 100%;
+
+    max-width: 680px;
+
+    height: auto;
+
+    object-fit: contain;
+
+    position: relative;
+
+    z-index: 4;
+
+    filter:
+        drop-shadow(
+            0 25px 22px
+            rgba(0, 0, 0, 0.25)
+        );
+
+    transition:
+        opacity 0.35s ease,
+        transform 0.35s ease;
+}
+
+
+/* =====================================================
+   SLIDER BUTTONS
+===================================================== */
+
+.slider-btn {
+    position: absolute;
+
+    width: 64px;
+    height: 64px;
+
+    border-radius: 50%;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+
+    background: #ffffff;
+
+    color: #134327;
+
+    font-size: 28px;
+
+    cursor: pointer;
+
+    z-index: 10;
+
+    transition: 0.3s ease;
+
+    box-shadow:
+        0 7px 25px
+        rgba(0, 0, 0, 0.08);
+}
+
+
+.slider-btn:hover {
+    background: #143242;
+
+    color: #ffffff;
+
+   
+    box-shadow:
+        0 8px 25px
+        rgba(14, 13, 13, 0.3);
+
+    transform: scale(1.08);
+}
+
+
+.slider-btn:disabled {
+    opacity: 0.45;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0, 0, 0, 0.05);
+}
+
+
+.prev-btn {
+    left: 2px;
+}
+
+
+.next-btn {
+    right: 2px;
+}
+
+
+/* =====================================================
+   DOTS
+===================================================== */
+
+.fleet-dots {
+    position: absolute;
+
+    bottom: 3px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+    display: flex;
+
+    gap: 10px;
+
+    z-index: 20;
+}
+
+
+.dot {
+    width: 10px;
+    height: 10px;
+
+    border-radius: 50%;
+
+    background: #d6d6d6;
+
+    opacity: 1;
+
+    transition: 0.3s ease;
+}
+
+
+.dot.active {
+    width: 11px;
+    height: 11px;
+
+    background: #474646;
+
+    box-shadow:
+        0 0 10px
+        rgba(9, 9, 9, 0.45);
+}
+
+
+/* =====================================================
+   VEHICLE INFORMATION PANEL
+===================================================== */
+
+.vehicle-info {
+    max-width: 1400px;
+
+    min-height: 340px;
+
+    margin:
+        30px auto 0;
+
+    padding:
+        35px 38px;
+
+    display: grid;
+
+    grid-template-columns:
+        1.65fr
+        1fr
+        1.05fr;
+
+    gap: 40px;
+
+    border:
+        1px solid #e8e8e8;
+
+    border-radius: 20px;
+
+    background: #ffffff;
+
+    box-shadow:
+        0 15px 45px
+        rgba(0, 0, 0, 0.07);
+
+    position: relative;
+}
+
+
+/* =====================================================
+   VERTICAL SEPARATORS
+===================================================== */
+
+.vehicle-features {
+    border-left:
+        1px solid #eeeeee;
+
+    border-right:
+        1px solid #eeeeee;
+
+    padding:
+        0 40px;
+}
+
+
+/* =====================================================
+   VEHICLE DETAILS
+===================================================== */
+
+.vehicle-count {
+    display: inline-flex;
+
+    padding:
+        8px 17px;
+
+    border-radius: 30px;
+
+    background: #0b1ef1c0;
+
+    color: #ffffff;
+
+    
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    gap: 5px;
+
+    margin-bottom: 20px;
+}
+
+
+.vehicle-details h2 {
+    margin: 0;
+
+    font-size: 32px;
+
+    line-height: 1.2;
+
+    font-weight: 700;
+
+    color: #171717;
+}
+
+
+.vehicle-specs {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 28px;
+
+    margin-top: 30px;
+}
+
+
+.spec {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    font-size: 16px;
+
+    color: #4f534f;
+
+    white-space: nowrap;
+}
+
+
+.spec i {
+    font-size: 20px;
+
+    color: #14213d;
+}
+
+
+.vehicle-description {
+    max-width: 520px;
+
+    margin-top: 28px;
+
+    font-size: 17px;
+
+    line-height: 1.9;
+
+    color: #6b6f6c;
+}
+
+
+/* =====================================================
+   FEATURES
+===================================================== */
+
+.vehicle-features h3 {
+    margin: 0 0 20px;
+
+    color:green;
+
+    font-size: 20px;
+
+    font-weight: 650;
+}
+
+
+.vehicle-features ul {
+    padding: 0;
+
+    margin: 0;
+
+    list-style: none;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+
+.vehicle-features li {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    font-size: 16px;
+
+    color: #0a0a0a;
+}
+
+
+.vehicle-features li span {
+    width: 21px;
+    height: 21px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:green;
+
+    color:white;
+
+    font-size: 12px;
+
+    font-weight: bold;
+
+    flex-shrink: 0;
+}
+
+
+/* =====================================================
+   PRICE
+===================================================== */
+
+.vehicle-price {
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    padding-left: 10px;
+}
+
+
+.price-label {
+    color: #777777;
+
+    font-size: 17px;
+
+    margin-bottom: 7px;
+}
+
+
+.price {
+    display: flex;
+
+    align-items: baseline;
+
+    gap: 8px;
+
+    margin-bottom: 28px;
+}
+
+
+.price span {
+    font-size: 42px;
+
+    font-weight: 750;
+
+    letter-spacing: -1px;
+
+    color: #171717db;
+}
+
+
+.price small {
+    font-size: 15px;
+
+    color: #777777;
+}
+
+
+/* =====================================================
+   BOOK BUTTON
+===================================================== */
+
+.book-btn {
+    width: 100%;
+
+    min-height: 54px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background:
+       
+          rgb(3, 5, 9);
+        
+   
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition: 0.3s ease;
+
+}
+
+
+.book-btn a {
+    text-decoration: none;
+
+    color: #ffffff;
+}
+
+
+.book-btn:hover {
+   background:rgba(0, 0, 0, 0.803);
+
+  
+}
+
+
+.booking-modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: rgba(5, 15, 30, 0.62);
+
+    backdrop-filter: blur(7px);
+    -webkit-backdrop-filter: blur(7px);
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    opacity: 0;
+    visibility: hidden;
+
+    transition:
+        opacity 0.3s ease,
+        visibility 0.3s ease;
+
+    z-index: 99999;
+}
+
+
+/* OPEN */
+
+.booking-modal.active {
+
+    opacity: 1;
+
+    visibility: visible;
+}
+
+
+/* =====================================================
+   POPUP
+===================================================== */
+
+.booking-popup {
+
+    width: 100%;
+
+    max-width: 768px;
+
+    max-height: 92vh;
+
+    overflow-y: auto;
+
+    background: #ffffff;
+
+    border-radius: 24px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 30px 80px rgba(0, 0, 0, 0.35);
+
+    transform:
+        translateY(30px)
+        scale(0.94);
+
+    transition:
+        transform 0.35s ease;
+
+    scrollbar-width: none;
+}
+
+.booking-popup::-webkit-scrollbar {
+    display: none;
+}
+
+
+.booking-modal.active .booking-popup {
+
+    transform:
+        translateY(0)
+        scale(1);
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.booking-popup-header {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    margin-bottom: 20px;
+}
+
+
+.popup-brand {
+
+    display: block;
+
+    font-size: 11px;
+
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    color: #1677ff;
+
+    margin-bottom: 4px;
+}
+
+
+.booking-popup-header h2 {
+
+    margin: 0;
+
+    font-size: 24px;
+
+    color: #172033;
+}
+
+
+.booking-popup-header p {
+
+    margin: 5px 0 0;
+
+    font-size: 12px;
+
+    color: #7d8795;
+}
+
+
+.popup-close {
+
+    width: 36px;
+
+    height: 36px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #f2f4f7;
+
+    color: #252c38;
+
+    font-size: 24px;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.popup-close:hover {
+
+    background: #e6e9ee;
+
+    transform: rotate(90deg);
+}
+
+
+/* =====================================================
+   PROGRESS
+===================================================== */
+
+.booking-progress {
+
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
+    margin-bottom: 24px;
+}
+
+
+.progress-step {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: #a2a9b4;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.progress-step span {
+
+    width: 28px;
+
+    height: 28px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #edf0f4;
+
+    color: #858d98;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.progress-step.active {
+
+    color: #1677ff;
+}
+
+
+.progress-step.active span {
+
+    background:green;
+
+    color: #fff;
+}
+
+
+.progress-line {
+
+    flex: 1;
+
+    height: 2px;
+
+    background: #e6e9ee;
+
+    margin: 0 12px;
+
+    transition: 0.3s ease;
+}
+
+
+.progress-line.active {
+
+    background:rgba(23, 224, 23, 0.732);
+}
+
+
+/* =====================================================
+   STEPS
+===================================================== */
+
+.booking-step {
+
+    display: none;
+}
+
+.booking-step.active {
+
+    display: block;
+
+    animation:
+        stepFade 0.3s ease;
+}
+
+
+@keyframes stepFade {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateX(10px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateX(0);
+    }
+}
+
+
+/* =====================================================
+   FORM TITLE
+===================================================== */
+
+.form-section-title {
+
+    margin-bottom: 20px;
+}
+
+
+.form-section-title h3 {
+
+    margin: 0;
+
+    font-size: 17px;
+
+    color: #202735;
+}
+
+
+.form-section-title p {
+
+    margin: 5px 0 0;
+
+    font-size: 12px;
+
+    color: #8a929f;
+}
+
+
+/* =====================================================
+   FORM FIELD
+===================================================== */
+
+
+
+
+.booking-input {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+.booking-input label {
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #555;
+}
+
+
+.booking-input input {
+    width: 100%;
+
+    height: 47px;
+
+    padding: 0 13px;
+
+    border: 1px solid #dedede;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #f8f8f8;
+
+    font-size: 13px;
+
+    color: #111;
+
+    transition: 0.2s;
+}
+
+
+.booking-input input::placeholder {
+    color: #999;
+}
+
+
+.booking-input input:focus {
+    background: #fff;
+
+    border-color: #111;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.04);
+}
+#bookingDate{
+    cursor: pointer;
+ 
+}
+input[type="date"]{
+    cursor:text;
+}
+input[type="date"]::-webkit-calendar-flatpicker-indicator{
+    cursor:text;
+    opacity:1;
+}
+.booking-input{
+    position:relative;
+    width:100%;
+
+}
+.booking-input input{
+    width: 100%;
+    padding:12px 45px 12px 15px;
+}
+.date-input-wrapper{
+    position:relative;
+    width:100%;
+}
+.date-input-wrapper input{
+    width:100%;
+    padding:12px 45px 12px 15px;
+}
+.date-input-wrapper i{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:#666;
+    cursor:pointer;
+    
+
+}
+
+/* ===============================
+   LOCATION INPUT
+================================ */
+
+.location-input {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #dedede;
+
+    border-radius: 10px;
+
+    background: #f8f8f8;
+}
+
+
+.location-input > div {
+    width: 100%;
+}
+
+
+.location-input label {
+    display: block;
+
+    margin-bottom: 3px;
+}
+
+
+.location-input input {
+    height: 24px;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 13px;
+}
+
+
+.location-input input:focus {
+    border: none;
+
+    box-shadow: none;
+
+    background: transparent;
+}
+
+
+/* ===============================
+   LOCATION ICONS
+================================ */
+
+.location-icon {
+    flex-shrink: 0;
+
+    width: 14px;
+    height: 14px;
+
+    position: relative;
+
+    border: 3px solid #111;
+
+    border-radius: 50%;
+}
+/* =====================================================
+   TRAVELLER COUNTER
+===================================================== */
+.traveller-counter {
+    width: fit-content;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 12px;
+
+    border: 1px solid #dfe4ea;
+    border-radius: 12px;
+
+    padding: 0 8px;
+    background: #fff;
+}
+
+.traveller-counter button {
+    width: 30px;
+    height: 30px;
+
+    flex-shrink: 0;
+
+    border: none;
+    border-radius: 9px;
+
+    background: #eef5ff;
+    color: #131314;
+
+    font-size: 22px;
+    font-weight: 600;
+  justify-self: center;
+    cursor: pointer;
+}
+
+.traveller-number {
+    min-width: 55px;
+    text-align: center;
+}
+
+.traveller-number strong {
+    display: block;
+    color: #202735;
+    font-size: 18px;
+}
+
+.traveller-number span {
+    color: #8a929f;
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   PRIMARY BUTTON
+===================================================== */
+
+.booking-primary-btn {
+
+    width: 100%;
+
+    height: 51px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: #1677ff;
+
+    color: #fff;
+
+    font-size: 14px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 7px;
+
+    transition: 0.25s ease;
+}
+
+
+.booking-primary-btn:hover {
+
+    background: #075fcf;
+
+    transform: translateY(-1px);
+}
+
+
+/* =====================================================
+   SUMMARY CARD
+===================================================== */
+
+.summary-card {
+
+    background: #f8fafc;
+
+    border: 1px solid #edf0f4;
+
+    border-radius: 14px;
+
+    padding: 20px;
+
+    margin-bottom: 11px;
+}
+
+
+.summary-card-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 18px;
+}
+
+
+
+
+
+.summary-card-title h4 {
+
+    margin: 0;
+
+    font-size: 13px;
+
+    color: #303847;
+}
+
+
+/* =====================================================
+   SUMMARY INFO
+===================================================== */
+
+.summary-info {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+}
+
+
+.summary-item {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+    margin-bottom:16px;
+}
+
+
+.summary-item span {
+
+    font-size: 10px;
+
+    color: #8a929f;
+}
+
+
+.summary-item strong {
+
+    font-size: 12px;
+
+    color: #252c38;
+
+    word-break: break-word;
+}
+
+
+/* =====================================================
+   TOUR
+===================================================== */
+
+.tour-summary {
+
+    background: #eef6ff;
+
+    border-color: #d9eaff;
+}
+
+
+.tour-summary-name {
+
+    font-size: 15px;
+
+    font-weight: 750;
+
+    color: #1266c5;
+}
+
+
+/* =====================================================
+   JOURNEY
+===================================================== */
+.tour-inside-journey{
+    margin-bottom:16px;
+}
+.journey-route {
+
+    display: flex;
+
+    flex-direction: column;
+
+    padding-left: 15px;
+    gap:14px;
+}
+.route-line{
+    width:2px;
+    height:25px;
+    background:#707171;
+    margin:2px 0 2px 4px;
+}
+
+
+.route-point {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+}
+
+
+.route-point div {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.route-point small {
+
+    font-size: 10px;
+
+    color: #8a929f;
+}
+
+
+.route-point strong {
+
+    font-size: 12px;
+
+    color: #252c38;
+}
+
+
+.route-dot {
+
+    width: 9px;
+
+    height: 9px;
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+}
+
+
+.pickup-dot {
+
+    background: #000000;
+}
+
+
+.drop-dot {
+
+    background: #ff7a00;
+}
+
+
+
+
+/* =====================================================
+   DATE / TIME
+===================================================== */
+
+.schedule-grid {
+
+    display: grid;
+
+    grid-template-columns: 1fr 1fr;
+
+    gap: 16px;
+}
+
+
+.schedule-item {
+
+    background: #fff;
+
+    border-radius: 9px;
+
+    padding: 10px;
+    gap:5px;
+}
+
+
+.schedule-item span {
+
+    display: block;
+
+    color: #8a929f;
+
+    font-size: 10px;
+
+    margin-bottom: 4px;
+}
+
+
+.schedule-item strong {
+
+    color: #252c38;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   CAR SUMMARY
+===================================================== */
+
+.selected-car-info {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+}
+
+
+.car-summary-image {
+
+    width: 80px;
+
+    height: 55px;
+
+    border-radius: 10px;
+
+    background: #fff;
+
+    overflow: hidden;
+
+    flex-shrink: 0;
+}
+
+
+.car-summary-image img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: contain;
+}
+
+
+.selected-car-info strong {
+
+    display: block;
+
+    font-size: 14px;
+
+    color: #202735;
+
+    margin-bottom: 4px;
+}
+
+
+.selected-car-info span {
+
+    display: block;
+
+    font-size: 10px;
+
+    color: #8a929f;
+}
+
+
+/* =====================================================
+   SUMMARY BUTTONS
+===================================================== */
+
+.summary-actions {
+
+    display: grid;
+
+    grid-template-columns: 0.8fr 1.5fr;
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+
+.previous-btn {
+
+    height: 50px;
+
+    border: 1px solid #dce1e7;
+
+    border-radius: 11px;
+
+    background: #fff;
+
+    color: #4c5563;
+
+    font-size: 13px;
+
+    font-weight: 650;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.previous-btn:hover {
+
+    background: #f5f7f9;
+}
+
+
+.confirm-booking-btn {
+
+    height: 50px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background: #1677ff;
+
+    color: #fff;
+
+    font-size: 13px;
+
+    font-weight: 750;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+
+.confirm-booking-btn:hover {
+
+    background: #075fcf;
+
+    transform: translateY(-1px);
+}
+.swal2-container{
+    z-index: 2147483647 !important;
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .booking-modal {
+
+        padding: 10px;
+    }
+
+
+    .booking-popup {
+
+        max-height: 94vh;
+
+        padding: 20px;
+
+        border-radius: 20px;
+    }
+
+
+    .booking-popup-header h2 {
+
+        font-size: 21px;
+    }
+
+
+    .summary-info {
+
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .summary-actions {
+
+        grid-template-columns: 1fr 1.5fr;
+    }
+
+}
+
+
+@media (max-width: 380px) {
+
+    .booking-popup {
+
+        padding: 17px;
+    }
+
+
+    .summary-info {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .summary-actions {
+
+        grid-template-columns: 1fr;
+    }
+
+}
+/* =====================================================
+   VIEW DETAILS
+===================================================== */
+
+
+
+
+
+@media(min-width:1024px){
+
+    
+    .booking-fields-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap:16px;
+}
+
+
+
+}
+
+
+
+@media (min-width: 769px) and (max-width: 1023px) {
+
+    .fleet-section {
+        padding: 60px 30px 40px;
+    }
+
+
+    /* ================================================
+       MAIN FLOW
+       Heading → Description → Cards → Car
+    ================================================ */
+
+    .fleet-main {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+
+        min-height: auto;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+
+    /* ================================================
+       HEADING + DESCRIPTION
+    ================================================ */
+
+    .fleet-intro {
+        width: 100%;
+
+        padding-left: 0;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+
+        text-align: center;
+    }
+
+
+    .fleet-intro h1 {
+        max-width: 700px;
+
+        margin: 0 auto;
+
+        font-size: clamp(44px, 6vw, 52px);
+
+        line-height: 1.08;
+
+        text-align: center;
+    }
+
+
+    .fleet-description {
+        max-width: 650px;
+
+        margin: 22px auto 0;
+
+        font-size: 17px;
+
+        line-height: 1.6;
+
+        text-align: center;
+    }
+
+
+    /* ================================================
+       TRUST CARDS
+       2 COLUMNS
+    ================================================ */
+
+    .fleet-trust {
+        width: 100%;
+        max-width: 600px;
+
+        margin: 28px auto 0;
+
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 16px;
+    }
+
+
+    .trust-card {
+        width: 100%;
+
+        min-height: 105px;
+
+        box-sizing: border-box;
+    }
+
+
+    /* ================================================
+       CAR SHOWCASE
+       BELOW TRUST CARDS
+    ================================================ */
+
+    .car-showcase {
+        width: 100%;
+
+        min-height: 420px;
+
+        margin-top: 0;
+
+        position: relative;
+
+        display: flex;
+
+        align-items: flex-start;
+
+        justify-content: center;
+    }
+
+
+    /* ================================================
+       CAR STAGE
+    ================================================ */
+
+    .car-stage {
+        width: 100%;
+        max-width: 650px;
+
+        height: 380px;
+
+        position: relative;
+
+        display: flex;
+
+        align-items: flex-start;
+
+        justify-content: center;
+
+        z-index: 3;
+    }
+
+
+    /* ================================================
+       CAR IMAGE
+    ================================================ */
+
+    .car-stage img {
+ 
+
+        margin: 0 auto;
+
+        object-fit: contain;
+
+
+        z-index: 4;
+    }
+
+.slider-btn{
+    position: absolute;
+    top:50%;
+  transform: translateY(-50%)!important;
+
+}
+.prev-btn{
+    left:0;
+
+}
+
+.next-btn{
+    right:0;
+}
+.vehicle-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+#vehiclePrice {
+    font-size: 28px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.price small {
+    font-size: 14px;
+    white-space: nowrap;
+}
+   .booking-fields-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap:16px;
+}
+  
+}
+@media(min-width:768px){
+       .fleet-section {
+        padding: 60px 30px 40px;
+    }
+
+
+    /* ================================================
+       MAIN FLOW
+       Heading → Description → Cards → Car
+    ================================================ */
+
+    .fleet-main {
+        width: 100%;
+        max-width: 900px;
+        margin: 0 auto;
+
+        min-height: auto;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+
+    /* ================================================
+       HEADING + DESCRIPTION
+    ================================================ */
+
+    .fleet-intro {
+        width: 100%;
+
+        padding-left: 0;
+
+        display: flex;
+        flex-direction: column;
+
+        align-items: center;
+
+        text-align: center;
+    }
+
+
+    .fleet-intro h1 {
+        max-width: 700px;
+
+        margin: 0 auto;
+
+        font-size: clamp(44px, 6vw, 52px);
+
+        line-height: 1.08;
+
+        text-align: center;
+    }
+
+
+    .fleet-description {
+        max-width: 650px;
+
+        margin: 22px auto 0;
+
+        font-size: 17px;
+
+        line-height: 1.6;
+
+        text-align: center;
+    }
+
+
+    /* ================================================
+       TRUST CARDS
+       2 COLUMNS
+    ================================================ */
+
+    .fleet-trust {
+        width: 100%;
+        max-width: 600px;
+
+        margin: 28px auto 0;
+
+        display: grid;
+
+        grid-template-columns: 1fr 1fr;
+
+        gap: 16px;
+    }
+
+
+    .trust-card {
+        width: 100%;
+
+        min-height: 105px;
+
+        box-sizing: border-box;
+    }
+
+
+    /* ================================================
+       CAR SHOWCASE
+       BELOW TRUST CARDS
+    ================================================ */
+
+    .car-showcase {
+        width: 100%;
+
+        min-height: 420px;
+
+        margin-top: 0;
+
+        position: relative;
+
+        display: flex;
+
+        align-items: flex-start;
+
+        justify-content: center;
+    }
+
+
+    /* ================================================
+       CAR STAGE
+    ================================================ */
+
+    .car-stage {
+        width: 100%;
+        max-width: 650px;
+
+        height: 380px;
+
+        position: relative;
+
+        display: flex;
+
+        align-items: flex-start;
+
+        justify-content: center;
+
+        z-index: 3;
+    }
+
+
+    /* ================================================
+       CAR IMAGE
+    ================================================ */
+
+    .car-stage img {
+ 
+
+        margin: 0 auto;
+
+        object-fit: contain;
+
+
+        z-index: 4;
+    }
+
+.slider-btn{
+    position: absolute;
+    top:50%;
+  transform: translateY(-50%)!important;
+
+}
+.prev-btn{
+    left:0;
+
+}
+
+.next-btn{
+    right:0;
+}
+.vehicle-price {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.price {
+    display: flex;
+    align-items: baseline;
+    justify-content: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+#vehiclePrice {
+    font-size: 28px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.price small {
+    font-size: 14px;
+    white-space: nowrap;
+}
+   .booking-fields-grid{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap:16px;
+}
+}
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 767px) {
+
+    .fleet-section {
+        padding:
+            55px 18px 30px;
+    }
+
+
+    .fleet-main {
+        grid-template-columns: 1fr;
+
+        min-height: auto;
+
+        gap: 20px;
+    }
+
+
+    .fleet-intro {
+        text-align: center;
+
+        padding: 0;
+    }
+
+
+    .fleet-label {
+        font-size: 16px;
+
+        margin-bottom: 12px;
+    }
+
+
+    .fleet-intro h1 {
+        font-size: 38px;
+
+        letter-spacing: -1px;
+    }
+
+
+    .fleet-description {
+        margin:
+            20px auto 0;
+
+        font-size: 15px;
+
+        line-height: 1.6;
+    }
+
+
+    .fleet-trust {
+        justify-content: center;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        gap: 10px;
+
+        margin-top: 25px;
+    }
+
+
+    .trust-card {
+        width: 100%;
+
+        max-width: 360px;
+
+        text-align: left;
+    }
+
+
+    /* CAR */
+
+    .car-showcase {
+        min-height: 350px;
+
+        margin-top: 10px;
+    }
+
+
+    .car-stage {
+        width: 100%;
+
+        height: 300px;
+    }
+
+
+    .car-stage img {
+        width: 100%;
+    }
+
+
+    .car-glow {
+        width: 280px;
+
+        height: 280px;
+    }
+
+
+    .car-platform {
+        width: 90%;
+
+        height: 70px;
+
+        bottom: 20px;
+    }
+
+
+    .slider-btn {
+        width: 48px;
+
+        height: 48px;
+
+        font-size: 21px;
+    }
+
+
+    .prev-btn {
+        left: 0;
+    }
+
+
+    .next-btn {
+        right: 0;
+    }
+
+
+    .fleet-dots {
+        bottom: 0;
+    }
+
+
+    .vehicle-info {
+        margin-top: 20px;
+
+        padding:
+            25px 20px;
+
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+
+        border-radius: 16px;
+    }
+
+
+    .vehicle-features {
+        border-left: none;
+
+        border-right: none;
+
+        border-top:
+            1px solid
+            rgba(128, 139, 168, 0.18);
+
+        border-bottom:
+            1px solid
+            rgba(128, 139, 168, 0.18);
+
+        padding:
+            25px 0;
+    }
+
+
+    .vehicle-details h2 {
+        font-size: 26px;
+    }
+
+
+    .vehicle-specs {
+        gap: 15px;
+
+        margin-top: 22px;
+    }
+
+
+    .spec {
+        font-size: 14px;
+    }
+
+
+    .spec-icon {
+        font-size: 21px;
+    }
+
+
+    .vehicle-description {
+        font-size: 15px;
+
+        line-height: 1.7;
+    }
+
+
+    .vehicle-price {
+        grid-column: auto;
+
+        padding: 0;
+    }
+
+
+    .price span {
+        font-size: 36px;
+    }
+
+
+}
+
+
+
+@media (max-width: 420px) {
+
+    .fleet-intro h1 {
+        font-size: 32px;
+    }
+
+
+    .fleet-description {
+        font-size: 14px;
+    }
+
+
+    .car-showcase {
+        min-height: 300px;
+    }
+
+
+    .car-stage {
+        height: 260px;
+    }
+
+
+    .car-glow {
+        width: 240px;
+
+        height: 240px;
+    }
+
+
+    .vehicle-specs {
+        display: grid;
+
+        grid-template-columns:
+            1fr 1fr;
+
+        gap: 17px;
+    }
+
+
+    .price span {
+        font-size: 32px;
+    }
+
+}
+
+    
+</style>
+<body>
+    
+
+     <div class="about-nav">
+        <a href="#" class="back-btn" onclick="goBack(event)">
+            <i class="fa-solid fa-angle-left"></i>
+        </a>
+        <h2>BOOK YOUR RIDE</h2>
+    </div>
+<section class="fleet-section">
+
+    <!-- ================= TOP FLEET AREA ================= -->
+
+    <div class="fleet-main">
+
+        <!-- LEFT CONTENT -->
+        <div class="fleet-intro">
+
+          
+            <h1>
+                Premium Rides for
+                <span>Every Journey</span>
+            </h1>
+
+            <p class="fleet-description">
+                Choose from our well-maintained, comfortable
+                and reliable cars for your Himachal adventure.
+            </p>
+
+
+            <!-- TRUST CARDS -->
+
+            <div class="fleet-trust">
+
+                <div class="trust-card">
+
+                    <div class="trust-icon">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+
+                    <div>
+                        <h3>Well Maintained</h3>
+                        <p>
+                            Regularly serviced
+                            for your safety
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="trust-card">
+
+                    <div class="trust-icon">
+                    <i class="fa-solid fa-handshake"></i>
+                    </div>
+
+                    <div>
+                        <h3>Trusted Drivers</h3>
+                        <p>
+                            Experienced &
+                            verified drivers
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT CAR SHOWCASE -->
+
+        <div class="car-showcase">
+
+            <!-- Previous -->
+            <button class="slider-btn prev-btn" id="prevCar">
+                &#10094;
+            </button>
+
+
+            <!-- CAR -->
+            <div class="car-stage">
+
+                <img
+                    id="carImage"
+                    src="images/dezire.png"
+                    alt="Dzire"
+                >
+
+                <div class="car-platform"></div>
+
+            </div>
+
+
+            <!-- Next -->
+            <button class="slider-btn next-btn" id="nextCar">
+                &#10095;
+            </button>
+
+
+            <!-- Pagination -->
+        
+
+        </div>
+
+    </div>
+
+
+    <!-- ================= VEHICLE INFORMATION ================= -->
+
+    <div class="vehicle-info">
+
+        <!-- LEFT -->
+
+        <div class="vehicle-details">
+
+            <span class="vehicle-count">
+                Vehicle <span id="currentVehicle"> 1 </span>  of <span id="totalVehicles" > 2 </span>
+            </span>
+
+            <h2 id="vehicleName">
+                
+            </h2>
+
+
+            <div class="vehicle-specs">
+
+                <div class="spec">
+                    <span class="spec-icon"><i class="fa-solid fa-user"></i></span>
+                    <span id="vehicleSeats"></span>
+                </div>
+
+                <div class="spec">
+                    <span class="spec-icon"><i class="fa-regular fa-snowflake"></i></span>
+                    <span>AC</span>
+                </div>
+
+                <div class="spec">
+                    <span class="spec-icon"><i class="fa-solid fa-suitcase-rolling"></i></span>
+                    <span id="vehicleCapacity"></span>
+                </div>
+
+            
+
+            </div>
+
+
+            <p class="vehicle-description" id="vehicleDescription">
+                Spacious, comfortable and perfect for family trips
+                in Himachal. Enjoy a smooth and safe journey.
+            </p>
+
+        </div>
+
+
+        <!-- MIDDLE -->
+
+        <div class="vehicle-features">
+
+            <h3>Features</h3>
+
+            <ul id="featureList">
+
+                <li>
+                    <span>✓</span>
+                    Air Conditioning
+                </li>
+
+                <li>
+                    <span>✓</span>
+                    Music System
+                </li>
+
+                <li>
+                    <span>✓</span>
+                    Power Windows
+                </li>
+
+                <li>
+                    <span>✓</span>
+                    Comfortable Seats
+                </li>
+
+                <li>
+                    <span>✓</span>
+                    Ample Boot Space
+                </li>
+
+                <li>
+                    <span>✓</span>
+                    First Aid Kit
+                </li>
+
+            </ul>
+
+        </div>
+
+
+        <!-- RIGHT -->
+
+        <div class="vehicle-price">
+
+            <span class="price-label">
+                Starting From
+            </span>
+
+            <div class="price">
+                <span id="vehiclePrice">₹ 3,500</span>
+                <small>/ Day</small>
+            </div>
+
+
+            <button class="book-btn" id="confirmBooking">
+               
+               Book Now
+            </button>
+
+
+           
+
+        </div>
+
+    </div>
+   
+<div class="booking-modal" id="bookingModal">
+
+    <div class="booking-popup">
+
+
+        <div class="booking-popup-header">
+
+            <div>
+
+                <span class="popup-brand"></span>
+
+                <h2 id="popupTitle">
+                    Your Details
+                </h2>
+
+                <p id="popupSubtitle">
+                    Enter your details to continue
+                </p>
+
+            </div>
+
+            <button
+                type="button"
+                class="popup-close"
+                id="closeBookingPopup">
+
+                &times;
+
+            </button>
+
+        </div>
+
+
+        <!-- =================================================
+             PROGRESS
+        ================================================== -->
+
+        <div class="booking-progress">
+
+            <div
+                class="progress-step active"
+                id="progressStep1">
+
+                <span>1</span>
+
+                <small>
+                    Details
+                </small>
+
+            </div>
+
+
+            <div
+                class="progress-line"
+                id="progressLine">
+            </div>
+
+
+            <div
+                class="progress-step"
+                id="progressStep2">
+
+                <span>2</span>
+
+                <small>
+                    Summary
+                </small>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             STEP 1
+        ================================================== -->
+
+        <div
+            class="booking-step active"
+            id="bookingStep1">
+
+
+            <!-- TITLE -->
+
+            <div class="form-section-title">
+
+                <h3>
+                    Passenger Details
+                </h3>
+
+                <p>
+                    Please provide your booking information
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 FORM GRID
+            ================================================== -->
+
+            <div class="booking-fields-grid">
+
+
+                <!-- =========================
+                     NAME
+                ========================== -->
+
+                <div class="booking-input">
+
+                    <label for="bookingName">
+                        Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="bookingName"
+                        placeholder="Enter your Name"
+                        autocomplete="name"
+                        required>
+
+                </div>
+
+
+
+                <!-- =========================
+                     MOBILE
+                ========================== -->
+
+                <div
+                    class="booking-input"
+                    id="mobileBookingField">
+
+                    <label for="userMobile">
+                        Mobile number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="userMobile"
+                        placeholder="10-digit mobile number"
+                        maxlength="10"
+                        autocomplete="tel"
+                        required>
+
+                </div>
+
+
+
+                <!-- =========================
+                     DATE
+                ========================== -->
+
+                <div
+                    class="booking-input"
+                    id="dateBookingField">
+
+                    <label for="bookingDate">
+                        Date of Booking
+                    </label>
+
+                    <div class="date-input-wrapper">
+
+                        <input
+                            type="text"
+                            id="bookingDate"
+                            title="Select the Date of Booking"
+                            placeholder="dd / mm / yy"
+                            autocomplete="off"
+                            required>
+
+                        <i
+                            class="fa-regular fa-calendar"
+                            id="calendarIcon">
+                        </i>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =========================
+                     TRAVELLERS
+                ========================== -->
+
+                <div class="booking-input">
+
+                    <label>
+                        No. of Travellers
+                        <span>*</span>
+                    </label>
+
+
+                    <div class="traveller-counter">
+
+                        <button
+                            type="button"
+                            id="minusTraveller">
+
+                            −
+
+                        </button>
+
+
+                        <div class="traveller-number">
+
+                            <strong id="travellerCount">
+                                1
+                            </strong>
+
+                            <span>
+                                Traveller
+                            </span>
+
+                        </div>
+
+
+                        <button
+                            type="button"
+                            id="plusTraveller">
+
+                            +
+
+                        </button>
+
+                    </div>
+
+
+                    <small class="traveller-limit">
+                        Maximum 6 travellers
+                    </small>
+
+
+                    <small
+                        class="field-error"
+                        id="travellerError">
+                    </small>
+
+                </div>
+
+
+
+                <!-- =========================
+                     PICKUP
+                ========================== -->
+
+                <div
+                    class="booking-input"
+                    id="pickupBookingField">
+
+                    <label for="pickupLocation">
+                        Pickup location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="pickupLocation"
+                        placeholder="Enter pickup location"
+                        required>
+
+                </div>
+
+
+
+                <!-- =========================
+                     DROP-OFF
+                ========================== -->
+
+                <div
+                    class="booking-input"
+                    id="dropoffBookingField">
+
+                    <label for="dropoffLocation">
+                        Drop-off location
+                    </label>
+
+                    <input
+                        type="text"
+                        id="dropoffLocation"
+                        placeholder="Enter Drop-off location"
+                        required>
+
+                </div>
+
+
+            </div>
+            <!-- END FORM GRID -->
+
+
+
+            <!-- =================================================
+                 SAVE & NEXT
+            ================================================== -->
+
+            <button
+                type="button"
+                class="booking-primary-btn"
+                id="saveNextBtn">
+
+                Save &amp; Next
+
+                <span>
+                    →
+                </span>
+
+            </button>
+
+
+        </div>
+       
+
+
+
+
+        <div
+            class="booking-step"
+            id="bookingStep2">
+
+
+            <!-- TITLE -->
+
+            <div class="form-section-title">
+
+               
+
+                <p>
+                    Review your booking details
+                </p>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 SUMMARY GRID
+            ================================================== -->
+
+            <div class="booking-fields-grid">
+
+
+               
+                <div class="summary-card">
+
+
+                    <div class="summary-card-title">
+
+                        <span class="summary-icon"></span>
+
+                        <div>
+
+                            <h4>
+                                Passenger Details
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="summary-info-grid">
+
+
+                        <!-- NAME -->
+
+                        <div class="summary-item">
+
+                            <span>
+                                Name
+                            </span>
+
+                            <strong id="summaryName">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <!-- MOBILE -->
+
+                        <div class="summary-item">
+
+                            <span>
+                                Mobile
+                            </span>
+
+                            <strong id="summaryMobile">
+                                —
+                            </strong>
+
+                        </div>
+
+
+                        <!-- TRAVELLERS -->
+
+                        <div class="summary-item">
+
+                            <span>
+                                Travellers
+                            </span>
+
+                            <strong id="summaryTravellers">
+                                1 Traveller
+                            </strong>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     JOURNEY DETAILS
+                ================================================== -->
+
+                <div class="summary-card">
+
+
+                    <div class="summary-card-title">
+
+                        <span class="summary-icon"></span>
+
+                        <div>
+
+                            <h4>
+                                Journey Details
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- SELECTED TOUR -->
+
+                    <div
+                        class="tour-inside-journey"
+                        id="tourInsideJourney">
+
+
+                        <div class="tour-inside-title">
+
+                            <div>
+
+                                <small>
+                                    Selected Tour
+                                </small>
+
+                                <strong id="tourName">
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div
+                            class="tour-duration"
+                            id="tourDuration">
+                        </div>
+
+
+                    </div>
+
+
+
+                    <!-- JOURNEY ROUTE -->
+
+                    <div class="journey-route">
+
+
+                        <!-- PICKUP -->
+
+                        <div class="route-point">
+
+                            <span
+                                class="route-dot pickup-dot">
+                            </span>
+
+
+                            <div>
+
+                                <small>
+                                    Pickup
+                                </small>
+
+                                <strong id="summaryPickup">
+                                    —
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+
+                        <!-- ROUTE LINE -->
+
+                        <div
+                            class="route-line"
+                            id="summaryRouteLine">
+                        </div>
+
+
+
+                        <!-- DROP-OFF -->
+
+                        <div
+                            class="route-point"
+                            id="summaryDropRow">
+
+                            <span
+                                class="route-dot drop-dot">
+                            </span>
+
+
+                            <div>
+
+                                <small>
+                                    Drop-off
+                                </small>
+
+                                <strong id="summaryDrop">
+                                    —
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TRAVEL SCHEDULE
+                ================================================== -->
+
+                <div class="summary-card">
+
+
+                    <div class="summary-card-title">
+
+                        <span class="summary-icon"></span>
+
+                        <div>
+
+                            <h4>
+                                Travel Schedule
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="schedule-grid">
+
+                        <div class="schedule-item">
+
+                            <span>
+                                Date
+                            </span>
+
+                            <strong id="summaryDate">
+                                —
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     SELECTED VEHICLE
+                ================================================== -->
+
+                <div
+                    class="summary-card car-summary">
+
+
+                    <div class="summary-card-title">
+
+                        <span class="summary-icon"></span>
+
+                        <div>
+
+                            <h4>
+                                Selected Vehicle
+                            </h4>
+
+                        </div>
+
+                    </div>
+
+
+
+                    <div class="selected-car-info">
+
+
+                        <!-- CAR IMAGE -->
+
+                        <div class="car-summary-image">
+
+                            <img
+                                id="summaryCarImage"
+                                src=""
+                                alt="Selected Car">
+
+                        </div>
+
+
+
+                        <!-- CAR DETAILS -->
+
+                        <div>
+
+                            <strong id="summaryCar">
+                                —
+                            </strong>
+
+                            <span id="summaryCarDetails">
+                                —
+                            </span>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+            </div>
+            <!-- END SUMMARY GRID -->
+
+
+
+            <!-- =================================================
+                 SUMMARY BUTTONS
+            ================================================== -->
+
+            <div class="summary-actions">
+
+
+                <button
+                    type="button"
+                    class="previous-btn"
+                    id="previousBtn">
+
+                    ← Previous
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="confirm-booking-btn"
+                    id="confirmBookingBtn">
+
+                    Confirm Booking
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+        <!-- END STEP 2 -->
+
+
+    </div>
+  <audio id="bookingsuccessSound">
+    <source src="audiofiles/bookingsuccess.mp3" type="audio/mpeg">
+</audio>
+
+</div>
+</section>
+
+
+     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+/* =====================================================
+   BACK FUNCTION
+===================================================== */
+
+function goBack(event) {
+
+    event.preventDefault();
+
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        window.location.href = "himachaltourism.html";
+    }
+}
+
+
+/* =====================================================
+   TOUR DATA FROM HOME PAGE
+===================================================== */
+
+const selectedTourName =
+    sessionStorage.getItem("selectedTourName");
+
+const selectedTourDuration =
+    sessionStorage.getItem("selectedTourDuration");
+
+const isTourBooking =
+    !!selectedTourName;
+
+/* =====================================================
+   CAB DATA FROM HOME PAGE
+===================================================== */
+
+const cabMobile =
+    sessionStorage.getItem("cabMobile");
+
+const cabDate =
+    sessionStorage.getItem("cabDate");
+
+const cabPickup =
+    sessionStorage.getItem("cabPickup");
+
+const cabDropoff =
+    sessionStorage.getItem("cabDropoff");
+
+
+/* TEST */
+
+console.log("CAB Mobile:", cabMobile);
+console.log("CAB Date:", cabDate);
+console.log("CAB Pickup:", cabPickup);
+console.log("CAB Drop-off:", cabDropoff);
+/* =====================================================
+   CARS DATA
+===================================================== */
+
+const cars = [
+
+    {
+        name: "Suzuki Dzire",
+        image: "images/dezire.png",
+        price: "₹ 2,500",
+        seats: "4 Seats",
+        capacity: "3 Luggage Capacity",
+       
+    },
+
+    {
+        name: "Ertiga",
+        image: "images/ertiga.png",
+        price: "₹ 3,500",
+        seats: "5 Seats",
+        capacity: "4 Luggage Capacity",
+        
+    }
+
+];
+
+let currentCar = 0;
+
+
+/* =====================================================
+   CAR ELEMENTS
+===================================================== */
+
+const carImage =
+    document.getElementById("carImage");
+
+const vehicleName =
+    document.getElementById("vehicleName");
+
+const vehiclePrice =
+    document.getElementById("vehiclePrice");
+
+const vehicleSeats =
+    document.getElementById("vehicleSeats");
+
+const vehicleCapacity =
+    document.getElementById("vehicleCapacity");
+
+
+const prevCar =
+    document.getElementById("prevCar");
+
+const nextCar =
+    document.getElementById("nextCar");
+
+const currentVehicleEl =
+    document.getElementById("currentVehicle");
+
+const totalVehiclesEl =
+    document.getElementById("totalVehicles");
+
+
+/* =====================================================
+   SHOW CAR
+===================================================== */
+
+function showCar(index) {
+
+    const car = cars[index];
+
+    if (!car) return;
+
+    carImage.src = car.image;
+    carImage.alt = car.name;
+
+    vehicleName.textContent = car.name;
+    vehiclePrice.textContent = car.price;
+    vehicleSeats.textContent = car.seats;
+    vehicleCapacity.textContent = car.capacity;
+   
+
+    currentVehicleEl.textContent = index + 1;
+    totalVehiclesEl.textContent = cars.length;
+
+    prevCar.disabled = index === 0;
+    nextCar.disabled = index === cars.length - 1;
+}
+
+
+/* =====================================================
+   NEXT CAR
+===================================================== */
+
+nextCar.addEventListener("click", function () {
+
+    if (currentCar < cars.length - 1) {
+
+        currentCar++;
+
+        showCar(currentCar);
+    }
+
+});
+
+
+/* =====================================================
+   PREVIOUS CAR
+===================================================== */
+
+prevCar.addEventListener("click", function () {
+
+    if (currentCar > 0) {
+
+        currentCar--;
+
+        showCar(currentCar);
+    }
+
+});
+
+
+/* INITIAL CAR */
+
+showCar(currentCar);
+
+
+/* =====================================================
+   BOOKING MODAL
+===================================================== */
+
+const bookingModal =
+    document.getElementById("bookingModal");
+
+const bookNowBtn =
+    document.getElementById("confirmBooking");
+
+const closeBookingBtn =
+    document.getElementById("closeBookingPopup");
+
+
+/* =====================================================
+   OPEN BOOKING POPUP
+===================================================== */
+
+bookNowBtn.addEventListener("click", function () {
+
+    /* Tour information */
+
+    if (isTourBooking) {
+
+        document.getElementById("tourName").textContent =
+            selectedTourName;
+
+        document.getElementById("tourDuration").textContent =
+            selectedTourDuration;
+// hide dropoff on tour booking //
+dropoffField.style.display = "none";
+   
+   bookingMobile.readOnly = false;
+    bookingDate.readOnly = false;
+    pickupLocation.readOnly = false;
+    dropoffLocation.readOnly = false;
+
+}
+else {
+
+    /* =========================
+       CAB BOOKING
+    ========================= */
+
+    /* Show all fields */
+ 
+    mobileField.style.display = "";
+    dateField.style.display = "";
+    pickupField.style.display = "";
+    dropoffField.style.display = "";
+
+    /* Auto-fill CAB data */
+
+    bookingMobile.value =
+        cabMobile || "";
+
+    bookingDate.value =
+        cabDate || "";
+
+    pickupLocation.value =
+        cabPickup || "";
+
+    dropoffLocation.value =
+        cabDropoff || "";
+
+    /* Lock CAB data */
+
+    bookingMobile.readOnly = true;
+    bookingDate.readOnly = true;
+    pickupLocation.readOnly = true;
+    dropoffLocation.readOnly = true;
+        }
+ 
+
+    bookingModal.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+
+});
+
+
+/* =====================================================
+   CLOSE BOOKING POPUP
+===================================================== */
+
+function closeBookingModal() {
+
+    bookingModal.classList.remove("active");
+
+    document.body.style.overflow = "";
+
+}
+
+
+/* CLOSE BUTTON */
+
+closeBookingBtn.addEventListener(
+    "click",
+    closeBookingModal
+);
+
+
+/* CLICK OUTSIDE */
+
+bookingModal.addEventListener(
+    "click",
+    function (event) {
+
+        if (event.target === bookingModal) {
+
+            closeBookingModal();
+
+        }
+
+    }
+);
+
+
+/* ESC KEY */
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Escape" &&
+            bookingModal.classList.contains("active")
+        ) {
+
+            closeBookingModal();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   BOOKING STEPS
+===================================================== */
+
+const bookingStep1 =
+    document.getElementById("bookingStep1");
+
+const bookingStep2 =
+    document.getElementById("bookingStep2");
+
+const saveNextBtn =
+    document.getElementById("saveNextBtn");
+
+const previousBtn =
+    document.getElementById("previousBtn");
+
+
+/* =====================================================
+   FORM ELEMENTS
+===================================================== */
+
+const bookingName =
+    document.getElementById("bookingName");
+
+const bookingMobile =
+    document.getElementById("userMobile");
+
+const bookingDate =
+    document.getElementById("bookingDate");
+
+
+const pickupLocation =
+    document.getElementById("pickupLocation");
+
+    const dropoffLocation=
+    document.getElementById("dropoffLocation");
+
+
+    //cab data ---> booking form //
+    
+    if(!isTourBooking){
+        bookingMobile.value= cabMobile || "";
+        bookingDate.value = cabDate || "";
+        pickupLocation.value = cabPickup || "";
+        dropoffLocation.value = cabDropoff || "";
+
+    }
+// cab form fields 
+const mobileField =
+   document.getElementById("mobileBookingField");
+
+const dateField =
+     document.getElementById("dateBookingField");
+
+const pickupField =
+     document.getElementById("pickupBookingField");
+     const dropoffField=
+     document.getElementById("dropoffBookingField");
+
+if(!isTourBooking){
+    if(cabMobile){
+        bookingMobileValue = cabMobile;
+
+    }
+    if(cabDate){
+        bookingDate.Value = cabDate;
+    }
+    if(cabPickup){
+        pickupLocation.Value = cabPickup;
+     }
+}
+const travellerCount =
+    document.getElementById("travellerCount");
+
+const minusTraveller =
+    document.getElementById("minusTraveller");
+
+const plusTraveller =
+    document.getElementById("plusTraveller");
+
+
+/* =====================================================
+   INTERNATIONAL MOBILE NUMBER
+===================================================== */
+
+const iti =
+    window.intlTelInput(
+        bookingMobile,
+        {
+
+            initialCountry: "in",
+
+            separateDialCode: true,
+
+            preferredCountries: [
+                "in",
+                "us",
+                "gb"
+            ],
+
+            nationalMode: true,
+
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+
+        }
+    );
+
+
+/* =====================================================
+   MOBILE NUMBER VALIDATION
+===================================================== */
+
+function validateMobile() {
+
+    const value =
+        bookingMobile.value.trim();
+
+
+    /* EMPTY */
+
+    if (value === "") {
+
+        alert(
+            "Please enter your mobile number."
+        );
+
+        bookingMobile.focus();
+
+        return false;
+    }
+
+
+    /* INVALID */
+
+    if (!iti.isValidNumber()) {
+
+        alert(
+            "Please enter a valid mobile number."
+        );
+
+        bookingMobile.focus();
+
+        return false;
+    }
+
+
+    return true;
+}
+
+
+/* =====================================================
+   MOBILE INPUT
+===================================================== */
+
+bookingMobile.addEventListener(
+    "input",
+    function () {
+
+        this.value =
+            this.value.replace(/\D/g, "");
+
+    }
+);
+
+
+/* =====================================================
+   FLATPICKR DATE
+===================================================== */
+
+const maxDate =
+    new Date();
+
+maxDate.setMonth(
+    maxDate.getMonth() + 4
+);
+
+
+const datePicker =
+    flatpickr(
+        "#bookingDate",
+        {
+
+            dateFormat: "d-m-Y",
+
+            minDate: "today",
+
+            maxDate: maxDate,
+
+            disableMobile: true
+
+        }
+    );
+
+
+/* =====================================================
+   CALENDAR ICON
+===================================================== */
+
+const calendarIcon =
+    document.getElementById("calendarIcon");
+
+
+calendarIcon.addEventListener(
+    "click",
+    function () {
+
+        datePicker.open();
+
+    }
+);
+
+
+/* =====================================================
+   DATE INPUT CLICK
+===================================================== */
+
+bookingDate.addEventListener(
+    "click",
+    function () {
+
+        datePicker.open();
+
+    }
+);
+
+
+/* =====================================================
+   TRAVELLER COUNTER
+===================================================== */
+
+let travellers = 1;
+
+
+/* INITIAL */
+
+travellerCount.textContent =
+    travellers;
+
+
+/* =====================================================
+   UPDATE TRAVELLER
+===================================================== */
+
+function updateTraveller() {
+
+    travellerCount.textContent =
+        travellers;
+
+
+    const travellerText =
+        travellerCount.parentElement
+        .querySelector("span");
+
+
+    if (travellerText) {
+
+        travellerText.textContent =
+            travellers === 1
+                ? "Traveller"
+                : "Travellers";
+
+    }
+
+}
+
+
+/* =====================================================
+   MINUS TRAVELLER
+===================================================== */
+
+minusTraveller.addEventListener(
+    "click",
+    function () {
+
+        if (travellers > 1) {
+
+            travellers--;
+
+            updateTraveller();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   PLUS TRAVELLER
+===================================================== */
+
+plusTraveller.addEventListener(
+    "click",
+    function () {
+
+        if (travellers < 6) {
+
+            travellers++;
+
+            updateTraveller();
+
+        }
+
+    }
+);
+
+
+/* =====================================================
+   SAVE & NEXT
+===================================================== */
+
+saveNextBtn.addEventListener(
+    "click",
+    function () {
+
+
+        /* =============================================
+           NAME
+        ============================================= */
+
+        const name =
+            bookingName.value.trim();
+
+
+        if (name === "") {
+
+            alert(
+                "Please enter your full name."
+            );
+
+            bookingName.focus();
+
+            return;
+        }
+
+
+        /* =============================================
+           MOBILE
+        ============================================= */
+
+        if (!validateMobile()) {
+
+            return;
+        }
+
+
+        /* =============================================
+           DATE
+        ============================================= */
+
+        const selectedDate =
+            bookingDate.value.trim();
+
+
+        if (selectedDate === "") {
+
+            alert(
+                "Please select your booking date."
+            );
+
+            datePicker.open();
+
+            return;
+        }
+
+
+        /* =============================================
+           PICKUP
+        ============================================= */
+
+        const pickup =
+            pickupLocation.value.trim();
+
+
+        if (pickup === "") {
+
+            alert(
+                "Please enter pickup location."
+            );
+
+            pickupLocation.focus();
+
+            return;
+        }
+
+
+        /* =============================================
+           TRAVELLERS
+        ============================================= */
+
+        if (
+            travellers < 1 ||
+            travellers > 6
+        ) {
+
+            alert(
+                "Please select 1 to 6 travellers."
+            );
+
+            return;
+        }
+
+
+        /* =============================================
+           TOUR SUMMARY
+        ============================================= */
+
+      const tourInsideJourney =
+    document.getElementById("tourInsideJourney");
+
+const summaryDropRow =
+    document.getElementById("summaryDropRow");
+
+const summaryRouteLine =
+    document.getElementById("summaryRouteLine");
+
+
+if (isTourBooking) {
+
+    /* Show selected tour */
+
+    tourInsideJourney.style.display = "block";
+
+    document.getElementById("tourName").textContent =
+        selectedTourName;
+
+    document.getElementById("tourDuration").textContent =
+        selectedTourDuration;
+
+
+    /* Hide drop-off */
+
+    summaryDropRow.style.display = "none";
+
+    summaryRouteLine.style.display="none";
+
+
+   
+
+}
+else {
+
+    /* Hide selected tour */
+
+    tourInsideJourney.style.display = "none";
+
+
+    /* Show drop-off */
+
+    summaryDropRow.style.display = "flex";
+
+
+    /* Show connecting line */
+
+    summaryRouteLine.style.display = "block";
+
+}
+
+        /* =============================================
+           SUMMARY - PASSENGER NAME
+        ============================================= */
+
+        document.getElementById(
+            "summaryName"
+        ).textContent =
+            name;
+
+
+        /* =============================================
+           SUMMARY - MOBILE
+        ============================================= */
+
+        document.getElementById(
+            "summaryMobile"
+        ).textContent =
+            iti.getNumber();
+
+
+        /* =============================================
+           SUMMARY - TRAVELLERS
+        ============================================= */
+
+        document.getElementById(
+            "summaryTravellers"
+        ).textContent =
+
+            travellers +
+            (
+                travellers === 1
+                    ? " Traveller"
+                    : " Travellers"
+            );
+
+
+        /* =============================================
+           SUMMARY - PICKUP
+        ============================================= */
+
+        document.getElementById(
+            "summaryPickup"
+        ).textContent =
+            pickup;
+
+
+        /* =============================================
+           SUMMARY - DROP OFF
+        ============================================= */
+
+        const summaryDrop =
+            document.getElementById(
+                "summaryDrop"
+            );
+
+
+        if (summaryDrop) {
+
+          if(isTourBooking){
+            summaryDrop.textContent = "-"
+
+          }else{
+            summaryDrop.textContent = cabDropoff || "-";
+
+          }
+
+        }
+     
+        if(isTourBooking){
+            document.getElementById("summaryDropRow").style.display="none";
+
+        }
+        else{
+    document.getElementById("summaryDropRow").style.display="flex";
+        }
+
+        /* =============================================
+           SUMMARY - DATE
+        ============================================= */
+
+        document.getElementById(
+            "summaryDate"
+        ).textContent =
+            selectedDate;
+
+
+
+
+
+        /* =============================================
+           SUMMARY - SELECTED CAR
+        ============================================= */
+
+        const selectedCar =
+            cars[currentCar];
+
+
+        document.getElementById(
+            "summaryCar"
+        ).textContent =
+            selectedCar.name;
+
+
+        document.getElementById(
+            "summaryCarDetails"
+        ).textContent =
+
+            `${selectedCar.seats} • ${selectedCar.engine}`;
+
+
+        document.getElementById(
+            "summaryCarImage"
+        ).src =
+            selectedCar.image;
+
+
+        /* =============================================
+           STEP 1 → STEP 2
+        ============================================= */
+
+        bookingStep1.classList.remove(
+            "active"
+        );
+
+        bookingStep2.classList.add(
+            "active"
+        );
+
+
+        /* =============================================
+           PROGRESS
+        ============================================= */
+
+        document.getElementById(
+            "progressStep1"
+        ).classList.remove(
+            "active"
+        );
+
+
+        document.getElementById(
+            "progressStep2"
+        ).classList.add(
+            "active"
+        );
+
+
+        document.getElementById(
+            "progressLine"
+        ).classList.add(
+            "active"
+        );
+
+
+        /* =============================================
+           POPUP HEADING
+        ============================================= */
+
+        document.getElementById(
+            "popupTitle"
+        ).textContent =
+            "Booking Summary";
+
+
+        document.getElementById(
+            "popupSubtitle"
+        ).textContent =
+            "Please review your details before confirming";
+
+
+        /* =============================================
+           SCROLL POPUP TO TOP
+        ============================================= */
+
+        document.querySelector(
+            ".booking-popup"
+        ).scrollTop = 0;
+
+    }
+);
+
+
+/* =====================================================
+   PREVIOUS BUTTON
+===================================================== */
+
+previousBtn.addEventListener(
+    "click",
+    function () {
+
+
+        bookingStep2.classList.remove(
+            "active"
+        );
+
+        bookingStep1.classList.add(
+            "active"
+        );
+
+
+        /* PROGRESS */
+
+        document.getElementById(
+            "progressStep2"
+        ).classList.remove(
+            "active"
+        );
+
+
+        document.getElementById(
+            "progressStep1"
+        ).classList.add(
+            "active"
+        );
+
+
+        document.getElementById(
+            "progressLine"
+        ).classList.remove(
+            "active"
+        );
+
+
+        /* HEADING */
+
+        document.getElementById(
+            "popupTitle"
+        ).textContent =
+            "Your Details";
+
+
+        document.getElementById(
+            "popupSubtitle"
+        ).textContent =
+            "Enter your details to continue";
+
+
+        /* SCROLL TOP */
+
+        document.querySelector(
+            ".booking-popup"
+        ).scrollTop = 0;
+
+    }
+);
+
+const confirmBookingBtn = document.getElementById("confirmBookingBtn");
+
+confirmBookingBtn.addEventListener("click", function () {
+
+    // SUCCESS SOUND
+    const sound = document.getElementById("bookingsuccessSound");
+
+    if (sound) {
+        sound.currentTime = 0;
+
+        sound.play().catch(error => {
+            console.log("Audio play blocked:", error);
+        });
+    }
+
+    // SWEET ALERT
+    Swal.fire({
+
+        icon: "success",
+
+        title: "Thank You! 🎉",
+
+        text: "Your booking has been confirmed. Our travel partner will call you back within 5 to 6 hrs.",
+
+        confirmButtonText: "Awesome",
+
+        timer: 6000,
+
+        timerProgressBar: true
+
+    }).then(()=>{
+        window.location.href="himachaltourism.html";
+    });
+
+});
+
+
+
+
+
+</script>
+</body>
+</html>

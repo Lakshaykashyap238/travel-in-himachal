@@ -1,0 +1,10163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Himachal Tourism</title>
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet"href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+ <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
+     </head>
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+    html, body {
+    width: 100%;
+    max-width: none;
+    min-width: 100%;
+    margin: 0;
+    padding: 0;
+     font-family:system-ui;
+    background-color:white;
+ 
+
+}
+
+.slider,
+.marquee,
+.places,
+.why-choose-us,
+.reviews-section,
+.footer {
+    width: 100%;
+    max-width: none;
+    margin-left: 0;
+    margin-right: 0;
+}
+   
+
+#preloader{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:#111;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:99999;
+    transition:opacity .6s ease, visibility .6s ease;
+}
+
+#preloader.hide{
+    opacity:0;
+    visibility:hidden;
+}
+
+.loader-content{
+    text-align:center;
+    color:#fff;
+}
+
+.loader-content h1{
+    font-size:60px;
+    font-style:italic;
+    margin:0;
+    animation:slideUp .8s ease forwards;
+}
+
+.loader-content p{
+    margin:15px 0 25px;
+    color:#d4af37;
+    letter-spacing:3px;
+    font-size:12px;
+    text-transform:uppercase;
+    opacity:0;
+    animation:fadeIn .8s .5s forwards;
+}
+
+.progress{
+    width:220px;
+    height:3px;
+    background:#333;
+    border-radius:20px;
+    overflow:hidden;
+    margin:auto;
+}
+
+.progress-bar{
+    width:0;
+    height:100%;
+    background:#d4af37;
+    animation:loading 1.8s linear forwards;
+}
+
+@keyframes loading{
+    from{width:0;}
+    to{width:100%;}
+}
+
+@keyframes slideUp{
+    from{
+        transform:translateY(50px);
+        opacity:0;
+    }
+    to{
+        transform:translateY(0);
+        opacity:1;
+    }
+}
+
+@keyframes fadeIn{
+    to{
+        opacity:1;
+    }
+}
+.navbar{
+        
+ 
+  width:100%;
+  white-space: nowrap;
+  flex-shrink: 0;
+  gap:30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  padding:0 40px;
+  background: #f6f3f3;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:1000;
+
+
+
+}
+.navbar h2{
+     margin-left:auto;
+    font-size:clamp(18px, 2vw, 28px);
+     color:green;
+}
+
+.nav-search{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    width:380px;
+    height:47px;
+    background:transparent;
+    border:1px solid #33323288;
+     border-radius: 25px;
+     padding:0 15px;
+     margin-left:auto;
+}
+.nav-search i{
+    color:black;
+    font-size:18px;
+    cursor:pointer;
+}
+.nav-search input{
+    width:100%;
+    border:none;
+    outline:none;
+    margin-left:10px;
+    font-size:16px;
+    font-weight:300;
+    background: transparent;
+}
+
+#menuBtn{
+    display:none;
+}
+#menuOverlay{
+display:none;
+}
+#sideMenu {
+    margin-left:auto;
+    display: flex;
+    flex-direction: row;
+gap:20px;
+ align-items:center;
+    justify-content:center;
+  
+}
+.menu-item {
+        padding: 8px 4px;
+    }
+.menu-item a{
+    position:relative;
+    text-decoration: none;
+    color:rgb(54, 54, 54);
+    font-size:18px;
+    font-weight:500;
+   
+    margin-top:10px;
+}
+.menu-item a::after{
+    content: "";
+    position: absolute;
+    left:50%;
+    bottom:0;
+ transform:translateX(-50%);
+ width:0;
+ height:2px;
+ background:rgb(37, 37, 37);
+ transition:0.3s ease;
+
+
+}
+.menu-item a:hover::after{
+    width:100%;
+}
+
+.about-popup {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100vh;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 99999;
+}
+
+.about-popup.active {
+    display: flex;
+}
+
+
+
+.about-popup-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 20, 30, .72);
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+
+
+
+.about-modal {
+    position: relative;
+    z-index: 2;
+
+    width: 92%;
+    max-width: 1050px;
+
+    max-height: 90vh;
+
+    padding: 35px 40px;
+
+    background: #f8fbf9;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 25px 80px rgba(0,0,0,.35);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: none;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+.about-modal::-webkit-scrollbar {
+    display: none;
+}
+.about-header {
+    flex-shrink: 0;
+
+    width: 100%;
+
+    text-align: center;
+
+    padding: 5px 50px 25px;
+}
+
+
+.about-header > span {
+    display: block;
+
+    color: #16825e;
+
+    font-size: clamp(9px, 1vw, 11px);
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+
+.about-header h2 {
+    margin: 8px 0 10px;
+
+    color: #17364d;
+
+    font-size: clamp(26px, 3vw, 40px);
+
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+
+.about-header p {
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    color: #66777f;
+
+    font-size: clamp(11px, 1.2vw, 13px);
+
+    line-height: 1.5;
+}
+
+.about-middle {
+    width: 100%;
+
+    flex-shrink: 0;
+
+    display: block;
+}
+
+
+.declaration {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    text-align: center;
+
+    padding: 20px 35px 10px;
+}
+
+
+.declaration p {
+    width: 100%;
+
+    max-width: 850px;
+
+    margin: 0;
+
+    color: #425761;
+
+    font-size: clamp(12px, 1.45vw, 16px);
+
+    line-height: 1.8;
+
+    font-weight: 400;
+}
+.about-founder {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-end;
+
+    text-align: right;
+
+    margin-top: 20px;
+
+    padding-right: 5px;
+
+    line-height: 1.1;
+}
+
+.about-founder strong {
+    color: #17364d;
+
+    font-family: cursive;
+
+    font-size: clamp(14px, 1.6vw, 19px);
+
+    font-weight: 600;
+}
+
+.about-founder small {
+    margin-top: 4px;
+
+    color: #16825e;
+
+    font-size: clamp(7px, .8vw, 9px);
+
+    font-weight: 600;
+
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+.about-bottom {
+    position: relative;
+
+    width: 100%;
+
+    flex-shrink: 0;
+
+    margin-top: 20px;
+
+    padding-top: 16px;
+
+    text-align: center;
+
+    border-top: 1px solid #dce6e1;
+}
+
+
+.about-bottom > span {
+    display: block;
+
+    color: #16825e;
+
+    font-size: clamp(7px, .8vw, 9px);
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+.about-bottom h3 {
+    margin: 5px 0 0;
+
+    color: #17364d;
+
+    font-family: cursive;
+
+    font-size: clamp(17px, 2vw, 21px);
+
+    line-height: 1.2;
+
+    font-weight: 600;
+}
+
+.about-close {
+    position: absolute;
+
+    top: 18px;
+    right: 20px;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(0,0,0,.07);
+
+    color: #17364d;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+
+    transition: .25s;
+}
+
+
+.about-close:hover {
+    background: #17364d;
+
+    color: white;
+
+    transform: rotate(90deg);
+}
+
+
+.slider{
+    width:100%;
+    height:100vh;
+    margin-top:0;
+    overflow:hidden;
+    position:relative;
+}
+
+.slides{
+    display:flex;
+    width:100%;
+    height:100%;
+    transition:transform 0.8s ease;
+}
+
+.slide{
+    min-width:100%;
+    height:100%;
+    position:relative;
+    flex-shrink:0;
+}
+
+.slide img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+}
+
+.overlay{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.35);
+}
+
+.hero-btns{
+ margin-top:auto;
+
+}
+
+.tag{
+    font-size:20px;
+    margin-bottom:40px;
+}
+
+.slide-content {
+    position: absolute;
+   
+    left: 8%;
+    bottom: 18%;
+    justify-content: space-evenly;
+    z-index: 5;
+
+    width: 90%;
+    max-width: 40rem;
+
+    color: #fff;
+}
+
+
+
+.slide-content .tag {
+    margin: 0 0 0.875rem;
+
+    font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+
+    text-transform: uppercase;
+
+    color: #ffb52e;
+}
+
+
+.slide-content h1 {
+    margin: 0 0 0.75rem;
+    white-space: nowrap;
+ padding:0;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.08;
+
+    font-weight: 800;
+
+    color: #fff;
+}
+
+
+
+.slide-content .desc {
+    margin: 0 0 1.5rem;
+padding: 0;
+   
+    max-width: 35rem;
+
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    line-height: 1.5;
+
+    font-weight: 400;
+
+    color: #fff;
+}
+
+
+.hero-btns {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
+.explore{
+    width:180px;
+    height:45px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:0;
+    margin-left:20px;
+    font-size:14px;
+    font-weight:500;
+    border-radius:30px;
+
+    box-sizing:border-box;
+     
+    transition:0.3s ease;
+}
+
+.explore{
+    border:2px solid #fff;
+    color:#fff;
+    text-decoration: none;
+}
+
+   
+
+.explore:hover{
+     transform:translateY(-3px);
+     background:rgb(255, 255, 255);
+     color:rgb(0, 0, 0);
+  
+}
+
+.btn{
+
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:45px;
+    height:45px;
+    border:none;
+    background:rgba(0,0,0,.45);
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+    z-index:5;
+}
+
+.dots{
+    position:absolute;
+    bottom:15px;
+    left:50%;
+    transform:translateX(-50%);
+    display:flex;
+    gap:8px;
+    z-index:5;
+    cursor: pointer;
+}
+
+.dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    background:#fff;
+    opacity:.5;
+    
+}
+
+.dot.active{
+    opacity:1;
+    transform:scale(1.2);
+    
+}
+
+.booking-popup {
+    display:none;
+    position: fixed;
+    top: 50%;
+    right: 28px;
+    transform: translateY(-50%);
+
+    width: 320px;
+
+    background: #ffffff;
+
+    padding: 24px;
+
+    border-radius: 20px;
+
+    border: 1px solid #e8e8e8;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.15);
+
+    z-index: 9999;
+}
+
+.booking-popup.attention {
+    animation: bookingAttention 2s ease-in-out infinite;
+}
+
+@keyframes bookingAttention {
+
+    0%,
+    70%,
+    100% {
+        transform: translateY(-50%);
+    }
+
+    80% {
+        transform: translateY(calc(-50% - 8px));
+    }
+
+    90% {
+        transform: translateY(calc(-50% + 6px));
+    }
+}
+
+.booking-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 22px;
+}
+
+
+.booking-label {
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    color: #ff7a00;
+}
+
+
+.booking-popup-header h2 {
+    margin: 5px 0 4px;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    letter-spacing: -0.7px;
+
+    color: #111;
+}
+
+
+.booking-popup-header p {
+    margin: 0;
+
+    font-size: 12px;
+
+    color: #777;
+}
+
+
+.close-booking {
+    width: 30px;
+    height: 30px;
+
+    border: none;
+
+    background: #f3f3f3;
+
+    border-radius: 50%;
+
+    font-size: 20px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    color: #333;
+
+    transition: 0.2s;
+}
+
+
+.close-booking:hover {
+    background: #111;
+    color: #fff;
+}
+
+
+.quick-booking-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+
+.booking-input {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+.booking-input label {
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #555;
+}
+
+
+.booking-input input {
+    width: 100%;
+
+    height: 47px;
+
+    padding: 0 13px;
+
+    border: 1px solid #dedede;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #f8f8f8;
+
+    font-size: 13px;
+
+    color: #111;
+
+    transition: 0.2s;
+}
+
+
+.booking-input input::placeholder {
+    color: #999;
+}
+
+
+.booking-input input:focus {
+    background: #fff;
+
+    border-color: #111;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.04);
+}
+#bookingDate{
+    cursor: pointer;
+ 
+}
+input[type="date"]{
+    cursor:text;
+}
+input[type="date"]::-webkit-calendar-flatpicker-indicator{
+    cursor:text;
+    opacity:1;
+}
+.booking-input{
+    position:relative;
+    width:100%;
+
+}
+.booking-input input{
+    width: 100%;
+    padding:12px 45px 12px 15px;
+}
+.booking-input i{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateX(-50%);
+    color:#666;
+    cursor:pointer;
+    
+
+}
+
+
+.location-input {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #dedede;
+
+    border-radius: 10px;
+
+    background: #f8f8f8;
+}
+
+
+.location-input > div {
+    width: 100%;
+}
+
+
+.location-input label {
+    display: block;
+
+    margin-bottom: 3px;
+}
+
+
+.location-input input {
+    height: 24px;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 13px;
+}
+
+
+.location-input input:focus {
+    border: none;
+
+    box-shadow: none;
+
+    background: transparent;
+}
+
+
+
+.location-icon {
+    flex-shrink: 0;
+
+    width: 14px;
+    height: 14px;
+
+    position: relative;
+
+    border: 3px solid #111;
+
+    border-radius: 50%;
+}
+
+
+
+.pickup-icon::after {
+    content: "";
+
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    background: #111;
+
+    border-radius: 50%;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+
+.pickup-icon::before {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: calc(100% + 3px);
+
+    transform: translateX(-50%);
+
+    width: 1px;
+    height: auto;
+
+    background: #cfcfcf;
+}
+
+
+
+.drop-icon {
+    border-radius: 2px;
+
+    background: #111;
+
+    border: none;
+}
+
+
+
+.see-price-btn {
+    width: 100%;
+    height: 50px;
+    margin-top: 5px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: #ff7a00;
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    transition: 0.25s;
+}
+
+.see-price-btn a {
+    text-decoration: none;
+    color: white;
+}
+
+.see-price-btn span {
+    font-size: 18px;
+    transition: 0.25s;
+}
+
+
+.see-price-btn.form-valid:hover {
+    background: rgba(2, 168, 2, 0.837);
+
+    transform: translateY(-2px);
+
+ 
+}
+
+
+.see-price-btn.form-valid:hover span {
+    transform: translateX(4px);
+}
+
+
+.about-popup {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100vh;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 99999;
+}
+
+.about-popup.active {
+    display: flex;
+}
+
+
+.about-popup-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 20, 30, 0.72);
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+.about-modal {
+    position: relative;
+    z-index: 2;
+
+    width: 92%;
+    max-width: 1050px;
+
+    max-height: 90vh;
+
+    padding: 35px 40px;
+
+    background: #f8fbf9;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.35);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.about-modal::-webkit-scrollbar {
+    display: none;
+}
+
+
+.about-close {
+    position: absolute;
+
+    top: 18px;
+    right: 20px;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.07);
+
+    color: #17364d;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.25s;
+}
+
+.about-close:hover {
+    background: #17364d;
+
+    color: #ffffff;
+
+    transform: rotate(90deg);
+}
+
+
+.about-header {
+    width: 100%;
+
+    text-align: center;
+
+    padding: 5px 50px 25px;
+
+    flex-shrink: 0;
+}
+
+.about-header > span {
+    display: block;
+
+    color: #16825e;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+.about-header h2 {
+    margin: 8px 0 10px;
+
+    color: #17364d;
+
+    font-size: 40px;
+
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+.about-header p {
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    color: #66777f;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+.about-middle {
+    width: 100%;
+
+    flex-shrink: 0;
+}
+
+.declaration {
+    width: 100%;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    text-align: center;
+
+    padding: 20px 35px 10px;
+}
+
+.declaration p {
+    width: 100%;
+
+    max-width: 850px;
+
+    margin: 0;
+
+    color: #425761;
+
+    font-size: 16px;
+
+    line-height: 1.8;
+
+    font-weight: 400;
+}
+
+
+.about-founder {
+    width:fit-content;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items:center;
+
+    text-align:center;
+
+    margin-top: 22px;
+    margin-left:auto;
+    padding-right:5px;
+
+    line-height: 1.1;
+}
+
+.about-founder strong {
+    color: #17364d;
+
+    font-family:Arial, Helvetica, sans-serif;
+
+    font-size: clamp(12px,2vw,16px);
+
+    font-weight: 600;
+}
+
+.about-founder small {
+    margin-top: 4px;
+  
+    color: #5e605f;
+
+    font-size:clamp(4px,2vw,8px);
+
+    font-weight: 600;
+   align-items: center;
+    letter-spacing: 1.5px;
+
+    text-transform: uppercase;
+}
+
+
+.about-bottom {
+    width: 100%;
+
+    flex-shrink: 0;
+
+    margin-top: 20px;
+
+    padding-top: 16px;
+
+    text-align: center;
+
+    border-top: 1px solid #dce6e1;
+}
+
+.about-bottom > span {
+    display: block;
+
+    color:rgb(3, 117, 3);
+
+    font-size: clamp(6px,2vw,10px);
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+.about-bottom h3 {
+    margin: 5px 0 0;
+
+    color: #17364d;
+
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+    font-size:clamp(12px,2vw,19px);
+
+    line-height: 1.2;
+
+    font-weight: 600;
+}
+
+.contact-popup {
+    position: fixed;
+    inset: 0;
+
+    width: 100%;
+    height: 100vh;
+
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    z-index: 99999;
+}
+
+.contact-popup.active {
+    display: flex;
+}
+
+
+.contact-popup-overlay {
+    position: absolute;
+    inset: 0;
+
+    background: rgba(0, 20, 30, 0.72);
+
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+}
+
+
+.contact-modal {
+    position: relative;
+    z-index: 2;
+
+    width: 92%;
+    max-width: 700px;
+
+    max-height: 90vh;
+
+    padding: 35px 45px;
+
+    background: #f8fbf9;
+
+    border-radius: 22px;
+
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.35);
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    scrollbar-width: none;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-modal::-webkit-scrollbar {
+    display: none;
+}
+
+
+.contact-close {
+    position: absolute;
+
+    top: 18px;
+    right: 20px;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 50%;
+
+    background: rgba(0, 0, 0, 0.07);
+
+    color: #17364d;
+
+    font-size: 19px;
+
+    cursor: pointer;
+
+    z-index: 5;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: 0.25s;
+}
+
+.contact-close:hover {
+    background: #17364d;
+
+    color: #ffffff;
+
+    transform: rotate(90deg);
+}
+
+
+.contact-header {
+    width: 100%;
+
+    text-align: center;
+
+    padding: 5px 35px 25px;
+
+    flex-shrink: 0;
+}
+
+.contact-header > span {
+    display: block;
+
+    color: #16825e;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+.contact-header h2 {
+    margin: 8px 0 10px;
+
+    color: #17364d;
+
+    font-size: 34px;
+
+    line-height: 1.1;
+
+    font-weight: 700;
+}
+
+.contact-header p {
+    max-width: 560px;
+
+    margin: 0 auto;
+
+    color: #66777f;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+}
+
+
+.contact-content {
+    width: 100%;
+
+    flex-shrink: 0;
+}
+
+
+.contact-form {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 15px;
+}
+
+
+.contact-field {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+.contact-field label {
+    color: #000508;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+.contact-field input,
+.contact-field select,
+.contact-field textarea {
+    width: 100%;
+
+    border: 1px solid #d8e3df;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #000001;
+
+    font-family: inherit;
+
+    font-size: 13px;
+
+    outline: none;
+
+    transition: 0.25s;
+
+    box-sizing: border-box;
+}
+
+
+.contact-field input,
+.contact-field select {
+    height: 43px;
+
+    padding: 0 13px;
+}
+
+
+.contact-field textarea {
+    min-height: 110px;
+
+    padding: 12px 13px;
+
+    resize: vertical;
+
+    line-height: 1.5;
+}
+
+
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+    color: #2d2e2e;
+}
+
+
+.contact-field input:focus,
+.contact-field select:focus,
+.contact-field textarea:focus {
+    border:1.2px solid #0a0a0a;
+  
+
+
+}
+
+.contact-input-email{
+    position:relative;
+    width:100%;
+
+}
+.contact-input-email i{
+    position:absolute;
+    left:13px;
+    top:50%;
+    transform: translateY(-50%);
+    color:#8a999e;
+    font-size:18px;
+    pointer-events: none;
+
+}
+.contact-input-email input{
+    padding-left:40px;
+}
+
+
+.contact-submit {
+    width: 100%;
+
+    height: 46px;
+
+    margin-top: 4px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #000000;
+
+    color: #ffffff;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.contact-submit:hover {
+    background: #000000e1;
+
+    transform: translateY(-1px);
+}
+
+
+.contact-bottom {
+    width: 100%;
+
+    margin-top: 22px;
+
+    padding-top: 15px;
+
+    text-align: center;
+
+    border-top: 1px solid #dce6e1;
+
+    flex-shrink: 0;
+}
+
+.contact-bottom > span {
+    display: block;
+
+    color: #16825e;
+
+    font-size: 9px;
+
+    font-weight: 700;
+
+    letter-spacing: 2px;
+}
+
+.contact-bottom h3 {
+    margin: 5px 0 0;
+
+    color: #17364d;
+
+    font-family: cursive;
+
+    font-size: 19px;
+
+    line-height: 1.2;
+
+    font-weight: 600;
+}
+.marquee{
+    width:100%;
+    overflow:hidden;
+    background:#252525;
+    padding:12px 0;
+}
+
+.marquee-track{
+    display:flex;
+    align-items:center;
+    width:max-content;
+}
+
+.marquee-item{
+    white-space:nowrap;
+    color:#fff;
+    font-weight:300;
+    padding-right:60px;
+}
+
+.marquee strong{
+    color:#ddc511;
+}
+.sep{
+  padding:0 40px;
+  display: inline-block;
+  font-size:18px;
+}
+
+
+  .place img{
+ width:100%;
+ height:100%;
+ object-fit: cover;
+ border-top-left-radius: 13px;
+ border-top-right-radius: 13px;
+ border-bottom-left-radius: 0;
+ border-bottom-right-radius: 0;
+    display: block;
+    padding: 0;
+    margin: 0;
+    transition:transform 1.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .place-card:hover .place img{
+    transform:scale(1.1);
+  }
+
+.package-header{
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top:1.25rem;
+
+}
+ 
+#popup{
+    display:none;
+    position:fixed;
+      top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    inset:0;
+    background:rgba(0,0,0,.75);
+    backdrop-filter:blur(6px);
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+    cursor: pointer;
+}
+
+
+#popupContent{
+    width:420px;
+    max-width:90%;
+    background:#2f2f2f;
+    color:#fff;
+    border:2px solid rgba(255,255,255,.18);
+    border-radius:20px;
+    overflow:hidden;      
+    box-shadow:0 20px 50px rgba(0,0,0,.45);
+ 
+}
+
+
+
+.popup-img{
+    width:100%;
+    height:320px;
+    object-fit:cover;
+    display:block;
+    border-radius:20px 20px 0 0;
+    transition:transform 2.5s ease;
+}
+.popup-img:hover{
+transform:scale(1.1);
+}
+#popupTitle{
+    text-align:center;
+    color:#f5c542;
+    font-size:28px;
+    margin:15px 0 5px;
+}
+
+#popupContent h4{
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align:center;
+    margin:10px 0;
+    font-size:20px;
+}
+#popupContent h4 i{
+  color:red;
+  font-size:16px;
+}
+#popupContent hr{
+  border:none;
+  height:1px;
+  background:#59575769;
+ margin:20px 0;
+}
+.places{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+}
+#placesList{
+    padding:0 30px 15px;
+    line-height:1.8;
+}
+#toggleBtn{
+    display:block;
+    margin:0 auto 20px;
+    background:none;
+    border:none;
+    color:#4da3ff;
+    cursor:pointer;
+    font-size:16px;
+}
+
+#closeBtn{
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 36px;
+    height: 36px;
+  border-radius:50%;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    font-size: 26px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: 0.3s;
+}
+
+.place{
+    position:relative;
+    width:100%;
+    overflow:hidden;
+  
+}
+
+
+
+.place img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+    padding:0;
+    margin:0;
+
+   border-radius: 18px 18px 0 0 ;
+
+    transition:transform 2.8s cubic-bezier(0.22,1,0.36,1);
+}
+
+
+.rating-box{
+    position:absolute;
+    top:10px;
+    left:10px;
+
+    display:flex;
+    flex-direction:column;
+
+    background:rgba(24,24,24,0.55);
+    backdrop-filter:blur(10px);
+
+    color:#fff;
+    padding:3px 7px;
+    border-radius:8px;
+
+    opacity:1;
+    transform:none;
+
+    z-index:3;
+
+    box-shadow:0 6px 16px rgba(0,0,0,.25);
+}
+
+.rating{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    font-size:15px;
+    font-weight:400;
+}
+
+.rating i{
+    color:#ffc107;
+    font-size:12px;
+}
+
+.rating-box small{
+    display:block;
+    margin-top:3px;
+    font-size:10px;
+    color:#ddd;
+}
+
+
+.image-info{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+
+    display:flex;
+    gap:10px;
+
+    background:rgba(24,24,24,0.55);
+    backdrop-filter:blur(10px);
+
+    color:#fff;
+    padding:6px 10px;
+    border-radius:8px;
+
+    opacity:1;
+    transform:none;
+
+    z-index:3;
+}
+
+
+.best-time,
+.group-size{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.group-size{
+    border-left:1px solid rgba(255,255,255,.3);
+    padding-left:10px;
+}
+
+.best-time i,
+.group-size i{
+    font-size:12px;
+    color:#fff8b0;
+}
+
+.best-time small,
+.group-size small{
+    display:block;
+    font-size:10px;
+    color:#ddd;
+}
+
+.best-time span,
+.group-size span{
+    display:block;
+    font-size:10px;
+    font-weight:600;
+}
+.place-content{
+  position: relative;
+    padding:6px 10px;
+
+}
+
+.place-content h3{
+    font-size:15px;
+   align-items:center;
+    line-height:1.3;
+}
+
+.tour-features{
+  position: absolute;
+  top:32px;
+  right:10px;
+    display: flex;
+    flex-direction: column;
+   align-items:flex-end;
+   z-index:2;
+    color: #555;
+    gap:6px;
+  
+}
+
+
+.tour-features span{
+    display:grid;
+    grid-template-columns: 10px auto;
+    align-items: center;
+   column-gap:6px;
+   font-size:10px;
+   gap:8px;
+   
+}
+
+.tour-features i{
+  width:18px;
+ text-align:center;
+ color:rgba(0, 0, 255, 0.599);
+    font-size: 13px;
+    padding-bottom:-3px;
+
+   
+}
+
+
+.tour-info p{
+    margin:4px 0;
+    color:#555;
+    font-size:15px;
+    font-weight:500;
+}
+.tour-info i{
+  color:rgb(126, 125, 125);
+}
+
+
+.price-info{
+    margin-top:4px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+   padding-top:3px;
+    margin-top:18px;
+    border-top:0.25px solid rgba(128, 128, 128, 0.599);
+}
+
+.price-info small{
+    color:#666;
+    margin-bottom:6px;
+    display:block;
+}
+
+.price-info h2{
+    color:#009944;
+    margin: 0;
+    line-height: 1;
+    font-size:20px;
+}
+
+.price-info span{
+    color:#454444;
+    font-size:10px;
+    margin:0;
+    line-height: 1;
+     font-size: 11px;
+
+}
+.price{
+  display: flex;
+  align-items: center;
+  flex-direction: baseline;
+  gap:5px;
+}
+.price span{
+  font-size: 14px;
+  font-weight: 700;
+  color:#2e7d32;
+
+}
+.tour-book-btn{
+    position: relative;
+     background:#009944;
+    color:#fff;
+    padding:9px 18px;
+    border-radius:30px;
+    border: none;
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+    font-size:12px;
+    z-index: 3;
+    margin-bottom:5px;
+    cursor: pointer;
+}
+
+.tour-book-btn:hover{
+   background:#06aa4d;
+}
+
+.section-tag{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#ff6b2c;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:2px;
+    margin-bottom:18px;
+}
+.why-right{
+    display: grid;
+    grid-template-columns: repeat(2, minmax (0,1fr));
+}
+.line{
+    width:40px;
+    height:2px;
+    background:#ff6b2c;
+    border-radius:10px;
+}
+
+.why-left p{
+    font-size:16px;
+    color:#6d6d6d;
+    line-height:1.9;
+    margin-bottom:35px;
+}
+.stats{
+    display:flex;
+    gap:20px;
+    margin-top:45px;
+}
+
+.stat-box{
+    background:#fff;
+    border-radius:18px;
+    padding:20px;
+    min-width:150px;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:.3s;
+}
+.stat-box i{
+    width:48px;
+    height:48px;
+    background:#fff3ee;
+    color:#ff6b2c;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+
+.feature-card{
+    background:#fff;
+    border-radius:22px;
+    padding:28px;
+    box-shadow:0 15px 35px rgba(0,0,0,.08);
+    transition:all .35s ease;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    min-height:260px;
+}
+
+.feature-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 25px 45px rgba(0,0,0,.15);
+}
+
+
+
+
+.icon-box{
+    width:65px;
+    height:65px;
+    border-radius:18px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:22px;
+}
+
+.icon-box i{
+    font-size:28px;
+}
+
+
+
+.blue{
+    background:#EAF3FF;
+}
+
+.blue i{
+    color:#2F80ED;
+}
+
+.orange{
+    background:#FFF1E7;
+}
+
+.orange i{
+    color:#FF7A30;
+}
+
+.green{
+    background:#ECFAF2;
+}
+
+.green i{
+    color:#1CBE6D;
+}
+
+.purple{
+    background:#F4EDFF;
+}
+
+.purple i{
+    color:#8B5CF6;
+}
+
+
+.reviews-section{
+
+    width:100%;
+    padding:80px 8%;
+    background:#fff;
+    overflow:hidden;
+
+}
+
+
+.reviews-header{
+
+    text-align:center;
+    margin-bottom:55px;
+
+}
+
+
+
+.review-tag{
+
+    display:inline-block;
+    padding:8px 18px;
+    background:#eef5ff;
+    color:#0b5ed7;
+    border-radius:50px;
+    font-size:14px;
+    font-weight:600;
+    letter-spacing:1px;
+
+}
+
+
+
+.reviews-header h2{
+
+    margin-top:18px;
+    font-size:42px;
+    color:#222;
+    font-weight:700;
+
+}
+
+
+
+.overall-rating{
+
+    margin:18px 0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:12px;
+
+}
+
+
+
+#overallStars{
+
+    color:#ffc107;
+    font-size:25px;
+    letter-spacing:3px;
+
+}
+
+
+
+#overallScore{
+
+    font-size:24px;
+    font-weight:700;
+    color:#222;
+
+}
+
+
+
+#reviewCount{
+
+    color:#666;
+    font-size:17px;
+
+}
+
+.slider-controls{
+
+    display:flex;
+    align-items:center;
+    gap:20px;
+
+}
+
+.reviews-slider{
+
+    width:100%;
+    overflow:hidden;
+
+}
+
+.review-track{
+
+    display:flex;
+    gap:25px;
+    transition:.6s ease;
+
+}
+
+.slider-btn{
+
+    width:45px;
+    height:45px;
+    border-radius:50%;
+    border:none;
+    background:rgba(0, 0, 0, 0.838);
+    color:white;
+    font-size:25px;
+    cursor:pointer;
+    flex-shrink:0;
+    transition:.3s;
+
+}
+
+
+
+.slider-btn:hover{
+
+    
+    transform:scale(1.1);
+
+}
+.review-card{
+
+    flex:0 0 calc((100% - 50px)/3);
+
+    background:white;
+
+    border-radius:none;
+
+    padding:28px;
+
+    border:1px solid #eee;
+
+    box-shadow:
+    0 10px 30px rgba(0,0,0,.08);
+
+    transition:.35s;
+
+}
+
+
+
+.review-card:hover{
+
+    transform:translateY(-10px);
+
+    box-shadow:
+    0 20px 40px rgba(0,0,0,.15);
+
+}
+.quote{
+
+    font-size:42px;
+    color:#ddd;
+
+}
+
+
+
+
+.review-text{
+
+    color:#555;
+    line-height:1.7;
+    font-size:16px;
+
+    display:-webkit-box;
+    -webkit-line-clamp:3;
+    -webkit-box-orient:vertical;
+
+    overflow:hidden;
+
+}
+
+
+
+.review-text.expanded{
+
+    display:block;
+    overflow:visible;
+
+}
+.review-stars{
+
+    color:#ffc107;
+
+    font-size:18px;
+
+    letter-spacing:3px;
+
+    margin-bottom:20px;
+
+}
+.review-footer{
+
+    display:flex;
+    align-items:center;
+    gap:15px;
+
+}
+
+.avatar{
+
+    width:55px;
+    height:55px;
+
+    border-radius:50%;
+
+    background:#0b5ed7;
+
+    color:#fff;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    font-weight:bold;
+
+    font-size:22px;
+
+}
+
+
+
+
+.review-user h4{
+
+    margin:0 0 5px;
+
+    color:#222;
+
+    font-size:17px;
+
+}
+
+
+
+.verified{
+
+    color:#18a558;
+
+    font-size:13px;
+
+    margin-left:8px;
+
+}
+
+
+
+
+.review-user span{
+
+    display:block;
+
+    color:#666;
+
+    font-size:14px;
+
+}
+
+.review-user small{
+
+    color:#999;
+
+}
+
+
+.slider-dots{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:10px;
+
+    margin-top:35px;
+
+}
+
+
+.review-btn{
+
+    display:block;
+
+    margin:45px auto 0;
+
+    padding:15px 35px;
+
+    border:none;
+
+    border-radius:50px;
+
+    background:#fcd704;
+
+    color:#000000;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+
+
+.review-btn:hover{
+
+   
+
+    transform:translateY(-3px);
+
+}
+
+
+
+.review-popup{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    display:none;
+
+    align-items:center;
+
+    justify-content:center;
+
+    padding:20px;
+
+    z-index:9999;
+
+}
+
+
+
+.popup-box{
+
+    width:100%;
+
+    max-width:520px;
+
+    background:white;
+
+    border-radius:22px;
+
+    padding:35px;
+
+    position:relative;
+
+    max-height:90vh;
+
+    overflow-y:auto;
+
+    animation:popup .35s ease;
+
+}
+
+
+
+@keyframes popup{
+
+from{
+
+    transform:translateY(30px);
+
+    opacity:0;
+
+}
+
+to{
+
+    transform:translateY(0);
+
+    opacity:1;
+
+}
+
+}
+
+
+.close-popup{
+
+    position:absolute;
+
+    top:15px;
+
+    right:20px;
+
+    font-size:30px;
+
+    cursor:pointer;
+
+    color:#777;
+
+}
+
+.close-popup:hover{
+
+    color:red;
+
+}
+
+
+.popup-box h2{
+
+    text-align:center;
+
+    margin-bottom:30px;
+
+}
+
+
+
+.popup-box input,
+.popup-box select,
+.popup-box textarea{
+
+
+    width:100%;
+
+    padding:15px;
+
+    border:1px solid #ddd;
+
+    border-radius:12px;
+
+    margin-bottom:18px;
+
+    font-size:15px;
+
+    outline:none;
+
+}
+.popup-box input:focus,
+.popup-box select:focus,
+.popup-box textarea:focus{
+
+
+    border-color:#0b5ed7;
+
+    box-shadow:
+    0 0 0 4px rgba(11,94,215,.12);
+
+}
+
+.popup-box textarea{
+
+    resize:none;
+
+}
+
+
+
+.rating-stars{
+
+    display:flex;
+
+    justify-content:center;
+
+    gap:12px;
+
+    margin:20px 0;
+
+}
+
+
+
+.rating-stars i{
+
+    font-size:30px;
+
+    color:#ccc;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+
+
+.rating-stars i.active,
+.rating-stars i:hover{
+
+    color:#ffc107;
+
+    transform:scale(1.15);
+
+}
+
+
+.popup-box i{
+    font-weight:400;
+}
+
+
+.popup-box button[type="submit"]{
+
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#000000e5;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+}
+
+
+
+.popup-box button[type="submit"]:hover{
+
+    background:#000000;
+    color:gold;
+
+}
+#backtoTop button{
+max-height:40px;
+white-space: none;
+  width:100%;
+  background-color:rgb(60,60,60);
+  color:white;
+  border:none;
+
+}
+#backtoTop button:hover{
+  cursor:pointer;
+ background-color:rgba(84, 84, 84, 0.732);
+}
+
+.footer{
+    background:#0f172a;
+    color:#fff;
+    padding:20px 40px;
+    align-items: center;
+    width:100%;
+
+}
+.footer hr{
+    width:100%;
+    height:.25px;
+    background:rgb(200, 198, 198);
+    margin:45px auto;
+    border:none;
+}
+.footer-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:45px;
+    align-items: start;
+  
+   
+} 
+.footer-brand{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    margin-top:0;
+    margin-bottom:18px;
+}
+.footer-tagline {
+    letter-spacing: 1px;
+    color:grey;
+    font-size:14px;
+}
+
+.footer-brand h2,
+.footer-box h2,
+.footer-box h3{
+    margin: 0 0 18px 0;
+    height:30px;
+    display: flex;
+    align-items: flex-start;
+}
+.footer-box{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    
+}
+.footer-box p{
+    margin:14px 0;
+    
+}
+.footer-box ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.footer-box ul li{
+    margin:14px 0;
+    color:#cbd5e1;
+}
+
+.footer-box ul li a{
+    color:#cbd5e1;
+    position: relative;
+    display:inline-block;
+    text-decoration:none;
+    transition:.3s;
+}
+.footer-box ul li a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-4px;
+    width:0;
+    height:1px;
+    background:rgb(201, 197, 197);
+    transform:translateX(-50%);
+    transition:.35s;
+}
+
+.footer-box ul li a:hover::after{
+    width:100%;
+}
+.footer-box ul li a:hover::after{
+    width:100%;
+}
+
+
+.newsletter{
+    text-align:center;
+    margin:70px 0;
+}
+
+.newsletter h3{
+    margin-bottom:10px;
+}
+
+.newsletter p{
+    color:#cbd5e1;
+}
+.newsletter-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:15px;
+    margin-top:25px;
+    flex-wrap:wrap;
+}
+.email-input{
+    position:relative;
+  
+}
+.email-input i{
+position:absolute;
+left:18px;
+top:50%;
+transform: translateY(-50%);
+font-size:16px;
+pointer-events: none;
+color:#888888;
+font-size:18px;
+}
+.email-input input{
+    width:320px;
+    height:48px;
+    padding:0 18px 0 48px;
+    border:none;
+    border-radius:50px;
+    outline:none;
+    font-size:15px;
+}
+
+.newsletter-box button{
+    padding:15px 35px;
+    border:none;
+    border-radius:50px;
+    cursor:pointer;
+    background:#ff9800;
+    color:#fff;
+    font-weight:600;
+    transition:.3s;
+    font-size:15px;
+    font-weight: 400;
+}
+
+.newsletter-box button.valid{
+    background:rgb(16, 187, 16);
+    transform:translateY(-3px);
+}
+
+.social-links{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    margin:40px 0;
+}
+
+.social-links img{
+    width:34px;
+    transition:.3s;
+}
+
+.social-links img:hover{
+    transform:translateY(-8px) scale(1.15);
+}
+
+.footer-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    margin-top:30px;
+   
+}
+
+
+.footer-bottom a{
+    color:#cbd5e1;
+    margin-left:20px;
+    text-decoration:none;
+    position:relative;
+    display: inline-block;
+    transition:.3s ease;
+}
+
+.footer-bottom a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-4px;
+    width:0;
+    height:1px;
+    background:rgb(201, 197, 197);
+    transform:translateX(-50%);
+    transition:.35s;
+}
+
+.footer-bottom a:hover::after{
+    width:100%;
+}
+.footer-bottom a:hover::after{
+    width:100%;
+}
+
+
+
+
+
+@media(min-width:1025px){
+    .navbar{
+        height:100px;
+        width:100%;
+       
+
+
+    }
+    .navbar h2{
+        font-size:44px;
+    }
+}
+
+@media (min-width: 1024px){
+  
+
+    .booking-popup {
+        right: 20px;
+
+        width: 300px;
+    }
+
+
+  .btn{
+
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:50%;
+    background:rgba(0,0,0,.45);
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+    z-index:5;
+}
+
+.prev{
+    left:10px;
+}
+
+.next{
+    right:10px;
+}
+ .navbar{
+        
+  height:80px;
+  width:100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding:0 40px;
+  background: #f6f3f3;
+  position:fixed;
+  top:0;
+  left:0;
+  z-index:1000;
+
+
+}
+.navbar h2{
+     margin-left:auto;
+   font-size:34px;
+     color:green;
+}
+
+.nav-search{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    width:680px;
+    height:47px;
+    background:transparent;
+    border:1px solid #63616188;
+     border-radius: 25px;
+     padding:0 15px;
+     margin-left:auto;
+}
+.nav-search i{
+    color:black;
+    font-size:18px;
+    cursor:pointer;
+}
+.nav-search input{
+    width:100%;
+    border:none;
+    outline:none;
+    margin-left:10px;
+    font-size:16px;
+    font-weight:300;
+    background: transparent;
+}
+
+#menuBtn{
+    display:none;
+}
+#menuOverlay{
+display:none;
+}
+#sideMenu {
+    margin-left:auto;
+    display: flex;
+    flex-direction: row;
+gap:30px;
+ align-items:center;
+    justify-content:center;
+  
+}
+.menu-item {
+        padding: 8px 4px;
+    }
+.menu-item a{
+    position:relative;
+    text-decoration: none;
+    color:rgb(54, 54, 54);
+    font-size:18px;
+    font-weight:500;
+   
+    margin-top:10px;
+}
+.menu-item a::after{
+    content: "";
+    position: absolute;
+    left:50%;
+    bottom:0;
+ transform:translateX(-50%);
+ width:0;
+ height:2px;
+ background:rgb(37, 37, 37);
+ transition:0.3s ease;
+
+
+}
+.menu-item a:hover::after{
+    width:100%;
+}
+
+
+
+#menuBtn {
+    display: none;
+}
+
+#menuOverlay {
+    display: none;
+}
+#sideMenu {
+    margin-left:auto;
+    display: flex;
+    flex-direction: row;
+gap:30px;
+ align-items:center;
+    justify-content:center;
+  
+}
+.menu-item {
+        padding: 8px 4px;
+    }
+.menu-item a{
+    position:relative;
+    text-decoration: none;
+    color:rgb(54, 54, 54);
+    font-size:18px;
+    font-weight:500;
+   
+    margin-top:10px;
+}
+.menu-item a::after{
+    content: "";
+    position: absolute;
+    left:50%;
+    bottom:0;
+ transform:translateX(-50%);
+ width:0;
+ height:2px;
+ background:rgb(37, 37, 37);
+ transition:0.3s ease;
+
+
+}
+.menu-item a:hover::after{
+    width:100%;
+}
+/* desktop slide */
+.desktop-slide{
+  display:block;
+}
+.mobile-slide{
+  display:none;
+}
+.slider{
+    margin-top:80px;
+    height:420px;
+    width:100%;
+}
+
+.booking-popup {
+    display:none;
+    position: fixed;
+    top: 50%;
+    right: 28px;
+    transform: translateY(-50%);
+
+    width: 320px;
+
+    background: #ffffff;
+
+    padding: 24px;
+
+    border-radius: 20px;
+
+    border: 1px solid #e8e8e8;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.15);
+
+    z-index: 9999;
+}
+
+.booking-popup.attention {
+    animation: bookingAttention 2s ease-in-out infinite;
+}
+
+@keyframes bookingAttention {
+
+    0%,
+    70%,
+    100% {
+        transform: translateY(-50%);
+    }
+
+    80% {
+        transform: translateY(calc(-50% - 8px));
+    }
+
+    90% {
+        transform: translateY(calc(-50% + 6px));
+    }
+}
+
+
+
+.booking-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 22px;
+}
+
+
+.booking-label {
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    color: #ff7a00;
+}
+
+
+.booking-popup-header h2 {
+    margin: 5px 0 4px;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    letter-spacing: -0.7px;
+
+    color: #111;
+}
+
+
+.booking-popup-header p {
+    margin: 0;
+
+    font-size: 12px;
+
+    color: #777;
+}
+
+
+
+.close-booking {
+    width: 30px;
+    height: 30px;
+
+    border: none;
+
+    background: #f3f3f3;
+
+    border-radius: 50%;
+
+    font-size: 20px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    color: #333;
+
+    transition: 0.2s;
+}
+
+
+.close-booking:hover {
+    background: #111;
+    color: #fff;
+}
+
+
+
+
+.quick-booking-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+
+
+
+.booking-input {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+.booking-input label {
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #555;
+}
+
+
+.booking-input input {
+    width: 100%;
+
+    height: 47px;
+
+    padding: 0 13px;
+
+    border: 1px solid #dedede;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #f8f8f8;
+
+    font-size: 13px;
+
+    color: #111;
+
+    transition: 0.2s;
+}
+
+
+.booking-input input::placeholder {
+    color: #999;
+}
+
+
+.booking-input input:focus {
+    background: #fff;
+
+    border-color: #111;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.04);
+}
+#bookingDate{
+    cursor: pointer;
+ 
+}
+input[type="date"]{
+    cursor:text;
+}
+input[type="date"]::-webkit-calendar-flatpicker-indicator{
+    cursor:text;
+    opacity:1;
+}
+.booking-input{
+    position:relative;
+    width:100%;
+
+}
+.booking-input input{
+    width: 100%;
+    padding:12px 45px 12px 15px;
+}
+.booking-input i{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateX(-50%);
+    color:#666;
+    cursor:pointer;
+    
+
+}
+
+
+
+.location-input {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #dedede;
+
+    border-radius: 10px;
+
+    background: #f8f8f8;
+}
+
+
+.location-input > div {
+    width: 100%;
+}
+
+
+.location-input label {
+    display: block;
+
+    margin-bottom: 3px;
+}
+
+
+.location-input input {
+    height: 24px;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 13px;
+}
+
+
+.location-input input:focus {
+    border: none;
+
+    box-shadow: none;
+
+    background: transparent;
+}
+
+
+
+
+.location-icon {
+    flex-shrink: 0;
+
+    width: 14px;
+    height: 14px;
+
+    position: relative;
+
+    border: 3px solid #111;
+
+    border-radius: 50%;
+}
+
+.pickup-icon::after {
+    content: "";
+
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    background: #111;
+
+    border-radius: 50%;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+
+
+.pickup-icon::before {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: calc(100% + 3px);
+
+    transform: translateX(-50%);
+
+    width: 1px;
+    height: auto;
+
+    background: #cfcfcf;
+}
+
+
+
+.drop-icon {
+    border-radius: 2px;
+
+    background: #111;
+
+    border: none;
+}
+
+
+
+.see-price-btn {
+    width: 100%;
+    height: 50px;
+    margin-top: 5px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: #ff7a00;
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    transition: 0.25s;
+}
+
+.see-price-btn a {
+    text-decoration: none;
+    color: white;
+}
+
+.see-price-btn span {
+    font-size: 18px;
+    transition: 0.25s;
+}
+
+
+
+
+.see-price-btn.form-valid:hover {
+    background: rgba(2, 168, 2, 0.837);
+
+    transform: translateY(-2px);
+
+ 
+}
+
+
+.see-price-btn.form-valid:hover span {
+    transform: translateX(4px);
+}
+
+    .about-modal {
+        width: 94%;
+
+        padding: 30px 30px;
+    }
+
+    .about-header {
+        padding-left: 35px;
+        padding-right: 35px;
+    }
+
+    .declaration {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+
+    .declaration p {
+        max-width: 780px;
+    }
+
+
+
+
+
+.tag{
+    font-size:20px;
+    margin-bottom:40px;
+}
+
+.slide-content {
+    position: absolute;
+   
+    left: 8%;
+    bottom: 18%;
+    justify-content: space-evenly;
+    z-index: 5;
+
+    width: 90%;
+    max-width: 40rem;
+
+    color: #fff;
+}
+
+
+
+.slide-content .tag {
+    margin: 0 0 0.875rem;
+
+    font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+
+    text-transform: uppercase;
+
+    color: #ffb52e;
+}
+
+
+
+
+.slide-content h1 {
+    margin: 0 0 0.75rem;
+    white-space: nowrap;
+ padding:0;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.08;
+
+    font-weight: 800;
+
+    color: #fff;
+}
+
+
+
+.slide-content .desc {
+    margin: 0 0 1.5rem;
+padding: 0;
+   
+    max-width: 35rem;
+
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    line-height: 1.5;
+
+    font-weight: 400;
+
+    color: #fff;
+}
+
+
+
+
+.hero-btns {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+
+
+
+.explore {
+    width: 10rem;
+    min-height: 2.9rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0.7rem 1.5rem;
+
+    margin: 0;
+
+    border: 0.125rem solid #fff;
+    border-radius: 2rem;
+
+    box-sizing: border-box;
+
+    color: #fff;
+    text-decoration: none;
+
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+
+}
+.explore:hover {
+    background: #fff;
+    color: #333;
+
+    transform: translateY(-0.2rem);
+}
+
+
+
+.btn {
+    border: none;
+    border-radius: 0.2rem;
+
+    font-size: 1.25rem;
+}
+
+.prev {
+    left: 1.25rem;
+}
+
+.next {
+    right: 1.25rem;
+}
+
+.marquee{
+    width:100%;
+    overflow:hidden;
+    background:#252525;
+    padding:12px 0;
+}
+
+.marquee-track{
+    display:flex;
+    align-items:center;
+    width:max-content;
+}
+
+.marquee-item{
+    white-space:nowrap;
+    color:#fff;
+    font-weight:300;
+    padding-right:60px;
+}
+
+.marquee strong{
+    color:#ddc511;
+}
+.sep{
+  padding:0 40px;
+  display: inline-block;
+  font-size:18px;
+}
+
+  .places{
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(280px,1fr));
+gap:5px;
+max-width :1400px;
+margin:20px auto;
+padding:0 40px;
+}
+  .place-card{
+    position:relative;
+    width:290px;
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+    transition:.3s;
+    display:flex;
+    flex-direction:column;
+    cursor:pointer;
+    margin:20px auto;
+}
+
+
+  .place{
+    width: 100%;
+    height:220px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .place img{
+ width:100%;
+ height:100%;
+ object-fit: cover;
+  position:relative;
+    overflow:hidden;
+    border-radius:18px 18px 0 0;
+    display: block;
+
+    padding: 0;
+    margin: 0;
+    transition:transform 1.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .place-card:hover .place img{
+    transform:scale(1.1);
+  }
+  .title{
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+#placesList{
+  display: grid;
+ grid-template-columns:repeat(2,max-content);
+  column-gap:50px;
+  align-items:center;
+  justify-content: center;
+  padding:0;
+
+  list-style-position: inside;
+}
+#placesList li{
+
+  text-align:left;
+
+}
+  
+
+  
+
+.rating-box{
+  position: absolute;
+  top:10px;
+  left:10px;
+  display:flex;
+  flex-direction: column;
+  background:rgba(24, 24, 24, 0.55);
+    backdrop-filter:blur(10px);
+  color:#fff;
+  padding:3px 7px;
+  border-radius:8px;
+   transform:translateX(-40px);
+    opacity:0;
+    transition:.45s;
+  z-index:3;
+  box-shadow:0 6px 16px rgba(0,0,0,.25);
+
+}
+.rating{
+  display:flex;
+  align-items: center;
+  gap:6px;
+  font-size:15px;
+  font-weight: 400;
+}
+.rating i{
+  color:#ffc107;
+  font-size:12px;
+
+}
+.rating-box small{
+  display:block;
+  margin-top:3px;
+ font-size:10px;
+color:#ddd;
+ 
+}
+.place-card:hover .rating-box
+{
+  opacity: 1;
+  transform:translateX(0);
+}
+
+.image-info{
+    position:absolute;
+    bottom:10px;
+    left:10px;
+    display:flex;
+    gap:10px;
+    background:rgba(24, 24, 24, 0.55);
+    backdrop-filter:blur(10px);
+    color:#fff;
+    padding:6px 10px;
+    border-radius:8px;
+    transform:translateX(-40px);
+    opacity:0;
+    transition:.45s;
+
+
+}
+
+.place-card:hover::after{
+  opacity:1;
+}
+.place-card:hover .image-info
+{
+  opacity: 1;
+  transform:translateX(0);
+}
+
+.best-time,
+.group-size{
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+.group-size{
+    border-left:1px solid rgba(255,255,255,.3);
+    padding-left:10px;
+}
+
+.best-time i,
+.group-size i{
+    font-size:12px;
+    color:#fff8b0;
+}
+
+.best-time small,
+.group-size small{
+    display:block;
+    font-size:10px;
+    color:#ddd;
+}
+
+.best-time span,
+.group-size span{
+    display:block;
+    font-size:10px;
+    font-weight:600;
+}
+.place-content{
+  position: relative;
+    padding:6px 10px;
+
+}
+
+.place-content h3{
+    font-size:15px;
+   align-items:center;
+    line-height:1.3;
+}
+
+.tour-features{
+  position: absolute;
+  top:32px;
+  right:10px;
+    display: flex;
+    flex-direction: column;
+   align-items:flex-end;
+   z-index:2;
+    color: #555;
+    gap:6px;
+  
+}
+
+
+.tour-features span{
+    display:grid;
+    grid-template-columns: 10px auto;
+    align-items: center;
+   column-gap:6px;
+   font-size:10px;
+   gap:8px;
+   
+}
+
+.tour-features i{
+  width:18px;
+ text-align:center;
+ color:rgba(0, 0, 255, 0.599);
+    font-size: 13px;
+    padding-bottom:-3px;
+
+   
+}
+
+
+.tour-info p{
+    margin:4px 0;
+    color:#555;
+    font-size:15px;
+    font-weight:500;
+}
+.tour-info i{
+  color:rgb(126, 125, 125);
+}
+
+
+.price-info{
+    margin-top:4px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+   padding-top:3px;
+    margin-top:18px;
+    border-top:0.25px solid rgba(128, 128, 128, 0.599);
+}
+
+.price-info small{
+    color:#666;
+    margin-bottom:6px;
+    display:block;
+}
+
+.price-info h2{
+    color:#009944;
+    margin: 0;
+    line-height: 1;
+    font-size:20px;
+}
+
+.price-info span{
+    color:#454444;
+    font-size:10px;
+    margin:0;
+    line-height: 1;
+     font-size: 11px;
+
+}
+.price{
+  display: flex;
+  align-items: center;
+  flex-direction: baseline;
+  gap:5px;
+}
+.price span{
+  font-size: 14px;
+  font-weight: 700;
+  color:#2e7d32;
+
+}
+.tour-book-btn{
+    position: relative;
+     background:#009944;
+    color:#fff;
+    padding:9px 18px;
+    border-radius:30px;
+    border: none;
+    text-decoration:none;
+    font-weight:600;
+    transition:.3s;
+    font-size:12px;
+    z-index: 3;
+    margin-bottom:5px;
+    cursor: pointer;
+}
+
+.tour-book-btn:hover{
+   background:#06aa4d;
+}
+    .why-choose-us{
+        width:100%;
+        max-width:100%;
+
+        padding:
+            clamp(45px, 7vw, 90px)
+            clamp(20px, 6vw, 80px);
+
+        display:grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+
+        gap:clamp(25px, 5vw, 70px);
+
+        align-items:center;
+
+        background:#e2e0e02f;
+
+        box-sizing:border-box;
+    }
+
+
+  
+
+    .why-left{
+        width:100%;
+        max-width:550px;
+        min-width:0;
+    }
+
+
+    .section-tag{
+        display:flex;
+        align-items:center;
+
+        gap:12px;
+
+        color:#ff6b2c;
+
+        font-size:clamp(11px, 1.1vw, 14px);
+
+        font-weight:700;
+
+        letter-spacing:2px;
+
+        margin-bottom:18px;
+    }
+
+
+    .line{
+        width:40px;
+        height:2px;
+
+        flex-shrink:0;
+
+        background:#ff6b2c;
+
+        border-radius:10px;
+    }
+
+
+
+    .why-left h2{
+        margin:0 0 22px;
+
+        font-size:clamp(28px, 3.5vw, 48px);
+
+        line-height:1.2;
+
+        color:#1b1b1b;
+
+        font-weight:700;
+
+        overflow-wrap:break-word;
+    }
+
+
+
+
+    .why-left p{
+        margin:0 0 35px;
+
+        font-size:clamp(13px, 1.2vw, 16px);
+
+        color:#6d6d6d;
+
+        line-height:1.9;
+
+        overflow-wrap:break-word;
+    }
+
+
+ 
+    .stats{
+        width:100%;
+
+        display:grid;
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
+        gap:clamp(8px, 1.5vw, 20px);
+
+        margin-top:45px;
+    }
+
+
+    .stat-box{
+        width:100%;
+        min-width:0;
+
+        background:#fff;
+
+        border-radius:18px;
+
+        padding:clamp(12px, 2vw, 20px);
+
+        box-shadow:
+            0 10px 30px rgba(0,0,0,.08);
+
+        transition:.3s;
+
+        box-sizing:border-box;
+    }
+
+
+    .stat-box:hover{
+        transform:translateY(-6px);
+    }
+
+
+    .stat-box i{
+        width:clamp(38px, 4vw, 48px);
+        height:clamp(38px, 4vw, 48px);
+
+        background:#fff3ee;
+
+        color:#ff6b2c;
+
+        border-radius:50%;
+
+        display:flex;
+
+        justify-content:center;
+        align-items:center;
+
+        font-size:clamp(14px, 1.6vw, 18px);
+
+        margin-bottom:15px;
+    }
+
+
+    .stat-box h3{
+        margin:0 0 5px;
+
+        font-size:clamp(18px, 2vw, 24px);
+
+        color:#1f1f1f;
+
+        line-height:1.2;
+    }
+
+
+    .stat-box span{
+        display:block;
+
+        font-size:clamp(10px, 1.1vw, 14px);
+
+        color:#777;
+
+        line-height:1.4;
+
+        overflow-wrap:break-word;
+    }
+
+
+
+    .why-right{
+        width:100%;
+        min-width:0;
+
+        display:grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+
+        gap:clamp(14px, 2vw, 24px);
+
+        align-items:start;
+
+        box-sizing:border-box;
+    }
+
+
+ 
+
+    .booking{
+        margin-top:0;
+    }
+
+
+    .pricesupport{
+        margin-top:clamp(20px, 3vw, 40px);
+    }
+
+
+    .destination{
+        margin-top:0;
+    }
+
+
+    .support{
+        margin-top:clamp(20px, 3vw, 40px);
+    }
+
+
+   
+
+    .feature-card{
+        width:100%;
+        min-width:0;
+
+        background:#fff;
+
+        border-radius:22px;
+
+        padding:clamp(18px, 2.2vw, 28px);
+
+        box-shadow:
+            0 15px 35px rgba(0,0,0,.08);
+
+        transition:
+            transform .35s ease,
+            box-shadow .35s ease;
+
+        cursor:pointer;
+
+        position:relative;
+
+     
+        overflow:visible;
+
+        min-height:clamp(220px, 25vw, 260px);
+
+        box-sizing:border-box;
+    }
+
+
+    .feature-card:hover{
+        transform:translateY(-8px);
+
+        box-shadow:
+            0 25px 45px rgba(0,0,0,.15);
+    }
+
+
+ 
+    .icon-box{
+        width:clamp(45px, 5vw, 65px);
+        height:clamp(45px, 5vw, 65px);
+
+        border-radius:18px;
+
+        display:flex;
+
+        justify-content:center;
+        align-items:center;
+
+        margin-bottom:clamp(14px, 2vw, 22px);
+
+        flex-shrink:0;
+    }
+
+
+    .icon-box i{
+        font-size:clamp(20px, 2.2vw, 28px);
+    }
+    .blue{
+        background:#EAF3FF;
+    }
+
+    .blue i{
+        color:#2F80ED;
+    }
+
+    .orange{
+        background:#FFF1E7;
+    }
+
+    .orange i{
+        color:#FF7A30;
+    }
+
+    .green{
+        background:#ECFAF2;
+    }
+
+    .green i{
+        color:#1CBE6D;
+    }
+
+    .purple{
+        background:#F4EDFF;
+    }
+
+    .purple i{
+        color:#8B5CF6;
+    }
+
+
+    .feature-card h3{
+        margin:0 0 15px;
+
+        font-size:clamp(16px, 1.8vw, 22px);
+
+        line-height:1.25;
+
+        color:#222;
+
+        font-weight:700;
+
+        overflow-wrap:break-word;
+
+        min-width:0;
+    }
+
+
+ 
+
+    .mini-line{
+        width:45px;
+        height:3px;
+
+        margin-bottom:15px;
+
+        border-radius:10px;
+    }
+
+
+    .blue-line{
+        background:#2F80ED;
+    }
+
+    .orange-line{
+        background:#FF7A30;
+    }
+
+    .green-line{
+        background:#1CBE6D;
+    }
+
+    .purple-line{
+        background:#8B5CF6;
+    }
+
+    .feature-card p{
+        margin:0;
+
+        font-size:clamp(12px, 1.15vw, 15px);
+
+        color:#6d6d6d;
+
+        line-height:1.7;
+
+        overflow-wrap:break-word;
+
+        word-break:normal;
+    }
+
+    .why-choose-us > *,
+    .why-left > *,
+    .why-right > *,
+    .feature-card > *{
+        min-width:0;
+        max-width:100%;
+    }
+
+
+.review-btn{
+    font-size:12px;
+    font-weight:500;
+    padding:10px 25px;
+    background:gold;
+    color:black;
+
+
+}
+
+.review-card{
+
+    flex:0 0 calc((100% - 25px)/2);
+
+}
+
+.reviews-header h2{
+
+    font-size:34px;
+
+}
+
+#backtoTop button{
+  height:40px;
+  font-size:15px;
+  font-weight:400;
+} 
+#backtoTop button:hover{
+    background:rgba(60, 60, 60, 0.952);
+}
+
+ .footer-container{
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 40px;
+    display:grid;
+    grid-template-columns: repeat(3,max-content);
+    gap:80px;
+    align-items: start;
+    justify-content: center;
+    justify-content: space-evenly;
+ }
+.footer-brand{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    margin-top:0;
+    margin-bottom:18px;
+}
+.footer-tagline {
+    letter-spacing: 1px;
+    color:grey;
+    font-size:14px;
+}
+
+.footer-brand h2,
+.footer-box h2,
+.footer-box h3{
+    margin: 0 0 18px 0;
+    height:25px;
+    display: flex;
+    align-items: flex-start;
+}
+.footer-box{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    
+}
+.footer-box p{
+    margin:14px 0;
+    
+}
+.footer-box ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.footer-box ul li{
+    margin:14px 0;
+    color:#cbd5e1;
+}
+
+.footer-box ul li a{
+    color:#cbd5e1;
+    position: relative;
+    display:inline-block;
+    text-decoration:none;
+    transition:.3s;
+}
+.footer-box ul li a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-4px;
+    width:0;
+    height:1px;
+    background:rgb(201, 197, 197);
+    transform:translateX(-50%);
+    transition:.35s;
+}
+
+.footer-box ul li a:hover::after{
+    width:100%;
+}
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+
+     .navbar {
+        width: 100%;
+        height: 70px;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-evenly;
+        gap:25px;
+        padding: 0 20px;
+    }
+
+    .navbar h2 {
+        margin-left: 0;
+        font-size: 24px;
+        white-space: nowrap;
+    }
+
+   .nav-search{
+    display: flex;
+    align-items: center;
+    justify-content:center;
+    width:320px;
+    height:40px;
+    background:transparent;
+    border:1px solid #33323288;
+     border-radius: 25px;
+     padding:0 15px;
+     margin-left:auto;
+}
+.nav-search i{
+    color:black;
+    font-size:18px;
+    cursor:pointer;
+}
+.nav-search input{
+    width:100%;
+    border:none;
+    outline:none;
+    margin-left:10px;
+    font-size:16px;
+    font-weight:300;
+    background: transparent;
+}
+
+#menuBtn{
+    display:none;
+}
+#menuOverlay{
+display:none;
+}
+#sideMenu {
+    margin-left:auto;
+    display: flex;
+    flex-direction: row;
+gap:5px;
+ align-items:center;
+    justify-content:center;
+  
+}
+.menu-item {
+        padding: 8px 4px;
+    }
+.menu-item a{
+    position:relative;
+    text-decoration: none;
+    color:rgb(54, 54, 54);
+    font-size:18px;
+    font-weight:500;
+   
+    margin-top:10px;
+}
+.menu-item a::after{
+    content: "";
+    position: absolute;
+    left:50%;
+    bottom:0;
+ transform:translateX(-50%);
+ width:0;
+ height:2px;
+ background:rgb(37, 37, 37);
+ transition:0.3s ease;
+
+
+}
+.menu-item a:hover::after{
+    width:100%;
+}
+
+    .about-modal {
+        width: 94%;
+
+        max-height: 90vh;
+
+        padding: 28px 22px;
+    }
+
+    .about-header {
+        padding: 5px 30px 20px;
+    }
+
+    .declaration {
+        padding: 15px 10px 5px;
+    }
+
+    .declaration p {
+        line-height: 1.7;
+    }
+
+    .about-founder {
+        margin-top: 16px;
+    }
+
+    .about-bottom {
+        margin-top: 18px;
+    }
+
+
+
+
+    .desktop-slide {
+        display: block;
+    }
+
+    .mobile-slide {
+        display: none;
+    }
+
+    .slider {
+        width: 100%;
+        height: clamp(380px, 42vw, 420px);
+        margin-top:70px;
+    }
+
+    .slide-content {
+        left: 6%;
+        bottom: 15%;
+
+        width: 70%;
+        max-width: 650px;
+    }
+
+    .slide-content .tag {
+        font-size: clamp(12px, 1.4vw, 17px);
+    }
+
+    .slide-content h1 {
+        font-size: clamp(30px, 4vw, 48px);
+        line-height: 1.08;
+
+        white-space: normal;
+    }
+
+    .slide-content .desc {
+        display: block;
+
+        max-width: 550px;
+
+        font-size: clamp(13px, 1.4vw, 16px);
+        line-height: 1.5;
+    }
+
+    .hero-btns {
+        justify-content: flex-start;
+    }
+
+    .explore {
+        width: clamp(145px, 17vw, 160px);
+        min-height: 45px;
+
+        font-size: 14px;
+    }
+
+
+
+    .btn {
+        width: clamp(38px, 5vw, 45px);
+        height: clamp(38px, 5vw, 45px);
+
+        font-size: clamp(18px, 2.5vw, 22px);
+    }
+
+    .prev {
+        left: 15px;
+    }
+
+    .next {
+        right: 15px;
+    }
+
+
+
+    .booking-popup {
+        position: fixed;
+
+        top: 50%;
+        right: clamp(15px, 3vw, 28px);
+        left: auto;
+
+        width: clamp(280px, 32vw, 320px);
+
+        max-width: calc(100vw - 30px);
+        max-height: calc(100vh - 30px);
+
+        height: auto;
+
+        transform: translateY(-50%);
+
+        padding: clamp(18px, 2.5vw, 24px);
+
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        box-sizing: border-box;
+    }
+
+    .booking-popup-header {
+        margin-bottom: 18px;
+    }
+
+    .booking-popup-header h2 {
+        font-size: clamp(20px, 2.5vw, 24px);
+    }
+
+    .booking-popup-header p {
+        font-size: 11px;
+    }
+
+    .booking-label {
+        font-size: 9px;
+    }
+
+    .close-booking {
+        width: 29px;
+        height: 29px;
+
+        flex-shrink: 0;
+    }
+
+
+
+    .quick-booking-form {
+        width: 100%;
+        gap: 12px;
+    }
+
+    .booking-input {
+        width: 100%;
+    }
+
+    .booking-input label {
+        font-size: 11px;
+    }
+
+    .booking-input input {
+        width: 100%;
+        height: 45px;
+
+        font-size: 13px;
+
+        padding: 10px 42px 10px 13px;
+    }
+
+    .location-input {
+        width: 100%;
+    }
+
+    .see-price-btn {
+        width: 100%;
+        height: 48px;
+
+        font-size: 13px;
+    }
+
+
+
+
+    .marquee {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .marquee-item {
+        padding-right: 40px;
+    }
+
+    .sep {
+        padding: 0 25px;
+    }
+
+
+    .places {
+        width: 100%;
+        max-width: 950px;
+
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+
+        gap: clamp(12px, 2vw, 25px);
+
+        margin: 20px auto;
+
+        padding: 0 clamp(20px, 4vw, 40px);
+    }
+
+    .place-card {
+        width: 100%;
+        max-width: 330px;
+
+        margin: 15px auto;
+    }
+
+    .place {
+        width: 100%;
+        height: clamp(190px, 24vw, 220px);
+    }
+
+    .place img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .place-content {
+        padding: 7px 10px;
+    }
+
+    .place-content h3 {
+        font-size: clamp(14px, 1.6vw, 16px);
+    }
+
+    .tour-info p {
+        font-size: clamp(13px, 1.5vw, 15px);
+    }
+
+    .tour-features {
+        top: 30px;
+        right: 10px;
+    }
+
+    .tour-features span {
+        font-size: 10px;
+    }
+
+    .tour-book-btn {
+        padding: 8px 15px;
+        font-size: 11px;
+    }
+
+
+  
+
+    #placesList {
+        grid-template-columns: repeat(2, max-content);
+
+        column-gap: clamp(20px, 4vw, 50px);
+
+        justify-content: center;
+    }
+
+
+
+    .why-choose-us {
+        width: 100%;
+
+        padding: clamp(55px, 7vw, 80px)
+                 clamp(25px, 5vw, 60px);
+
+        display: grid;
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+
+        gap: clamp(25px, 5vw, 60px);
+
+        box-sizing: border-box;
+    }
+
+    .why-left {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .section-tag {
+        font-size: 12px;
+    }
+
+    .why-left h2 {
+        font-size: clamp(30px, 4vw, 42px);
+        line-height: 1.2;
+    }
+
+    .why-left p {
+        font-size: clamp(14px, 1.5vw, 16px);
+        line-height: 1.7;
+    }
+
+
+
+    .stats {
+        display: flex;
+
+        gap: 12px;
+
+        margin-top: 30px;
+
+        flex-wrap: wrap;
+    }
+
+    .stat-box {
+        min-width: 0;
+
+        flex: 1 1 100px;
+
+        padding: 15px;
+    }
+
+    .stat-box i {
+        width: 42px;
+        height: 42px;
+
+        font-size: 16px;
+    }
+
+    .stat-box h3 {
+        font-size: clamp(20px, 2.5vw, 24px);
+    }
+
+    .stat-box span {
+        font-size: 12px;
+    }
+
+
+
+    .why-right {
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: clamp(12px, 2vw, 22px);
+    }
+
+    .feature-card {
+        width: 100%;
+
+        min-height: clamp(220px, 28vw, 260px);
+
+        padding: clamp(18px, 2.5vw, 25px);
+    }
+
+    .icon-box {
+        width: 55px;
+        height: 55px;
+
+        margin-bottom: 18px;
+    }
+
+    .icon-box i {
+        font-size: 24px;
+    }
+
+    .feature-card h3 {
+        font-size: clamp(17px, 2vw, 21px);
+    }
+
+    .feature-card p {
+        font-size: clamp(13px, 1.4vw, 15px);
+        line-height: 1.6;
+    }
+
+
+
+
+    .review-card {
+        flex: 0 0 calc((100% - 25px) / 2);
+    }
+
+    .reviews-header h2 {
+        font-size: clamp(28px, 3.5vw, 34px);
+    }
+
+    #backtoTop button{
+  height:40px;
+  font-size:15px;
+  font-weight:400;
+} 
+#backtoTop button:hover{
+    background:rgba(60, 60, 60, 0.952);
+}
+
+  
+
+ 
+    .footer {
+        width: 100%;
+        padding: 20px 30px;
+    }
+
+    
+ .footer-container{
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 40px;
+    display:grid;
+    grid-template-columns: repeat(3,1fr);
+    gap:80px;
+    align-items: start;
+    justify-content: center;
+    justify-content: space-evenly;
+ }
+.footer-brand{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    margin-top:0;
+    margin-bottom:18px;
+}
+.footer-tagline {
+    letter-spacing: 1px;
+    color:grey;
+    font-size:14px;
+}
+
+.footer-brand h2,
+.footer-box h2,
+.footer-box h3{
+    margin: 0 0 18px 0;
+    height:25px;
+    display: flex;
+    align-items: flex-start;
+}
+.footer-box{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    
+}
+.footer-box p{
+    margin:14px 0;
+    
+}
+.footer-box ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+}
+
+.footer-box ul li{
+    margin:14px 0;
+    color:#cbd5e1;
+}
+
+.footer-box ul li a{
+    color:#cbd5e1;
+    position: relative;
+    display:inline-block;
+    text-decoration:none;
+    transition:.3s;
+}
+.footer-box ul li a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-4px;
+    width:0;
+    height:1px;
+    background:rgb(201, 197, 197);
+    transform:translateX(-50%);
+    transition:.35s;
+}
+
+.footer-box ul li a:hover::after{
+    width:100%;
+}
+
+    .newsletter {
+        margin: 50px 0;
+    }
+
+    .newsletter-box {
+        gap: 12px;
+    }
+
+    .email-input input {
+        width: min(320px, 100%);
+    }
+
+
+    img,
+    video,
+    iframe {
+        max-width: 100%;
+    }
+}
+
+@media(max-width:767px){
+   
+ .navbar{
+   
+  height:60px;
+  width:100%;
+  align-items:center;
+  justify-content:center;
+
+ 
+  
+    }
+.navbar h2{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    margin: 0;
+    font-size: 28px; 
+    white-space: nowrap;
+}
+
+.nav-search{
+    display: none;
+}
+#menuBtn{
+        display: flex;
+        position: absolute;
+        right: 20px;
+        top: 50%;
+        transform: translateY(-50%);
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 100;
+      color:green;
+      font-size:1.5em;
+}
+.menu-span{
+  font-size:0.85rem;
+  margin-top:11px;
+}
+
+
+
+#menuOverlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100vh;
+  background:rgba(0,0,0,0.5);
+  display:none;
+  z-index:10500;
+  pointer-events:auto;
+}
+
+
+/* ===== SIDE MENU ===== */
+#sideMenu{
+  position:fixed;
+  top:60px;
+  right:-260px;
+  width:auto;
+  height:auto;
+  padding:10px;
+  border-bottom-left-radius:10px;
+  font-size:10px;
+  background: linear-gradient(90deg,  black,  rgb(53, 53, 53));
+  padding-top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  transition:0.4s ease;
+  z-index:11000;
+  cursor:pointer;
+}
+.menu-item{
+  
+  position:relative;
+  padding:14px 25px;
+  color:white;
+  cursor:pointer;
+  align-items:center;
+  font-weight:bold;
+  
+  
+}
+.menu-item a{
+    text-decoration:none;
+    color:white;
+}
+.menu-item i{
+  margin-right:10px;
+}
+.menu-item:hover{
+  color:gold;
+}
+
+
+
+.menu-item::after{
+  content:"";
+  position:absolute;
+  left:0px;
+  bottom:6px;
+  width:0%;
+  height:2px;
+  background:gold;
+  transition:0.3s;
+}
+
+
+.menu-item:hover::after{
+  width:100%;
+}
+
+
+#sideMenu.active{
+  right:0;
+}
+
+
+
+    .about-modal {
+        width: 94%;
+
+        max-height: 90vh;
+
+        padding: 28px 22px;
+    }
+
+    .about-header {
+        padding: 5px 30px 20px;
+    }
+    .about-header h2{
+        font-size:24px;
+    } 
+
+    .declaration {
+        padding: 15px 10px 5px;
+    }
+
+    .declaration p {
+        line-height: 1.7;
+    }
+
+    .about-founder {
+        margin-top: 16px;
+    }
+
+    .about-bottom {
+        margin-top: 18px;
+    }
+
+.contact-header h2{
+    font-size:24px;
+}
+
+
+.slide .desktop-slide{
+  display:none;
+}
+.slide .mobile-slide{
+  display:block;
+}
+.slider{
+margin-top:60px;
+    height:420px;
+}
+.slide-content{
+    width:70%;
+    max-width:320px;
+    left:8px;
+    
+}
+
+
+
+
+
+  .btn{
+
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:45px;
+    height:45px;
+    border:none;
+    border-radius:50%;
+    background:rgba(0,0,0,.45);
+    color:#fff;
+    font-size:22px;
+    cursor:pointer;
+    z-index:5;
+}
+
+.prev{
+    left:10px;
+}
+
+.next{
+    right:10px;
+}
+.booking-popup {
+  
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    left:15px;
+    right:15px;
+   justify-content: center;
+    width:auto;
+    height:auto  !important;
+    min-height:0 !important;
+    max-height:calc(100vh - 30px);
+    background: #ffffff;
+    padding:24px;
+    box-sizing:border-box;
+    border-radius: 20px;
+    border: 1px solid #e8e8e8;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+  
+}
+
+.booking-popup.attention {
+    animation: bookingAttention 2s ease-in-out infinite;
+}
+
+@keyframes bookingAttention {
+
+    0%,
+    70%,
+    100% {
+        transform: translateY(-50%);
+    }
+
+    80% {
+        transform: translateY(calc(-50% - 8px));
+    }
+
+    90% {
+        transform: translateY(calc(-50% + 6px));
+    }
+}
+
+.booking-popup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    margin-bottom: 22px;
+}
+
+
+.booking-label {
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 2px;
+
+    color: #ff7a00;
+}
+
+
+.booking-popup-header h2 {
+    margin: 5px 0 4px;
+
+    font-size: 24px;
+    font-weight: 700;
+
+    letter-spacing: -0.7px;
+
+    color: #111;
+}
+
+
+.booking-popup-header p {
+    margin: 0;
+
+    font-size: 12px;
+
+    color: #777;
+}
+
+
+
+.close-booking {
+    width: 30px;
+    height: 30px;
+
+    border: none;
+
+    background: #f3f3f3;
+
+    border-radius: 50%;
+
+    font-size: 20px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    color: #333;
+
+    transition: 0.2s;
+}
+
+
+.close-booking:hover {
+    background: #111;
+    color: #fff;
+}
+
+
+
+
+.quick-booking-form {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+
+
+
+.booking-input {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+.booking-input label {
+    font-size: 11px;
+
+    font-weight: 600;
+
+    color: #555;
+}
+
+
+.booking-input input {
+    width: 100%;
+
+    height: 47px;
+
+    padding: 0 13px;
+
+    border: 1px solid #dedede;
+
+    border-radius: 10px;
+
+    outline: none;
+
+    background: #f8f8f8;
+
+    font-size: 13px;
+
+    color: #111;
+
+    transition: 0.2s;
+}
+
+
+.booking-input input::placeholder {
+    color: #999;
+}
+
+
+.booking-input input:focus {
+    background: #fff;
+
+    border-color: #111;
+
+    box-shadow:
+        0 0 0 3px rgba(0, 0, 0, 0.04);
+}
+#bookingDate{
+    cursor: pointer;
+ 
+}
+input[type="date"]{
+    cursor:text;
+}
+input[type="date"]::-webkit-calendar-flatpicker-indicator{
+    cursor:text;
+    opacity:1;
+}
+.booking-input{
+    position:relative;
+    width:100%;
+
+}
+.booking-input input{
+    width: 100%;
+    padding:12px 45px 12px 15px;
+}
+.booking-input i{
+    position:absolute;
+    right:15px;
+    top:50%;
+    transform:translateX(-50%);
+    color:#666;
+    cursor:pointer;
+    
+
+}
+
+
+
+.location-input {
+    position: relative;
+
+    display: flex;
+
+    flex-direction: row;
+
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 10px 12px;
+
+    border: 1px solid #dedede;
+
+    border-radius: 10px;
+
+    background: #f8f8f8;
+}
+
+
+.location-input > div {
+    width: 100%;
+}
+
+
+.location-input label {
+    display: block;
+
+    margin-bottom: 3px;
+}
+
+
+.location-input input {
+    height: 24px;
+
+    padding: 0;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 13px;
+}
+
+
+.location-input input:focus {
+    border: none;
+
+    box-shadow: none;
+
+    background: transparent;
+}
+
+
+
+
+.location-icon {
+    flex-shrink: 0;
+
+    width: 14px;
+    height: 14px;
+
+    position: relative;
+
+    border: 3px solid #111;
+
+    border-radius: 50%;
+}
+
+
+
+.pickup-icon::after {
+    content: "";
+
+    position: absolute;
+
+    width: 5px;
+    height: 5px;
+
+    background: #111;
+
+    border-radius: 50%;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+}
+
+
+.pickup-icon::before {
+    content: "";
+
+    position: absolute;
+
+    left: 50%;
+    top: calc(100% + 3px);
+
+    transform: translateX(-50%);
+
+    width: 1px;
+    height: auto;
+
+    background: #cfcfcf;
+}
+
+
+
+.drop-icon {
+    border-radius: 2px;
+
+    background: #111;
+
+    border: none;
+}
+
+
+.see-price-btn {
+    width: 100%;
+    height: 50px;
+    margin-top: 5px;
+
+    border: none;
+    border-radius: 11px;
+
+    background: #ff7a00;
+    color: #fff;
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+
+    transition: 0.25s;
+}
+
+.see-price-btn a {
+    text-decoration: none;
+    color: white;
+}
+
+.see-price-btn span {
+    font-size: 18px;
+    transition: 0.25s;
+}
+
+.see-price-btn.form-valid:hover {
+    background: rgba(2, 168, 2, 0.837);
+
+    transform: translateY(-2px);
+
+ 
+}
+
+
+/* Arrow bhi tabhi move hoga */
+.see-price-btn.form-valid:hover span {
+    transform: translateX(4px);
+}
+
+
+
+
+
+
+.tag{
+    font-size:20px;
+    margin-bottom:40px;
+}
+
+.slide-content {
+    position: absolute;
+   
+   left:50%;
+   transform: translateX(-50%);
+    bottom: 18%;
+    justify-content: space-evenly;
+    z-index: 5;
+
+    width: auto;
+    max-width: 220px;
+
+    color: #fff;
+}
+
+
+
+.slide-content .tag {
+    margin: 0 0 0.875rem;
+
+    font-size: clamp(0.8rem, 1.2vw, 1.1rem);
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+    line-height: 1.2;
+text-align: center;
+    text-transform: uppercase;
+  bottom:20%;
+    color: #ffb52e;
+}
+
+
+
+
+.slide-content h1 {
+    margin: 0 0 0.75rem;
+    white-space: normal;
+ padding:0;
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.08;
+
+    font-weight: 800;
+  text-align:center;
+    color: #fff;
+}
+
+
+
+
+.slide-content .desc {
+    display: none;
+    margin: 0 0 1.5rem;
+padding: 0;
+   
+    max-width: 35rem;
+
+    font-size: clamp(0.85rem, 1.2vw, 1rem);
+    line-height: 1.5;
+
+    font-weight: 400;
+text-align: center;
+    color: #fff;
+}
+
+
+
+.hero-btns {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+     margin-bottom:-20px;
+
+}
+
+.explore {
+    width: 10rem;
+    min-height: 2.9rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    
+    padding: 0.7rem 1.5rem;
+
+    margin-top:25px;
+
+    border: 0.125rem solid #fff;
+    border-radius: 2rem;
+
+    box-sizing: border-box;
+
+    color: #fff;
+    text-decoration: none;
+
+    font-size: 0.875rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+   
+
+}
+
+
+.explore:hover {
+    background: #fff;
+    color: #333;
+
+    transform: translateY(-0.2rem);
+}
+
+
+.btn {
+    border: none;
+    border-radius: 0.2rem;
+
+    font-size: 1.25rem;
+}
+
+.prev {
+    left: 1.25rem;
+}
+
+.next {
+    right: 1.25rem;
+}
+
+
+
+.marquee{
+    width:100%;
+    overflow:hidden;
+    background:#252525;
+    padding:12px 0;
+}
+
+.marquee-track{
+    display:flex;
+    align-items:center;
+    width:max-content;
+}
+
+.marquee-item{
+    white-space:nowrap;
+    color:#fff;
+    font-weight:300;
+    padding-right:60px;
+}
+
+.marquee strong{
+    color:#ddc511;
+}
+.sep{
+  padding:0 40px;
+  display: inline-block;
+  font-size:18px;
+}
+
+  .places{
+display: grid;
+grid-template-columns: 1fr;
+gap:5px;
+max-width :1400px;
+margin:20px auto;
+padding:0 40px;
+}
+  .place-card{
+    position:relative;
+    width:320px;
+    background:#fff;
+    border-radius:16px;
+    overflow:hidden;
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+    transition:.3s;
+    display:flex;
+    flex-direction:column;
+    cursor:pointer;
+    margin:20px auto;
+}
+
+
+  .place{
+    width: 100%;
+    height:220px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .place img{
+    
+ width:100%;
+ height:100%;
+ object-fit: cover;
+ border-top-left-radius: 13px;
+ border-top-right-radius: 13px;
+    display: block;
+    padding: 0;
+    margin: 0;
+    transition:transform 2.8s cubic-bezier(0.22,1,0.36,1);
+  }
+  .place-card:hover .place img{
+    transform:scale(1.1);
+  }
+  .title{
+    margin-top: 10px;
+    text-align: center;
+    font-weight: bold;
+  }
+
+#placesList{
+  display: grid;
+ grid-template-columns:repeat(2,max-content);
+  column-gap:50px;
+  align-items:center;
+  justify-content: center;
+  padding:0;
+
+  list-style-position: inside;
+}
+#placesList li{
+
+  text-align:left;
+
+}
+  
+.place img{
+    position:relative;
+    overflow:hidden;
+    border-radius:18px 18px 0 0;
+    transform:scale(1);
+}
+
+.rating-box{
+ opacity:1;
+ transform: translateX(0);
+
+}
+
+.image-info{
+ opacity:1;
+ transform: translateX(0);
+
+
+}
+
+.place-card:hover .place img{
+    transform: scale(1);
+}
+
+    .why-choose-us {
+    display: grid;
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding: 60px 20px;
+    }
+
+    .why-left {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .why-right {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 24px;
+        margin-top:25px;
+    }
+
+    /* Zig-zag desktop spacing remove */
+    .pricesupport,
+    .support {
+        margin-top: 0;
+    }
+
+
+
+/*==========================
+   LEFT CONTENT
+===========================*/
+
+
+
+.section-tag{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    color:#ff6b2c;
+    font-size:14px;
+    font-weight:700;
+    letter-spacing:2px;
+    margin-bottom:18px;
+}
+
+.line{
+    width:40px;
+    height:2px;
+    background:#ff6b2c;
+    border-radius:10px;
+}
+
+.why-left h2{
+    font-size:36px;
+    line-height:1.2;
+    color:#1b1b1b;
+    font-weight:700;
+    margin-bottom:22px;
+}
+
+.why-left p{
+    font-size:16px;
+    color:#6d6d6d;
+    line-height:1.9;
+    margin-bottom:35px;
+}
+
+
+
+.stats{
+    display:flex;
+    gap:20px;
+    margin-top:45px;
+}
+
+.stat-box{
+    background:#fff;
+    border-radius:18px;
+    padding:20px;
+    min-width:0;
+    box-shadow:0 10px 30px rgba(0,0,0,.08);
+    transition:.3s;
+    align-items:center;
+    justify-content: center;
+    text-align: center;
+    
+}
+
+.stat-box:hover{
+    transform:translateY(-6px);
+}
+
+.stat-box i{
+    width:48px;
+    height:48px;
+    background:#fff3ee;
+    color:#ff6b2c;
+    border-radius:50%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:18px;
+    margin-bottom:15px;
+}
+
+.stat-box h3{
+    font-size:20px;
+    color:#1f1f1f;
+    margin-bottom:5px;
+}
+
+.stat-box span{
+    display: block;
+    font-size:10px;
+    color:#232222;
+    text-align: center;
+}
+
+.booking{
+    margin-top:0;
+}
+
+.pricesupport{
+    margin-top:40px;
+}
+
+.destination{
+    margin-top:0;
+}
+
+.support{
+    margin-top:40px;
+}
+
+
+/*=========================
+      FEATURE CARD
+=========================*/
+
+.feature-card{
+    background:#fff;
+    border-radius:22px;
+    padding:28px;
+    box-shadow:0 15px 35px rgba(0, 0, 0, 0.314);
+    transition:all .35s ease;
+    cursor:pointer;
+    position:relative;
+    overflow:hidden;
+    min-height:260px;
+}
+
+.feature-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 25px 45px rgba(0,0,0,.15);
+}
+
+
+
+.icon-box{
+    width:65px;
+    height:65px;
+    border-radius:18px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-bottom:22px;
+}
+
+.icon-box i{
+    font-size:28px;
+}
+
+
+
+
+.blue{
+    background:#EAF3FF;
+}
+
+.blue i{
+    color:#2F80ED;
+}
+
+.orange{
+    background:#FFF1E7;
+}
+
+.orange i{
+    color:#FF7A30;
+}
+
+.green{
+    background:#ECFAF2;
+}
+
+.green i{
+    color:#1CBE6D;
+}
+
+.purple{
+    background:#F4EDFF;
+}
+
+.purple i{
+    color:#8B5CF6;
+}
+
+.feature-card h3{
+    font-size:22px;
+    color:#222;
+    margin-bottom:15px;
+    font-weight:700;
+}
+
+
+.feature-card p{
+    font-size:15px;
+    color:#6d6d6d;
+    line-height:1.8;
+}
+
+.mini-line{
+    width:55px;
+    height:4px;
+    border-radius:20px;
+    margin-bottom:18px;
+}
+
+.blue-line{
+    background:#2F80ED;
+}
+
+.orange-line{
+    background:#FF7A30;
+}
+
+.green-line{
+    background:#1CBE6D;
+}
+
+.purple-line{
+    background:#8B5CF6;
+}
+
+.review-card{
+
+    flex:0 0 100%;
+
+}
+.review-card:hover{
+    transform:scale(1);
+}
+
+.reviews-header h2{
+
+    font-size:34px;
+
+}
+
+#backtoTop button{
+  height:40px;
+  font-size:15px;
+  font-weight:400;
+} 
+#backtoTop button:hover{
+    background:rgba(60, 60, 60, 0.952);
+}
+
+ .footer-container{
+    max-width:1200px;
+    margin:0 auto;
+    padding:0 40px;
+    display:grid;
+    grid-template-columns: repeat(1,max-content);
+    gap:80px;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-evenly;
+ }
+
+
+
+}
+
+@media (max-width: 430px) {
+ 
+ .places{
+    padding-left:clamp(12px, 2vw, 20px);
+    padding-right:clamp(12px, 2vw  , 20px);
+ }   .slider-btn{
+width:35px;
+height:35px;
+font-size:18px;
+    display:block;
+
+}
+
+
+.overall-rating{
+
+    flex-direction:column;
+
+}
+    .booking-popup {
+        left: 8px;
+        right: 8px;
+        bottom:auto;
+
+        padding: 16px;
+
+        border-radius: 16px;
+    }
+
+
+    .booking-popup-header h2 {
+        font-size: 20px;
+    }
+
+
+    .booking-input label {
+        font-size: 10px;
+    }
+
+
+    .booking-input input {
+        font-size: 12px;
+    }
+
+about-modal {
+        width: 94%;
+
+        max-height: 90vh;
+
+        padding: 25px 16px 20px;
+
+        border-radius: 20px;
+    }
+
+    .about-close {
+        top: 12px;
+        right: 12px;
+
+        width: 36px;
+        height: 36px;
+
+        font-size: 18px;
+    }
+
+    .about-header {
+        padding: 8px 25px 18px;
+    }
+
+    .about-header h2 {
+        line-height: 1.12;
+    }
+
+    .about-header p {
+        line-height: 1.45;
+    }
+
+    .declaration {
+        padding: 10px 3px 5px;
+    }
+
+    .declaration p {
+        line-height: 1.65;
+    }
+
+    .about-founder {
+        margin-top: 15px;
+
+        padding-right: 2px;
+    }
+
+    .about-bottom {
+        margin-top: 18px;
+
+        padding-top: 14px;
+    }
+
+    .about-bottom h3 {
+        margin-top: 4px;
+    }
+.avatar{
+    width:44px;
+    height:44px;
+    font-size:18px;
+    display:flex;
+    text-align:center;
+    justify-content: center;
+    align-items: center;
+    font-weight:500; 
+
+}
+.review-btn{
+    padding:10px 25px;
+    font-size:15px;
+    font-weight:400;
+}
+
+.footer{
+    background:#0f172a;
+    color:#fff;
+    padding:20px 40px;
+    align-items: center;
+
+}
+.footer hr{
+    width:100%;
+    height:.25px;
+    background:rgb(200, 198, 198);
+    margin:45px auto;
+    border:none;
+}
+.footer-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+    gap:45px;
+  
+   
+} 
+.footer-brand{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    margin-top:0;
+    margin-bottom:18px;
+}
+.footer-tagline {
+    letter-spacing: 1px;
+    color:grey;
+    font-size:14px;
+}
+
+.footer-brand h2,
+.footer-box h2,
+.footer-box h3{
+    margin-bottom:18px;
+}
+
+.footer-box p{
+    margin:14px 0;
+}
+.footer-box ul{
+    list-style:none;
+    padding:0;
+}
+
+.footer-box ul li{
+    margin:14px 0;
+    color:#cbd5e1;
+}
+
+.footer-box ul li a{
+    color:#cbd5e1;
+    position: relative;
+    display:inline-block;
+    text-decoration:none;
+    transition:.3s;
+}
+.footer-box ul li a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-4px;
+    width:0;
+    height:1px;
+    background:rgb(201, 197, 197);
+    transform:translateX(-50%);
+    transition:.35s;
+}
+
+.footer-box ul li a:hover::after{
+    width:100%;
+}
+.footer-box ul li a:hover::after{
+    width:100%;
+}
+.trust{
+    margin-top:20px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.newsletter{
+    text-align:center;
+    margin:70px 0;
+}
+
+.newsletter h3{
+    margin-bottom:10px;
+}
+
+.newsletter p{
+    color:#cbd5e1;
+}
+.newsletter-box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:15px;
+    margin-top:25px;
+    flex-wrap:wrap;
+}
+.email-input{
+    position:relative;
+  
+}
+.email-input i{
+position:absolute;
+left:18px;
+top:50%;
+transform: translateY(-50%);
+font-size:16px;
+pointer-events: none;
+color:#888888;
+font-size:18px;
+}
+.email-input input{
+    width:320px;
+    height:48px;
+    padding:0 18px 0 48px;
+    border:none;
+    border-radius:50px;
+    outline:none;
+    font-size:15px;
+}
+
+.newsletter-box button{
+    padding:15px 35px;
+    border:none;
+    border-radius:50px;
+    cursor:pointer;
+    background:#ff9800;
+    color:#fff;
+    font-weight:600;
+    transition:.3s;
+    font-size:15px;
+    font-weight: 400;
+}
+
+.newsletter-box button.valid{
+    background:rgb(16, 187, 16);
+    transform:translateY(-3px);
+}
+
+.social-links{
+    display:flex;
+    justify-content:center;
+    gap:25px;
+    margin:40px 0;
+}
+
+.social-links img{
+    width:34px;
+    transition:.3s;
+}
+
+.social-links img:hover{
+    transform:translateY(-8px) scale(1.15);
+}
+
+.footer-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:20px;
+    margin-top:30px;
+   
+}
+
+
+.footer-bottom a{
+    color:#cbd5e1;
+    margin-left:20px;
+    text-decoration:none;
+    position:relative;
+    display: inline-block;
+    transition:.3s ease;
+}
+
+.footer-bottom a::after{
+    content:"";
+    position:absolute;
+    left:50%;
+    bottom:-4px;
+    width:0;
+    height:1px;
+    background:rgb(201, 197, 197);
+    transform:translateX(-50%);
+    transition:.35s;
+}
+
+.footer-bottom a:hover::after{
+    width:100%;
+}
+.footer-bottom a:hover::after{
+    width:100%;
+}
+
+}
+
+
+
+
+
+</style>
+</head>
+
+
+<body>
+<div id="preloader">
+  <div class="loader-content">
+    <h1>Himachal</h1>
+    <p>Prayer Flags • Pine Woods</p>
+
+    <div class="progress">
+      <div class="progress-bar"></div>
+    </div>
+  </div>
+</div>
+<div id="popup">
+  <div class="popup-content" id="popupContent">
+    <button id="closeBtn"><i class="fa-solid fa-xmark"></i></button>
+    <img class="popup-img" id="popupImg" src="" alt="tour-image">
+    <h2 id="popupTitle"></h2>
+    <hr>
+    <h4><i class="fa-solid fa-thumbtack"></i> Places We'll cover</h4>
+    <ul id="placesList"></ul>
+    <button id="toggleBtn" onclick="togglePlaces()">more..</button>
+  </div>
+</div>
+<div class="navbar">
+    
+    
+    <h2>Travel In Himachal</h2>
+    <div class="nav-search"><i class="fa-solid fa-magnifying-glass"></i>
+    <input type="text" placeholder="Search"></div>
+   
+   <div id="menuBtn"> <i class="fa-solid fa-bars"></i>    
+</div>
+<div id="menuOverlay"></div>
+
+
+<!-- ===== RIGHT SIDE SLIDE MENU ===== -->
+<div id="sideMenu">
+
+
+        <div class="menu-item"> <a href="himachaltourism.html"> Home</a></div>
+
+        <div class="menu-item" id="bookingCab"> <a href="#"> Booking</a> </div>
+
+        <div class="menu-item" id="aboutBtn"> <a href="#" > About</a></div>
+
+        <div class="menu-item" id="contactBtn"> <a href="#" > Contact</a></div>
+              
+</div>
+</div>
+<!-- RIGHT SIDE BOOKING POPUP -->
+<div class="booking-popup" id="bookingPopup">
+
+    <div class="booking-popup-header">
+        <div>
+           
+            <h2>Book your ride</h2>
+            <p>Enter your trip details</p>
+        </div>
+        <button class="close-booking" type="button">&times;</button>
+    </div>
+
+
+    <form class="quick-booking-form">
+
+    
+        <!-- Mobile -->
+        <div class="booking-input">
+            <label for="userMobile">Mobile number</label>
+
+            <input
+                type="tel"
+                id="userMobile"
+                placeholder="Enter Your mobile number"
+                autocomplete="tel"
+                required
+
+            >
+        </div>
+<div class="booking-input">
+         <label>Date of Booking</label>
+<input type="text"  
+id="bookingDate" 
+title="Select the Date of Booking"
+ placeholder=" dd / mm / yy "
+
+  required>
+ <i class="fa-regular fa-calendar" id="calendarIcon"></i>
+</div>
+        <!-- Pickup -->
+        <div class="booking-input location-input" id="pickupBookingField">
+
+            <span class="location-icon pickup-icon"></span>
+
+            <div>
+                <label for="pickupLocation">Pickup location</label>
+
+                <input
+                    type="text"
+                    id="pickupLocation"
+                    placeholder="Enter pickup location"
+                    required
+                >
+            </div>
+
+        </div>
+
+
+        <!-- Drop-off -->
+        <div class="booking-input location-input">
+
+            <span class="location-icon drop-icon"></span>
+
+            <div>
+                <label for="dropLocation">Drop-off location</label>
+
+                <input
+                    type="text"
+                    id="dropoffLocation"
+                    placeholder="Where to?"
+                    required
+                >
+            </div>
+
+        </div>
+
+
+        <!-- Button -->
+        <button type="submit" class="see-price-btn">See prices </button>
+
+    </form>
+
+</div>
+
+<div class="about-popup" id="aboutPopup">
+
+    <!-- Overlay -->
+    <div class="about-popup-overlay"></div>
+
+
+    <!-- About Modal -->
+    <div class="about-modal">
+
+        <!-- Close Button -->
+        <button
+            type="button"
+            class="about-close"
+            id="aboutClose">
+            &times;
+        </button>
+
+
+        <!-- =========================
+             HEADER
+        ========================== -->
+
+        <div class="about-header">
+
+            <span>ABOUT US</span>
+
+            <h2>
+                Discover Himachal.<br>
+                Travel With Us.
+            </h2>
+
+            <p>
+                Making your journey through the mountains
+                comfortable, reliable and memorable.
+            </p>
+
+        </div>
+
+
+        <!-- =========================
+             DECLARATION
+        ========================== -->
+
+        <div class="about-middle">
+
+            <div class="declaration">
+
+                <p>
+                    Himachal Tourism was created with a simple belief
+                    — that travelling is not just about reaching a destination,
+                    but about experiencing everything that happens along the way.
+                    From winding mountain roads and peaceful valleys to
+                    snow-covered peaks, charming villages and the warmth of
+                    local people, Himachal Pradesh has a story waiting to be
+                    discovered around every turn.
+
+                    Our vision is to make that experience comfortable,
+                    reliable and memorable for every traveller.
+
+                    Whether you are planning a family holiday, a peaceful
+                    escape with friends, an adventurous road trip or simply
+                    looking for a few days away from the busy city life,
+                    we are here to make your journey easier from the very beginning.
+
+                    With carefully planned tours, comfortable rides and a focus
+                    on dependable travel services, we want you to spend less time
+                    worrying about the journey and more time enjoying the mountains.
+
+                    For us, every traveller is more than just a booking —
+                    every journey is an opportunity to create a beautiful memory,
+                    discover a new place and take a little piece of Himachal
+                    back home with you. <br>
+                    Follow us on <strong>www.travelinhimachal.co.in</strong>
+                </p>
+
+
+                <!-- Founder -->
+
+                <div class="about-founder">
+
+                    <strong>Lakshay Kashyap</strong>
+
+                    <small>Founder</small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================
+             FOOTER
+        ========================== -->
+
+        <div class="about-bottom">
+
+            <span>
+                SAME ROADS • NEW STORIES
+            </span>
+
+            <h3>
+                Your Travel Story Starts Here.
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="contact-popup" id="contactPopup">
+
+    <!-- Overlay -->
+    <div class="contact-popup-overlay"></div>
+
+
+    <!-- Contact Modal -->
+    <div class="contact-modal">
+
+        <!-- Close Button -->
+        <button
+            type="button"
+            class="contact-close"
+            id="contactClose">
+            &times;
+        </button>
+
+
+        <!-- =========================
+             HEADER
+        ========================== -->
+
+        <div class="contact-header">
+
+            <span>CONTACT US</span>
+
+            <h2>
+                Let's Talk.<br>
+                We're Here To Help.
+            </h2>
+
+            <p>
+                Have a question or planning a trip?
+                Send us a message and our travel team will get back to you.
+            </p>
+
+        </div>
+
+
+        
+
+        <div class="contact-content">
+
+
+            <form class="contact-form" id="contactForm">
+
+              
+                <div class="contact-field">
+
+                    <label for="contactName">
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="contactName"
+                        name="name"
+                        placeholder="Enter your name">
+                </div>
+
+
+                <!-- Mobile -->
+                <div class="contact-field">
+
+                    <label for="contactMobile">
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="contactMobile"
+                        name="mobile"
+                
+                        autocomplete="tel"
+                        
+                        placeholder="Enter your mobile number">
+                </div>
+
+
+                <!-- Email -->
+                <div class="contact-field">
+                     
+                    <label for="contactEmail">
+                        Email Address
+                    </label>
+              <div class="contact-input-email">
+                <i class="fa-regular fa-envelope"></i>
+                    <input
+                        type="email"
+                        id="contactEmail"
+                        name="email"
+                        placeholder=" Enter your email address">
+                </div>
+
+             </div>
+                <!-- Subject -->
+                <div class="contact-field">
+
+                    <label for="contactSubject">
+                        Subject
+                    </label>
+
+                    <select
+                        id="contactSubject"
+                        name="subject">
+
+                        <option value="" selected disabled>
+                            Select a subject
+                        </option>
+
+                        <option value="general">
+                            General Enquiry
+                        </option>
+
+                        <option value="tour">
+                            Tour Enquiry
+                        </option>
+
+                        <option value="cab">
+                            Cab Booking
+                        </option>
+
+                        <option value="booking-support">
+                            Booking Support
+                        </option>
+
+                        <option value="other">
+                            Other
+                        </option>
+
+                    </select>
+                </div>
+
+
+                <!-- Message -->
+                <div class="contact-field contact-message">
+
+                    <label for="contactMessage">
+                        Message
+                    </label>
+
+                    <textarea
+                        id="contactMessage"
+                        name="message"
+                        rows="5"
+                        placeholder="Write your message..."></textarea>
+
+                </div>
+
+
+                <!-- Submit -->
+                <button
+                    type="submit"
+                    class="contact-submit"
+                    id="contactSubmit">
+
+                    Send Message
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+       
+
+        <div class="contact-bottom">
+
+            <span>
+                YOUR JOURNEY MATTERS
+            </span>
+
+            <h3>
+                We're Always Happy To Help.
+            </h3>
+
+        </div>
+
+    </div>
+
+</div>
+<div class="slider" id="slider">
+
+    <button class="btn prev">&#10094;</button>
+
+    <div class="slides" id="slides">
+
+        <div class="slide">
+          <img class="desktop-slide" src="images/desk4.jpg" >
+            <img class="mobile-slide" src="images/slide3.jpeg" >
+            <div class="overlay"></div>
+
+            <div class="slide-content">
+                <p class="tag">WELCOME TO HIMACHAL</p>
+                <h1>journey Through The Woods</h1>
+                <p class="desc"></p>
+
+                <div class="hero-btns">
+                                      <a href="#" class="explore">EXPLORE</a>
+                </div>
+            </div>
+        </div>
+
+     
+        <div class="slide">
+          <img class="desktop-slide" src="images/desk22.jpg">
+            <img class="mobile-slide" src="images/slide1.jpeg">
+            <div class="overlay"></div>
+
+            <div class="slide-content">
+                <p class="tag"> HIMALAYAN ESCAPE</p>
+                <h1>Into The Frozen Himalayas</h1>
+                <p class="desc">Discover breathaking glaciers, snow-covered peaks and the untouched beauty of the himalayas.</p>
+
+                <div class="hero-btns">
+                  
+                    <a href="#" class="explore">EXPLORE</a>
+                </div>
+            </div>
+        </div>
+         <div class="slide">
+          <img class="desktop-slide" src="images/desk3.jpg">
+            <img class="mobile-slide" src="images/slide2.jpg">
+            <div class="overlay"></div>
+
+            <div class="slide-content">
+                <p class="tag">EXPLORE THE HILLS</p>
+                <h1>Where Nature Comes Alive</h1>
+                <p class="desc"> Wander through peaceful valleys, pine forests and breathaking mountains landscapes.</p>
+
+                <div class="hero-btns">
+                   
+                    <a href="#" class="explore">EXPLORE</a>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="slide">
+            <img class="desktop-slide"src="images/desk16.jpg">
+             <img class= "mobile-slide" src="images/slide4.jpg">
+            <div class="overlay"></div>
+
+            <div class="slide-content">
+                <p class="tag">CHASE THE HORIZON</p>
+                <h1>Adventure Beyond the Ordinary</h1>
+                <p class="desc">Follow the mountains trails and experience  unforgettable views beneath the Himalayan sky.</p>
+
+                <div class="hero-btns">
+                  
+                    <a href="#" class="explore">EXPLORE</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    
+    
+
+    <button class="btn next">&#10095;</button>
+
+    <div class="dots">
+        <span class="dot active"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+         <span class="dot"></span>
+    </div>
+
+</div>
+
+<div class="marquee" id="marqueeNav">
+    <div class="marquee-track" id="marqueeTrack">
+
+        <div class="marquee-item">
+
+
+          <span class="sep"><i class="fa-solid fa-tags"></i> Customized Tour Packages</span>   
+                   
+                    <span class="sep"><i class="fa-solid fa-plane"></i> Airport Pickup & Drop</span>
+              <span class="sep"><i class="fa-regular fa-heart"></i> Honeymoon Packages</span>
+              <span class="sep"><i class="fa-solid fa-people-group"></i>  Family Tours</span>
+              <span class="sep"><i class="fa-solid fa-person-walking-luggage"></i> Adventure Trips</span>
+             <span class="sep"><i class="fa-solid fa-hotel"></i>  Hotel Booking Assistance</span> 
+              <span class="sep"> <i class="fa-solid fa-taxi"></i> Experienced Drivers </span>
+             <span class="sep"><i class="fa-solid fa-headset"></i> 24/7 Customer Support</span>
+             <span class="sep"> <i class="fa-solid fa-hand-holding-dollar"></i> Affordable Pricing</span>
+             <span class="sep"><i class="fa-solid fa-shield-halved"></i> Safe & Comfortable Travel</span> 
+               <span class="sep"><i class="fa-solid fa-globe"></i> Visit Us: <strong>www.travelinhimachal.co.in</strong></span>
+        </div>
+
+    </div>
+</div>
+
+<div class="package-header">
+      <h1>Our Tour Packages</h1>
+</div>
+<div class="places">
+  <div class="place-card">
+    <div class="place">
+   <img src="images/shimla.jpeg" alt="shimla" class="gallery-img" onclick="openImage(this.src,'SHIMLA')">
+  
+   
+ <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+    <div class="image-info">
+        <div class="best-time">
+   <i class="bi bi-cloud-snow-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="place-content">
+
+  <h3> Shimla & Kufri Tour</h3>
+
+ <div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 3 Days and 2 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+
+  <div class="place-card">
+    <div class="place">
+   <img src="images/manali.jpeg" alt="Manali" class="gallery-img" onclick="openImage(this.src,'MANALI')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+      <i class="bi bi-brightness-high-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="place-content">
+
+  <h3>Kangra and Bir Billing Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+ 
+  <div class="tour-info">
+    <p> <i class="fa-solid fa-calendar-days"></i> 3 Days and 2 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+
+     
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+
+  <div class="place-card">
+    <div class="place">
+   <img src="images/dharamshala.jpeg" alt="dharamshala" class="gallery-img"
+    onclick="openImage(this.src,'DHARAMSHALA')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+      <i class="bi bi-brightness-high-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="place-content">
+
+  <h3>Dharamshala Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 3 Days and 2 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+     
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+  <div class="place-card">
+    <div class="place">
+   <img src="images/kangra.jpeg" alt="shimla" class="gallery-img" onclick="openImage(this.src,'KANGRA')">
+  
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+      <i class="bi bi-brightness-high-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="place-content">
+
+  <h3>Kangra & Bir Billing Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 3 Days and 2 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+  
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+  <div class="place-card">
+    <div class="place">
+   <img src="images/spiti vally.jpeg" alt="shimla" class="gallery-img" onclick="openImage(this.src,'SPITI-VALLY')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+   <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+      <i class="bi bi-brightness-high-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="place-content">
+
+  <h3>Spiti & Kaja Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 7 Days and 6 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+
+     
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+  <div class="place-card">
+    <div class="place">
+   <img src="images/mcleodganj.jpeg" alt="shimla" class="gallery-img" onclick="openImage(this.src,'MCLEODGANJ')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+    <i class="bi bi-cloud-drizzle-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="place-content">
+
+  <h3>Mcleodganj Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 3 Days and 2 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+
+     
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+
+  <div class="place-card">
+    <div class="place">
+   <img src="images/kausauli.jpeg" alt="shimla" class="gallery-img" onclick="openImage(this.src,'KASAULI')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+      <i class="bi bi-brightness-high-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="place-content">
+
+  <h3>Kasauli Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 2 Days and 1 Night</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+
+    
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+  <div class="place-card">
+    <div class="place">
+   <img src="images/Manikaran sahib.jpeg" alt="shimla" class="gallery-img" onclick="openImage(this.src,'KASOL')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+      <i class="bi bi-brightness-high-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="place-content">
+
+  <h3>Kullu, Kasol & Manikaran Sahib Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 4 Days and 3 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+
+    
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+  <div class="place-card">
+    <div class="place">
+   <img src="images/dalhousie.jpeg" alt="shimla" class="gallery-img" onclick="openImage(this.src,'DALHOUSIE')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+      <i class="bi bi-brightness-high-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="place-content">
+
+  <h3>Dalhousie & khajjiar Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 3 Days and 2 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+  
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+ <div class="place-card">
+    <div class="place">
+   <img src="images/dalhousie.jpeg" alt="shimla" class="gallery-img" onclick="openImage(this.src,'DALHOUSIE')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+      <i class="bi bi-brightness-high-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="place-content">
+
+  <h3>Kinnaur & Sangla Valley Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 6 Days and 5 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+  
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+ <div class="place-card">
+    <div class="place">
+   <img src="images/dalhousie.jpeg" alt="shimla" class="gallery-img" onclick="openImage(this.src,'DALHOUSIE')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+      <i class="bi bi-brightness-high-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="place-content">
+
+  <h3>Chamba & Bharmour Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 4 Days and 3 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+  
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+  <div class="place-card">
+    <div class="place">
+   <img src="images/chamba.jpeg" alt="Chamba" class="gallery-img" onclick="openImage(this.src,'CHAMBA')">
+   
+    <div class="rating-box">
+    <div class="rating">
+      <i class="fa-solid fa-star"></i>
+      <span>4.8</span>
+    </div>
+    <small>326 Reviews</small>
+   </div>
+      <div class="image-info">
+        <div class="best-time">
+    <i class="bi bi-cloud-sun-fill"></i>
+            <div>
+                <small>Best Time</small>
+                <span>Mar - Jun</span>
+            </div>
+        </div>
+
+        <div class="group-size">
+            <i class="fa-solid fa-users"></i>
+            <div>
+                <small>Group Size</small>
+                   <span>2 - 6 People</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="place-content">
+
+  <h3>Tirthan Valley & Jibhi Tour</h3>
+<div class="tour-features">
+    <span><i class="fa-solid fa-car fa-fw"></i> Cab Included</span>
+    <span><i class="fa-solid fa-shield-halved fa-fw"></i> Safe Driving</span>
+</div>
+  <div class="tour-info">
+    <p><i class="fa-solid fa-calendar-days"></i> 3 Days and 2 Nights</p>
+  </div>
+  <div class="price-info">
+    <div>
+      <small>Starting From</small>
+      <div class="price">
+      <h2>₹ 8,999/</h2>
+       <span> Traveller</span>
+    </div>
+</div>
+
+    
+     <button type="button" class="tour-book-btn" >Book Now</button>
+  </div>
+</div>
+</div>
+
+</div>
+<section class="why-choose-us">
+
+    <!-- Left Content -->
+    <div class="why-left">
+
+        <span class="section-tag">
+            <span class="line"></span>
+            WHY CHOOSE US
+            <span class="line"></span>
+        </span>
+
+        <h2>Your Trusted <br> Travel Partner in <br> Himachal</h2>
+
+        <p>
+            We are dedicated to making your journey comfortable,
+            safe and memorable. From easy booking to 24/7 support,
+            we provide everything you need for the perfect
+            Himachal adventure.
+        </p>
+
+     
+
+        <div class="stats">
+
+            <div class="stat-box">
+                <i class="fa-regular fa-face-smile"></i>
+                <h3>500+</h3>
+                <span>Happy Travelers</span>
+            </div>
+
+            <div class="stat-box">
+                <i class="fa-solid fa-location-dot"></i>
+                <h3>50+</h3>
+                <span>Destinations</span>
+            </div>
+
+            <div class="stat-box">
+                <i class="fa-solid fa-award"></i>
+                <h3>15+</h3>
+                <span>Years Of Experience</span>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Right Cards -->
+
+    <div class="why-right">
+
+        <div class="feature-card booking">
+
+            <div class="icon-box blue">
+                <i class="fa-solid fa-calendar-check"></i>
+            </div>
+
+            <h3>Easy Booking</h3>
+
+            <div class="mini-line blue-line"></div>
+
+            <p>
+                Book your cab and tour package in just a few clicks.
+                Quick, simple and hassle-free.
+            </p>
+
+        </div>
+
+
+       <div class="feature-card pricesupport">
+
+            <div class="icon-box orange">
+                <i class="fa-solid fa-tags"></i>
+            </div>
+
+            <h3>Affordable Prices</h3>
+
+            <div class="mini-line orange-line"></div>
+
+            <p>
+              Enjoy the best travel deals with transparent pricing
+                and absolutely no hidden charges.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card destination">
+
+            <div class="icon-box green">
+                <i class="fa-solid fa-location-dot"></i>
+            </div>
+
+            <h3>Local Destination</h3>
+
+            <div class="mini-line green-line"></div>
+
+            <p>
+                Discover the breathtaking beauty of Himachal with
+                carefully selected destinations.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card support">
+
+            <div class="icon-box purple">
+                <i class="fa-solid fa-headset"></i>
+            </div>
+
+            <h3>24/7 Support</h3>
+
+            <div class="mini-line purple-line"></div>
+
+            <p>
+                Our travel experts are always available to assist
+                you before, during and after your trip.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+<section class="reviews-section">
+
+    <div class="reviews-header">
+
+        <span class="review-tag">
+            ⭐ Client Experiences
+        </span>
+
+
+        <h2>
+            Loved by Thousands of Travelers
+        </h2>
+
+
+
+        <div class="overall-rating">
+
+            <span id="overallStars"></span>
+
+            <span id="overallScore"></span>
+
+        </div>
+
+
+
+        <p id="reviewCount"></p>
+
+
+    </div>
+
+
+
+
+    <!-- Reviews Slider -->
+
+    <div class="slider-controls">
+
+
+        <button 
+        id="prevReview"
+        class="slider-btn">
+
+            ❮
+
+        </button>
+
+
+
+        <div class="reviews-slider">
+
+
+            <div 
+            class="review-track" 
+            id="reviewTrack">
+
+             
+
+
+            </div>
+
+
+        </div>
+
+
+
+        <button 
+        id="nextReview"
+        class="slider-btn">
+
+            ❯
+
+        </button>
+
+
+
+    </div>
+
+
+
+
+
+  
+
+    <div 
+    class="slider-dots" 
+    id="sliderDots">
+
+    </div>
+
+
+    <button 
+    id="openReview" 
+    class="review-btn">
+
+       <i class="fa-solid fa-user-plus"></i>  Add Your Review
+
+    </button>
+
+
+
+</section>
+
+
+
+
+
+
+
+
+<div 
+class="review-popup" 
+id="reviewPopup">
+
+
+
+    <div class="popup-box">
+
+
+        <span 
+        class="close-popup" 
+        id="closeReview">
+
+            &times;
+
+        </span>
+
+
+
+
+        <h2>
+          <i class="fa-solid fa-share-from-square"></i> Share Your Experience
+        </h2>
+
+
+
+
+
+        <form id="reviewForm">
+
+
+
+
+
+            <input
+
+            type="text"
+
+            id="userName"
+
+            placeholder="Your Name"
+
+            required
+
+            >
+
+
+
+
+
+
+            <select 
+            id="userPlace" 
+            required>
+
+
+                <option value="">
+                    Select Place
+                </option>
+              <option value="Kangra">
+                  Kangra
+                </option>
+
+
+                <option value="Manali">
+                    Manali
+                </option>
+
+
+                <option value="Kasol">
+                    Kasol
+                </option>
+
+
+                <option value="Spiti Valley">
+                    Spiti Valley
+                </option>
+
+
+                <option value="Dharamshala">
+                    Dharamshala
+                </option>
+
+                 <option value="Solan">
+                    Solan
+                </option>
+
+                 <option value="Shimla">
+                   Shimla
+                </option>
+                 <option value="Sirmour">
+                   Sirmour
+                </option>
+                 <option value="Kinnaur">
+                   Kinnaur
+                </option>
+                 <option value="Kasauli">
+                Kasauli
+                </option>
+                
+
+                
+
+                
+
+
+            </select>
+
+
+
+
+
+
+
+            <!-- Star Rating -->
+
+
+            <div class="rating-stars">
+
+
+                <i data-rate="1">
+                    ★
+                </i>
+
+
+                <i data-rate="2">
+                    ★
+                </i>
+
+
+                <i data-rate="3">
+                    ★
+                </i>
+
+
+                <i data-rate="4">
+                    ★
+                </i>
+
+
+                <i data-rate="5">
+                    ★
+                </i>
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <textarea
+
+            id="userReview"
+
+            rows="5"
+
+            placeholder="Write your experience..."
+
+            required>
+
+            </textarea>
+
+
+
+
+
+
+
+            <button 
+            type="submit">
+
+                Submit Review
+
+            </button>
+
+
+
+
+
+        </form>
+
+
+
+
+    </div>
+
+<audio id="bookingsuccessSound">
+    <source src="audiofiles/bookingsuccess.mp3" type="audio/mpeg">
+</audio>
+
+</div>
+  <div id="backtoTop">
+  <button>  Back to top</button>
+  </div>
+
+<footer class="footer">
+  <div class="footer-brand">
+    
+        <h2> Travel In Himachal</h2>
+
+       <p class="footer-tagline">
+      Explore | Dream | Discover</p>
+
+        <div class="footer-rating">
+
+
+            <small>Trusted by 5000+ Travelers</small>
+
+        </div>
+
+    </div>
+    <hr>
+<div class="footer-container">
+
+ 
+
+    <!-- Quick Links -->
+
+    <div class="footer-box">
+
+        <h3>Quick Links</h3>
+
+        <ul>
+
+            <li><a href="himachaltourism.html">Home</a></li>
+
+            <li><a href="#">Destinations</a></li>
+
+            <li><a href="#">Tour Packages</a></li>
+
+            <li><a href="#">Reviews</a></li>
+
+            <li><a href="#">Contact</a></li>
+
+        </ul>
+
+    </div>
+
+    <!-- Services -->
+
+    <div class="footer-box">
+
+        <h3>Our Services</h3>
+
+        <ul>
+
+            <li>Cab Booking</li>
+
+            <li> Local Sightseeing</li>
+
+            <li>Airport Pickup</li>
+
+            <li> Hotel Assistance</li>
+
+            <li> Custom Tour Packages</li>
+
+        </ul>
+
+    </div>
+
+   
+
+    <div class="footer-box">
+
+        <h3>Contact Us</h3>
+
+        <p> Himachal Pradesh, India</p>
+
+        <p> +91 7876846613</p>
+
+        <p> support@travelinhimachal.co.in</p>
+
+       
+
+    </div>
+
+</div>
+
+<!-- Newsletter -->
+
+<div class="newsletter">
+
+    <h3>Get Travel Updates</h3>
+
+    <p>Subscribe to receive exclusive offers & travel tips.</p>
+
+    <div class="newsletter-box">
+        
+        <div class="email-input">
+    <i class="fa-regular fa-envelope"></i>
+        <input type="email" placeholder="Enter email address" id="newsletterEmail" method="post">
+    
+    </div>
+
+        <button id="subscribeBtn">Subscribe</button>
+</div>
+</div>
+
+<!-- Social -->
+
+<div class="social-links">
+
+<a href="#"><img src="https://cdn-icons-png.flaticon.com/512/2111/2111463.png"></a>
+
+<a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733547.png"></a>
+
+<a href="#"><img src="https://cdn-icons-png.flaticon.com/512/733/733579.png"></a>
+
+<a href="#"><img src="https://cdn-icons-png.flaticon.com/512/841/841364.png"></a>
+
+</div>
+
+
+<div class="footer-bottom">
+<hr>
+
+<p>© 2026 Travel In Himachal. All Rights Reserved.</p>
+
+<div>
+
+<a href="#">Privacy Policy</a>
+
+<a href="#">Terms & Conditions</a>
+
+<a href="#">Cancellation Policy</a>
+
+</div>
+
+</div>
+
+</footer>
+
+
+ <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
+<script>
+  
+document.addEventListener("DOMContentLoaded", () => {
+    const loader = document.getElementById("preloader");
+
+    setTimeout(() => {
+        loader.classList.add("hide");
+
+        setTimeout(() => {
+            loader.style.display = "none";
+        }, 600);
+    }, 1800);
+});
+ // ══════════════════════════════════════════
+// SIDE MENU LINKS
+// ══════════════════════════════════════════
+
+document.querySelectorAll("#sideMenu .menu-item a").forEach(link => {
+
+    link.addEventListener("click", function () {
+
+        // Close side menu
+        document.getElementById("sideMenu").classList.remove("active");
+
+        // Close overlay
+        document.getElementById("menuOverlay").style.display = "none";
+
+    });
+
+});
+
+
+// ══════════════════════════════════════════
+// MENU OPEN / CLOSE
+// ══════════════════════════════════════════
+
+document.getElementById("menuBtn").addEventListener("click", () => {
+
+    document.getElementById("sideMenu").classList.add("active");
+
+    document.getElementById("menuOverlay").style.display = "block";
+
+});
+
+
+document.getElementById("menuOverlay").addEventListener("click", () => {
+
+    document.getElementById("sideMenu").classList.remove("active");
+
+    document.getElementById("menuOverlay").style.display = "none";
+
+});
+
+
+// ══════════════════════════════════════════
+// SLIDER
+// ══════════════════════════════════════════
+
+const slides = document.getElementById("slides");
+const dots = document.querySelectorAll(".dot");
+
+let index = 0;
+const total = dots.length;
+
+
+function goToSlide(i) {
+
+    if (i >= total) {
+        index = 0;
+    }
+    else if (i < 0) {
+        index = total - 1;
+    }
+    else {
+        index = i;
+    }
+
+
+    slides.style.transform =
+        `translateX(-${index * 100}%)`;
+
+
+    dots.forEach(dot =>
+        dot.classList.remove("active")
+    );
+
+
+    dots[index].classList.add("active");
+
+}
+
+
+// NEXT BUTTON
+document.querySelector(".next").onclick = () =>
+    goToSlide(index + 1);
+
+
+// PREVIOUS BUTTON
+document.querySelector(".prev").onclick = () =>
+    goToSlide(index - 1);
+
+
+// DOTS
+dots.forEach((dot, i) => {
+
+    dot.onclick = () =>
+        goToSlide(i);
+
+});
+
+
+// AUTO SLIDER
+setInterval(() => {
+
+    goToSlide(index + 1);
+
+}, 6000);
+// BOOKING FORM
+// =====================================================
+
+const form = document.querySelector(".quick-booking-form");
+
+
+// =====================================================
+// BOOKING POPUP ELEMENTS
+// =====================================================
+
+const bookingPopup = document.querySelector(".booking-popup");
+const closeBooking = document.querySelector(".close-booking");
+const bookingCab = document.getElementById("bookingCab");
+
+const bookingInputs = bookingPopup.querySelectorAll("input");
+
+
+// =====================================================
+// POPUP STATE
+// =====================================================
+
+let popupOpen = false;
+let popupWasClosedByScroll = false;
+let bookingAutoTimer = null;
+
+
+
+
+function isAnyPopupActive(){
+    return document.querySelector
+    (".about-popup.active, .contact-popup.active")!==null;
+
+}
+
+function startBookingAutoOpen(){
+    clearTimeout(bookingAutoTimer);
+
+    bookingAutoTimer = setTimeout(function(){
+        if(popupOpen){
+            return;
+        }
+        if(isAnyPopupActive()){
+            return;
+        }
+        if(window.scrollY === 0){
+            openBookingPopup();
+        }
+    },20000);
+}
+
+// =====================================================
+// FLATPICKR VARIABLE
+// =====================================================
+
+let datePicker = null;
+
+
+// =====================================================
+// OPEN BOOKING POPUP
+// =====================================================
+
+function openBookingPopup() {
+
+    bookingPopup.style.display = "block";
+
+    bookingPopup.classList.add("attention");
+    bookingPopup.classList.add("active");
+
+    popupOpen = true;
+
+    document.body.classList.add("popup-open");
+}
+
+
+// =====================================================
+// CLOSE BOOKING POPUP
+// =====================================================
+
+function closeBookingPopup() {
+
+    bookingPopup.style.display = "none";
+
+    bookingPopup.classList.remove("attention");
+    bookingPopup.classList.remove("active");
+
+    popupOpen = false;
+
+    document.body.classList.remove("popup-open");
+
+
+    // Close Flatpickr calendar
+ 
+
+    if (datePicker) {
+
+        datePicker.close();
+
+    }
+
+
+};
+
+
+window.addEventListener("load", function(){
+  clearTimeout(bookingAutoTimer);
+
+  bookingAutoTimer = setTimeout(function(){
+
+    if(!popupOpen && !isAnyPopupActive() && window.scrollY===0){
+        openBookingPopup();
+    }
+  },3000);
+});
+
+
+// =====================================================
+// POPUP SCROLL BEHAVIOUR
+// =====================================================
+
+window.addEventListener("scroll", function () {
+
+    const scrollY = window.scrollY;
+    const viewportHeight = window.innerHeight;
+
+    if(datePicker){
+        datePicker.close();
+    }
+
+    if (scrollY > viewportHeight) {
+
+        if (popupOpen) {
+
+            closeBookingPopup();
+
+            popupWasClosedByScroll = true;
+
+        }
+
+        return;
+    }
+
+    if (scrollY === 0 && popupWasClosedByScroll) {
+
+        popupWasClosedByScroll = false;
+
+        startBookingAutoOpen();
+
+    }
+
+});
+
+// =====================================================
+// MANUAL CLOSE BUTTON
+// =====================================================
+
+closeBooking.addEventListener("click", function () {
+
+    closeBookingPopup();
+    popupWasClosedByScroll=false;
+
+   
+
+});
+
+
+// =====================================================
+// OPEN POPUP FROM NAVBAR
+// =====================================================
+
+bookingCab.addEventListener("click", function (e) {
+
+    e.preventDefault();
+
+    popupWasClosedByScroll = false;
+
+    openBookingPopup();
+
+});
+
+
+// =====================================================
+// STOP ATTENTION ANIMATION WHEN INPUT IS FOCUSED
+// =====================================================
+
+bookingInputs.forEach(function (input) {
+
+    input.addEventListener("focus", function () {
+
+        bookingPopup.classList.remove("attention");
+
+    });
+
+});
+
+// =====================================================
+// MOBILE NUMBER / INTL TEL INPUT - BOOKING FORM
+// =====================================================
+
+const phoneInput = document.getElementById("userMobile");
+
+const iti = window.intlTelInput(phoneInput, {
+
+    initialCountry: "in",
+
+    separateDialCode: true,
+
+    preferredCountries: ["in", "us", "gb"],
+
+    nationalMode: true,
+
+    utilsScript:
+        "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+
+});
+
+
+// =====================================================
+// MOBILE NUMBER VALIDATION
+// =====================================================
+
+function validateMobile(showMessage = false) {
+
+    const value = phoneInput.value.trim();
+
+    // EMPTY NUMBER
+    if (value === "") {
+
+        if (showMessage) {
+
+            phoneInput.setCustomValidity(
+                "Please enter your mobile number."
+            );
+
+        } else {
+
+            phoneInput.setCustomValidity("");
+
+        }
+
+        return false;
+    }
+
+
+    // INVALID NUMBER
+    if (!iti.isValidNumber()) {
+
+        if (showMessage) {
+
+            phoneInput.setCustomValidity(
+                "Please enter a valid mobile number."
+            );
+
+        } else {
+
+            phoneInput.setCustomValidity("");
+
+        }
+
+        return false;
+    }
+
+
+    // VALID NUMBER
+
+    phoneInput.setCustomValidity("");
+
+    return true;
+}
+
+
+// =====================================================
+// MOBILE INPUT EVENT
+// =====================================================
+
+phoneInput.addEventListener("input", function () {
+
+    phoneInput.setCustomValidity("");
+
+    checkForm();
+
+});
+
+
+// =====================================================
+// COUNTRY CHANGE
+// =====================================================
+
+phoneInput.addEventListener("countrychange", function () {
+
+    phoneInput.setCustomValidity("");
+
+    checkForm();
+
+});
+
+
+// =====================================================
+// FORM BUTTON + REQUIRED INPUTS
+// =====================================================
+
+const button = form.querySelector(".see-price-btn");
+
+const requiredInputs = form.querySelectorAll(
+    "input[required]"
+);
+
+
+// =====================================================
+// CHECK FORM
+// =====================================================
+
+function checkForm() {
+
+    let allFilled = true;
+
+
+    // CHECK REQUIRED INPUTS
+
+    requiredInputs.forEach(function (input) {
+
+        if (input.value.trim() === "") {
+
+            allFilled = false;
+
+        }
+
+    });
+
+
+    // CHECK MOBILE
+
+    if (
+        phoneInput.value.trim() === "" ||
+        !iti.isValidNumber()
+    ) {
+
+        allFilled = false;
+
+    }
+
+
+    // BUTTON STATE
+
+    button.classList.toggle(
+        "form-valid",
+        allFilled
+    );
+
+}
+
+
+// =====================================================
+// REQUIRED INPUT EVENTS
+// =====================================================
+
+requiredInputs.forEach(function (input) {
+
+    input.addEventListener(
+        "input",
+        checkForm
+    );
+
+    input.addEventListener(
+        "change",
+        checkForm
+    );
+
+});
+
+
+// =====================================================
+// BOOKING FORM SUBMIT
+// =====================================================
+
+form.addEventListener("submit", function (e) {
+
+    e.preventDefault();
+
+    let allFilled = true;
+
+
+    // CHECK REQUIRED INPUTS
+
+    requiredInputs.forEach(function (input) {
+
+        if (input.value.trim() === "") {
+
+            allFilled = false;
+
+        }
+
+    });
+
+
+    // FINAL MOBILE VALIDATION
+
+    if (!validateMobile(true)) {
+
+        allFilled = false;
+
+    }
+
+
+    // STOP IF INVALID
+
+    if (!allFilled) {
+
+        form.reportValidity();
+
+        return;
+
+    }
+
+
+    // =================================================
+    // SAVE CAB BOOKING DATA
+    // =================================================
+
+    sessionStorage.setItem(
+        "cabMobile",
+        iti.getNumber()
+    );
+
+    sessionStorage.setItem(
+        "cabDate",
+        document.getElementById("bookingDate").value.trim()
+    );
+
+    sessionStorage.setItem(
+        "cabPickup",
+        document.getElementById("pickupLocation").value.trim()
+    );
+
+    sessionStorage.setItem(
+        "cabDropoff",
+        document.getElementById("dropoffLocation").value.trim()
+    );
+
+
+    // GO TO NEXT PAGE
+
+    window.location.href = "booking.html";
+
+});
+
+
+// =====================================================
+// INITIAL FORM CHECK
+// =====================================================
+
+checkForm();
+
+
+// =====================================================
+// BOOKING DATE CALENDAR
+// =====================================================
+
+const maxDate = new Date();
+
+maxDate.setMonth(
+    maxDate.getMonth() + 4
+);
+
+
+// =====================================================
+// INITIALIZE FLATPICKR
+// =====================================================
+
+datePicker = flatpickr("#bookingDate", {
+
+    dateFormat: "d-m-Y",
+
+    minDate: "today",
+
+    maxDate: maxDate
+
+});
+
+
+// =====================================================
+// CALENDAR ICON
+// =====================================================
+
+document
+    .getElementById("calendarIcon")
+    .addEventListener("click", function () {
+
+        datePicker.open();
+
+    });
+
+
+// =====================================================
+// ABOUT POPUP
+// =====================================================
+
+const aboutBtn =
+    document.getElementById("aboutBtn");
+
+const aboutPopup =
+    document.getElementById("aboutPopup");
+
+const aboutClose =
+    document.getElementById("aboutClose");
+
+const aboutOverlay =
+    document.querySelector(".about-popup-overlay");
+
+
+// OPEN ABOUT
+
+aboutBtn.addEventListener("click", function(e) {
+
+    e.preventDefault();
+
+
+    if (popupOpen) {
+
+        closeBookingPopup();
+
+    }
+
+
+    aboutPopup.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+
+});
+
+
+// CLOSE ABOUT
+
+function closeAboutPopup() {
+
+    aboutPopup.classList.remove("active");
+
+    document.body.style.overflow = "";
+
+    startBookingAutoOpen();
+
+}
+
+
+// X BUTTON
+
+aboutClose.addEventListener(
+    "click",
+    closeAboutPopup
+);
+
+
+// OVERLAY
+
+aboutOverlay.addEventListener(
+    "click",
+    closeAboutPopup
+);
+
+
+// ESC
+
+document.addEventListener(
+    "keydown",
+    function(e) {
+
+        if (
+            e.key === "Escape" &&
+            aboutPopup.classList.contains("active")
+        ) {
+
+            closeAboutPopup();
+
+        }
+
+    }
+);
+
+
+// =====================================================
+// CONTACT POPUP
+// =====================================================
+
+const contactBtn =
+    document.getElementById("contactBtn");
+
+const contactPopup =
+    document.getElementById("contactPopup");
+
+const contactClose =
+    document.getElementById("contactClose");
+
+const contactOverlay =
+    document.querySelector(".contact-popup-overlay");
+
+
+// OPEN CONTACT POPUP
+
+contactBtn.addEventListener("click", function (e) {
+
+    e.preventDefault();
+
+
+    if (popupOpen) {
+
+        closeBookingPopup();
+
+    }
+
+
+    contactPopup.classList.add("active");
+
+    document.body.style.overflow = "hidden";
+
+});
+
+
+// CLOSE CONTACT POPUP
+
+contactClose.addEventListener("click", function () {
+
+    contactPopup.classList.remove("active");
+
+    document.body.style.overflow = "";
+
+    startBookingAutoOpen();
+
+});
+
+
+// CLOSE WHEN CLICKING OUTSIDE MODAL
+
+contactOverlay.addEventListener("click", function () {
+
+    contactPopup.classList.remove("active");
+
+    document.body.style.overflow = "";
+
+    startBookingAutoOpen();
+
+});
+
+
+// =====================================================
+// CONTACT FORM
+// =====================================================
+
+const contactForm =
+    document.getElementById("contactForm");
+
+const contactPhoneInput =
+    document.getElementById("contactMobile");
+
+const contactEmail =
+    document.getElementById("contactEmail");
+
+
+// =====================================================
+// CONTACT MOBILE / INTL TEL INPUT
+// =====================================================
+
+const contactIti =
+    window.intlTelInput(
+        contactPhoneInput,
+        {
+
+            initialCountry: "in",
+
+            separateDialCode: true,
+
+            preferredCountries: ["in", "us", "gb"],
+
+            nationalMode: true,
+
+            utilsScript:
+                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js"
+
+        }
+    );
+
+
+// =====================================================
+// CONTACT MOBILE INPUT
+// =====================================================
+
+contactPhoneInput.addEventListener(
+    "input",
+    function () {
+
+        this.setCustomValidity("");
+
+    }
+);
+
+
+// =====================================================
+// CONTACT COUNTRY CHANGE
+// =====================================================
+
+contactPhoneInput.addEventListener(
+    "countrychange",
+    function () {
+
+        this.setCustomValidity("");
+
+    }
+);
+
+
+// =====================================================
+// CONTACT EMAIL INPUT
+// =====================================================
+
+contactEmail.addEventListener(
+    "input",
+    function () {
+
+        this.setCustomValidity("");
+
+    }
+);
+
+
+// =====================================================
+// CONTACT FORM SUBMIT
+// =====================================================
+
+contactForm.addEventListener(
+    "submit",
+    function (e) {
+
+        e.preventDefault();
+
+
+        // =================================================
+        // MOBILE - EMPTY
+        // =================================================
+
+        if (
+            contactPhoneInput.value.trim() === ""
+        ) {
+
+            contactPhoneInput.setCustomValidity(
+                "Please enter your mobile number."
+            );
+
+            contactPhoneInput.reportValidity();
+
+            return;
+
+        }
+
+
+        // =================================================
+        // MOBILE - INVALID
+        // =================================================
+
+        if (
+            !contactIti.isValidNumber()
+        ) {
+
+            contactPhoneInput.setCustomValidity(
+                "Please enter a valid mobile number."
+            );
+
+            contactPhoneInput.reportValidity();
+
+            return;
+
+        }
+
+
+        // =================================================
+        // EMAIL - EMPTY
+        // =================================================
+
+        if (
+            contactEmail.value.trim() === ""
+        ) {
+
+            contactEmail.setCustomValidity(
+                "Please enter your email address."
+            );
+
+            contactEmail.reportValidity();
+
+            return;
+
+        }
+
+
+        // =================================================
+        // EMAIL - INVALID
+        // =================================================
+
+        if (
+            !contactEmail.checkValidity()
+        ) {
+
+            contactEmail.setCustomValidity(
+                "Please enter a valid email address."
+            );
+
+            contactEmail.reportValidity();
+
+            return;
+
+        }
+
+
+        // =================================================
+        // ALL VALID
+        // =================================================
+
+        contactPhoneInput.setCustomValidity("");
+
+        contactEmail.setCustomValidity("");
+
+
+        // YAHAN ACTUAL CONTACT FORM SUBMIT CODE LAGAO
+
+    }
+);
+
+// scroll to explore //
+document.querySelectorAll(".explore").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+        e.preventDefault();
+        // popup close by explore btn //
+         closeBookingPopup();
+         popupWasClosedByScroll=true;
+         //-----------------------------//
+        const target = document.getElementById("marqueeNav");
+        const marqueeHeight = document.querySelector(".navbar").offsetHeight;
+
+        const targetPosition =
+            target.getBoundingClientRect().top + window.pageYOffset - marqueeHeight;
+
+        window.scrollTo({
+            top:targetPosition,
+            behavior: "smooth"
+        });
+    });
+});
+/** marquee effect **/
+const track = document.getElementById("marqueeTrack");
+const original = track.querySelector(".marquee-item");
+
+// Screen fill karne ke liye clones banao
+while (track.scrollWidth < window.innerWidth * 3) {
+    track.appendChild(original.cloneNode(true));
+}
+
+let x = 0;
+const speed = 1; // Speed (0.5 = slow, 1 = medium, 2 = fast)
+
+function animate() {
+
+    x -= speed;
+
+    const first = track.firstElementChild;
+
+    // Jab pehla item poori tarah bahar nikal jaaye
+    if (-x >= first.offsetWidth) {
+        x += first.offsetWidth;
+        track.appendChild(first);
+    }
+
+    track.style.transform = `translateX(${x}px)`;
+
+    requestAnimationFrame(animate);
+}
+
+animate();
+
+/** places popup image effect**/
+function openImage(src,title){
+    document.getElementById("popup").style.display="flex";
+    document.getElementById("popupImg").src=src;
+    document.getElementById("popupTitle").innerHTML=title;
+
+    document.body.style.overflow = "hidden";
+    currentPlace = title;
+    expanded = false;
+    showPlaces();
+}
+
+function showPlaces(){
+
+const list=document.getElementById("placesList");
+
+list.innerHTML="";
+
+const arr=touristPlaces[currentPlace] || [];
+
+const limit=expanded ? arr.length : 4;
+
+for(let i=0;i<limit;i++){
+
+list.innerHTML+=`<li> ${arr[i]}</li>`;
+
+}
+
+const btn=document.getElementById("toggleBtn");
+
+if(arr.length<=4){
+
+btn.style.display="none";
+
+}else{
+
+btn.style.display="block";
+btn.innerText=expanded ? " " : "More.. ";
+
+}
+
+}
+
+function togglePlaces(){
+
+expanded=!expanded;
+
+showPlaces();
+
+}
+function closeImage(){
+    document.getElementById("popup").style.display="none";
+    document.body.style.overflow = "auto";
+}
+document.getElementById("closeBtn").addEventListener("click", closeImage);
+
+
+
+
+// places list//
+const touristPlaces = {
+
+SHIMLA:[
+"Jakhoo Temple",
+"The Ridge",
+"Mall Road",
+"Christ Church",
+"Kufri",
+"Green Valley",
+"Mashobra",
+"Naldehra",
+"Chail",
+"Rohru"
+],
+
+MANALI:[
+"Hadimba Temple",
+"Solang Valley",
+"Rohtang Pass",
+"Atal Tunnel",
+"Jogini Waterfall",
+"Vashisht Temple",
+"Old Manali",
+"Manu Temple"
+],
+
+DHARAMSHALA:[
+"McLeodganj",
+"Bhagsu Waterfall",
+"Triund",
+"Dal Lake",
+"Namgyal Monastery",
+"St. John Church"
+],
+
+"SPITI-VALLY":[
+"Key Monastery",
+"Chandratal Lake",
+"Kaza",
+"Hikkim",
+"Langza",
+"Komic"
+],
+
+KASOL:[
+"Manikaran Sahib",
+"Tosh",
+"Kheerganga",
+"Chalal",
+"Pulga",
+"Malana"
+],
+
+KANGRA:[
+"Kangra Fort",
+"Masroor Temple",
+"Kareri Lake",
+"Bir Billing",
+"Baijnath Temple"
+],
+
+DALHOUSIE:[
+"Khajjiar",
+"Panchpula",
+"Dainkund Peak",
+"Satdhara Falls",
+"St. John's Church"
+],
+
+MANDI:[
+"Prashar Lake",
+"Rewalsar Lake",
+"Bhutnath Temple",
+"Barot Valley"
+],
+
+MCLEODGANJ:[
+"Bhagsu Falls",
+"Triund",
+"Dal Lake",
+"Namgyal Monastery"
+],
+
+KINNAUR:[
+"Kalpa",
+"Sangla Valley",
+"Chitkul",
+"Reckong Peo"
+],
+
+CHAMBA:[
+"Khajjiar",
+"Chamunda Temple",
+"Bhuri Singh Museum",
+"Chamera Lake"
+],
+
+KASAULI:[
+"Monkey Point",
+"Gilbert Trail",
+"Sunset Point",
+"Christ Church",
+"Mall Road"
+]
+
+};
+
+let expanded=false;
+let currentPlace="";
+
+//place card data//
+document.querySelectorAll(".tour-book-btn").forEach(button => {
+
+    button.addEventListener("click", function () {
+
+        const card = this.closest(".place-card");
+
+        const tourName = card
+            .querySelector(".place-content h3")
+            .textContent
+            .trim();
+
+        const duration = card
+            .querySelector(".tour-info p")
+            .textContent
+            .trim();
+
+        console.log("Tour Name:", tourName);
+        console.log("Duration:", duration);
+
+
+        // 🔹 TOUR DATA SAVE
+        sessionStorage.setItem("selectedTourName", tourName);
+        sessionStorage.setItem("selectedTourDuration", duration);
+
+
+        // 🔹 CAR BOOKING PAGE
+        window.location.href = "booking.html";
+
+    });
+
+});
+/*feature card */
+
+
+const reveals = document.querySelectorAll(".reveal");
+
+function revealElements() {
+    reveals.forEach((element) => {
+        const elementTop = element.getBoundingClientRect().top;
+        const windowHeight = window.innerHeight;
+
+        if (elementTop < windowHeight - 80) {
+            element.classList.add("show");
+        }
+    });
+}
+
+window.addEventListener("scroll", revealElements);
+window.addEventListener("load", revealElements);
+
+
+// name validation //
+ const nameInput = document.getElementById("contactName");
+
+nameInput.addEventListener("input", function(){
+
+    this.value = this.value
+    .toLowerCase()
+    .replace(/\b\w/g, function(char){
+        return char.toUpperCase();
+    });
+
+});
+// REVIEW DATA
+// ==========================
+
+let reviews = [
+
+{
+    name:"Rahul Sharma",
+    place:"Manali",
+    rating:5,
+    review:"Amazing experience. The trip was well planned and the driver was very helpful. Beautiful places and smooth journey."
+},
+
+{
+    name:"Priya Verma",
+    place:"Shimla",
+    rating:4,
+    review:"Had a wonderful Himachal trip. Hotels and cab service were excellent."
+},
+
+{
+    name:"Amit Singh",
+    place:"Spiti Valley",
+    rating:5,
+    review:"One of the best travel experiences. Everything was perfectly managed."
+},
+
+{
+    name:"Neha Kapoor",
+    place:"Kasol",
+    rating:5,
+    review:"Beautiful destination and very comfortable travel experience."
+}
+
+];
+
+
+
+
+// ==========================
+// ELEMENTS
+// ==========================
+
+const reviewTrack = document.getElementById("reviewTrack");
+
+const sliderDots = document.getElementById("sliderDots");
+
+const prevBtn = document.getElementById("prevReview");
+
+const nextBtn = document.getElementById("nextReview");
+
+const overallStars = document.getElementById("overallStars");
+
+const overallScore = document.getElementById("overallScore");
+
+const reviewCount = document.getElementById("reviewCount");
+
+
+
+
+// ==========================
+// GENERATE STARS
+// ==========================
+
+
+function generateStars(rating){
+
+    let stars="";
+
+    for(let i=1;i<=5;i++){
+
+        if(i<=rating){
+
+            stars += "★";
+
+        }
+        else{
+
+            stars += "☆";
+
+        }
+
+    }
+
+    return stars;
+
+}
+
+
+
+
+// ==========================
+// DISPLAY REVIEWS
+// ==========================
+
+
+function showReviews(){
+
+
+reviewTrack.innerHTML="";
+
+
+reviews.forEach((item,index)=>{
+
+
+let card=document.createElement("div");
+
+
+card.className="review-card";
+
+
+card.innerHTML=`
+
+<div class="quote">
+"
+</div>
+
+
+<p class="review-text">
+
+${item.review}
+
+</p>
+
+
+
+
+
+
+<div class="review-stars">
+
+${generateStars(item.rating)}
+
+</div>
+
+
+
+<div class="review-footer">
+
+
+<div class="avatar">
+
+${item.name.charAt(0)}
+
+</div>
+
+
+<div class="review-user">
+
+
+<h4>
+
+${item.name}
+
+<span class="verified">
+✔️ Verified
+</span>
+
+</h4>
+
+
+<span>
+${item.place}
+</span>
+
+
+</div>
+
+
+</div>
+
+`;
+
+
+
+reviewTrack.appendChild(card);
+
+
+
+});
+
+
+
+calculateRating();
+
+
+createDots();
+
+
+
+}
+
+
+
+
+//overall rating //
+
+function calculateRating(){
+
+
+let total=0;
+
+
+reviews.forEach(item=>{
+
+total+=item.rating;
+
+});
+
+
+let avg=(total/reviews.length).toFixed(1);
+
+
+overallStars.innerHTML=generateStars(Math.round(avg));
+
+
+overallScore.innerHTML=avg+"/5";
+
+
+reviewCount.innerHTML=
+`Based on ${reviews.length} traveler reviews`;
+
+}
+
+
+//slider//
+
+let currentSlide=0;
+
+
+
+function slideReview(){
+
+
+let cardWidth =
+document.querySelector(".review-card").offsetWidth + 25;
+
+
+reviewTrack.style.transform=
+`translateX(-${currentSlide*cardWidth}px)`;
+
+
+updateDots();
+
+
+}
+
+
+
+
+nextBtn.addEventListener("click",()=>{
+
+
+let visible =
+window.innerWidth <=768 ? 1 :
+window.innerWidth <=1024 ? 2 : 3;
+
+
+
+if(currentSlide < reviews.length-visible){
+
+currentSlide++;
+
+}
+else{
+
+currentSlide=0;
+
+}
+
+
+slideReview();
+
+
+});
+
+
+
+
+prevBtn.addEventListener("click",()=>{
+
+
+if(currentSlide>0){
+
+currentSlide--;
+
+}
+else{
+
+currentSlide=reviews.length-1;
+
+}
+
+
+slideReview();
+
+
+});
+
+
+
+
+function createDots(){
+
+
+sliderDots.innerHTML="";
+
+
+let totalDots=Math.ceil(
+reviews.length/
+(window.innerWidth<=768?1:
+window.innerWidth<=1024?2:3)
+);
+
+
+
+for(let i=0;i<totalDots;i++){
+
+
+let dot=document.createElement("span");
+
+
+dot.className="dot";
+
+
+if(i===0)
+dot.classList.add("active");
+
+
+
+dot.onclick=()=>{
+
+
+currentSlide=i;
+
+slideReview();
+
+
+};
+
+
+
+sliderDots.appendChild(dot);
+
+
+
+}
+
+
+}
+
+
+
+
+function updateDots(){
+
+
+let dots=document.querySelectorAll(".dot");
+
+
+dots.forEach(dot=>{
+
+dot.classList.remove("active");
+
+});
+
+
+if(dots[currentSlide]){
+
+dots[currentSlide].classList.add("active");
+
+}
+
+
+}
+
+// ==========================
+// POPUP OPEN CLOSE
+// ==========================
+
+
+const popup =
+document.getElementById("reviewPopup");
+
+
+document.getElementById("openReview")
+.onclick=()=>{
+
+popup.style.display="flex";
+
+};
+
+
+
+document.getElementById("closeReview")
+.onclick=()=>{
+
+popup.style.display="none";
+
+};
+
+
+
+
+
+// ==========================
+// STAR SELECT
+// ==========================
+
+
+let selectedRating=0;
+
+
+const ratingStars=
+document.querySelectorAll(".rating-stars i");
+
+
+
+ratingStars.forEach(star=>{
+
+
+star.onclick=()=>{
+
+
+selectedRating=
+Number(star.dataset.rate);
+
+
+
+ratingStars.forEach(s=>{
+
+s.classList.remove("active");
+
+});
+
+
+
+for(let i=0;i<selectedRating;i++){
+
+ratingStars[i]
+.classList.add("active");
+
+}
+
+
+};
+
+
+});
+
+
+
+
+
+// ==========================
+// SUBMIT REVIEW
+// ==========================
+document.getElementById("reviewForm")
+.addEventListener("submit",(e)=>{
+
+    e.preventDefault();
+
+
+    if(selectedRating === 0){
+
+        Swal.fire({
+
+            icon:"warning",
+
+            title:"Rating Required",
+
+            text:"Please select your rating first",
+
+            confirmButtonColor:"#0b5ed7"
+
+        });
+
+        return;
+
+    }
+
+
+
+    let newReview={
+
+        name:
+        document.getElementById("userName").value,
+
+
+        place:
+        document.getElementById("userPlace").value,
+
+
+        rating:selectedRating,
+
+
+        review:
+        document.getElementById("userReview").value
+
+    };
+
+
+
+    reviews.unshift(newReview);
+
+
+
+    showReviews();
+
+
+
+    // Close popup
+
+    popup.style.display="none";
+
+
+
+    e.target.reset();
+
+
+
+    ratingStars.forEach(star=>{
+
+        star.classList.remove("active");
+
+    });
+
+
+    selectedRating=0;
+
+
+
+    // SUCCESS SOUND
+
+    let sound=document.getElementById("bookingsuccessSound");
+
+    sound.currentTime=0;
+
+    sound.play();
+
+
+
+
+    // SWEET ALERT
+
+    Swal.fire({
+
+        icon:"success",
+
+        title:"Thank You! 🎉",
+
+        text:"Your experience has been shared successfully.",
+
+        confirmButtonText:"Awesome",
+
+        confirmButtonColor:"#0b5ed7",
+
+        timer:3000,
+
+        timerProgressBar:true
+
+    });
+});
+// ==========================
+// READ MORE
+// ==========================
+
+
+document.addEventListener("click",(e)=>{
+
+
+if(e.target.classList.contains("read-more")){
+
+
+let text=e.target.previousElementSibling;
+
+
+text.classList.toggle("expanded");
+
+
+
+e.target.innerHTML=
+text.classList.contains("expanded")
+?
+"Read Less"
+:
+"Read More";
+
+
+}
+
+});
+
+// INITIAL LOAD
+
+showReviews();
+
+ // ══════════════════════════════════════════
+  //  BACK TO TOP
+  // ══════════════════════════════════════════
+  const topBtn = document.getElementById("backtoTop");
+
+  window.onscroll = function () {
+    topBtn.style.display = document.documentElement.scrollTop > 100 ? "block" : "none";
+  };
+
+  topBtn.onclick = function () {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+ 
+ // newsletter email validation //
+const emailInput = document.getElementById("newsletterEmail");
+const subscribeBtn = document.getElementById("subscribeBtn");
+
+emailInput.addEventListener("input", () => {
+
+    if(emailInput.checkValidity() && emailInput.value.trim() !== ""){
+        subscribeBtn.classList.add("valid");
+    }else{
+        subscribeBtn.classList.remove("valid");
+    }
+
+});
+</script>
+</body>
+</html>
