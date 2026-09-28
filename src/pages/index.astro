@@ -1,0 +1,24 @@
+---
+// Week 1 placeholder. The full home page (hero, tours, fleet, reviews)
+// is ported from the original design in weeks 2–3.
+import Base from '@/layouts/Base.astro';
+import { SITE } from '@/lib/site';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TravelAgency',
+  name: SITE.name,
+  url: Astro.site?.toString(),
+  telephone: SITE.phone,
+  email: SITE.email,
+  areaServed: SITE.region,
+  address: { '@type': 'PostalAddress', addressRegion: SITE.region, addressCountry: SITE.country },
+};
+---
+<Base title={SITE.name} description="Book tours and cabs across Himachal Pradesh — Shimla, Manali, Spiti, Dharamshala and more.">
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(jsonLd)} />
+  <main class="mx-auto grid min-h-screen max-w-3xl place-content-center gap-4 px-4 text-center">
+    <h1 class="text-4xl font-bold text-brand">{SITE.name}</h1>
+    <p class="text-lg text-slate-600">{SITE.tagline}. The new website is on its way.</p>
+  </main>
+</Base>

@@ -1,0 +1,19 @@
+# Cloudflare Pages response headers (static — no Functions used).
+/*
+  Strict-Transport-Security: max-age=31536000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://challenges.cloudflare.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://*.supabase.co; font-src 'self'; connect-src 'self' https://*.supabase.co wss://*.supabase.co https://cloudflareinsights.com; frame-src https://challenges.cloudflare.com; worker-src 'self'; manifest-src 'self'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+
+/admin/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+/track/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

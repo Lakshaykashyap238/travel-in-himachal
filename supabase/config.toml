@@ -1,0 +1,58 @@
+# Supabase CLI configuration (local development + `supabase config push`).
+# Hosted-project settings marked ⚠ must match the dashboard — see docs/SETUP.md.
+project_id = "travel-in-himachal"
+
+[api]
+enabled = true
+port = 54321
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+max_rows = 500
+
+[db]
+port = 54322
+major_version = 17
+
+[db.seed]
+enabled = false   # catalogue data ships as a migration, not a seed
+
+[realtime]
+enabled = true
+
+[storage]
+enabled = true
+file_size_limit = "2MiB"   # photos are compressed in the browser to ~200 KB first
+
+[auth]
+enabled = true
+site_url = "http://localhost:4321"
+additional_redirect_urls = ["http://localhost:4321/admin"]
+jwt_expiry = 3600
+# ⚠ Only the owner adds staff. Nobody can sign themselves up.
+enable_signup = false
+minimum_password_length = 12
+password_requirements = "lower_upper_letters_digits"
+
+[auth.email]
+enable_signup = false
+double_confirm_changes = true
+enable_confirmations = true
+secure_password_change = true
+max_frequency = "60s"
+
+# ⚠ Two-factor authentication with an authenticator app for staff.
+[auth.mfa]
+max_enrolled_factors = 4
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
+[auth.rate_limit]
+sign_in_sign_ups = 30
+token_verifications = 30
+
+[functions.create-booking]
+enabled = true
+verify_jwt = true   # the website sends the public anon key
+import_map = "./functions/create-booking/deno.json"

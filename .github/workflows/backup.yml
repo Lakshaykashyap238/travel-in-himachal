@@ -1,0 +1,64 @@
+name: Nightly backup & keep-alive
+
+# Runs every night at 02:15 IST. It:
+#   1. pings the Supabase API so the free project never counts as "inactive"
+#      (free projects pause after 7 days without activity);
+#   2. takes an encrypted pg_dump of the database and keeps it for 30 days
+#      as a workflow artifact (replaces the backups Supabase Free lacks).
+#
+# Restore steps: docs/RUNBOOK.md → "Restore a backup".
+on:
+  schedule:
+    - cron: '45 20 * * *'   # 20:45 UTC = 02:15 IST
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: production
+    steps:
+      - name: Keep-alive — touch the public API
+        run: |
+          curl --fail --silent --show-error --max-time 30 \
+            "${{ vars.PUBLIC_SUPABASE_URL }}/rest/v1/packages?select=slug&limit=1" \
+            -H "apikey: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}" > /dev/null
+          echo "Supabase API reachable."
+
+      - name: Install PostgreSQL 17 client (must match the server version)
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq && sudo apt-get install -y -qq postgresql-client-17
+          /usr/lib/postgresql/17/bin/pg_dump --version
+
+      - name: Dump and encrypt
+        env:
+          # Use the Supabase *Session pooler* connection string (IPv4).
+          # The direct connection is IPv6-only and GitHub runners can't reach it.
+          DB_URL: ${{ secrets.SUPABASE_DB_POOLER_URL }}
+          PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          stamp=$(date -u +%Y-%m-%dT%H%MZ)
+          /usr/lib/postgresql/17/bin/pg_dump "$DB_URL" \
+            --format=custom --no-owner \
+            --schema=public --schema=auth \
+            --file="tih-$stamp.dump"
+          test -s "tih-$stamp.dump"
+          gpg --batch --yes --symmetric --cipher-algo AES256 \
+              --passphrase "$PASSPHRASE" --output "tih-$stamp.dump.gpg" "tih-$stamp.dump"
+          shred -u "tih-$stamp.dump"
+          ls -lh tih-*.gpg
+          echo "FILE=tih-$stamp.dump.gpg" >> "$GITHUB_ENV"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.FILE }}
+          path: ${{ env.FILE }}
+          retention-days: 30
+          if-no-files-found: error

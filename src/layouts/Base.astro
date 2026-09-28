@@ -1,0 +1,40 @@
+---
+import '@/styles/global.css';
+import { SITE } from '@/lib/site';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Private pages (admin, tracking) must never be indexed. */
+  noindex?: boolean;
+  image?: string;
+}
+
+const { title, description, noindex = false, image = '/og-default.jpg' } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const fullTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:locale" content="en_IN" />
+    <meta name="theme-color" content="#0a7a2f" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <slot name="head" />
+  </head>
+  <body class="min-h-screen bg-white text-ink antialiased">
+    <slot />
+  </body>
+</html>

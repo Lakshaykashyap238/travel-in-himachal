@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+/* Brand tokens carried over from the original design (green brand, gold accent). */
+@theme {
+  --color-brand: #0a7a2f;
+  --color-brand-dark: #075a22;
+  --color-accent: #ffb52e;
+  --color-ink: #111827;
+  --color-night: #0f172a;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }

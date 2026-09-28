@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /track
+
+Sitemap: https://travelinhimachal.in/sitemap-index.xml

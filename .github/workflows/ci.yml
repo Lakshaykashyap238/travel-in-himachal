@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_call:   # reused by deploy.yml before every production deploy
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  web:
+    name: Website — type check & build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx astro check
+      - run: npm run build
+        env:
+          PUBLIC_SITE_URL: https://example.invalid
+
+  database:
+    name: Database — security & booking tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U postgres" --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run test:db
+        env:
+          TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
+
+  functions:
+    name: Edge Functions — type check & tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: supabase/functions/create-booking
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno check index.ts handler.ts
+      - run: deno test

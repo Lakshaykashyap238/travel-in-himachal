@@ -1,0 +1,15 @@
+{
+  "extends": "astro/tsconfigs/strict",
+  "include": [".astro/types.d.ts", "src/**/*", "supabase/functions/_shared/**/*"],
+  "exclude": ["dist", "supabase/functions/create-booking"],
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "allowImportingTsExtensions": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@shared/*": ["supabase/functions/_shared/*"]
+    }
+  }
+}
