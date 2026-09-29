@@ -1,0 +1,24 @@
+---
+import LegalPage from '@/components/LegalPage.astro';
+import { getCatalogue } from '@/lib/catalogue';
+const { settings: s } = await getCatalogue();
+---
+<LegalPage title="Terms & conditions" description={`Terms for booking tours and cabs with ${s.business_name}.`} path="/terms">
+  <h2>Booking requests</h2>
+  <p>Submitting the booking form sends a request; it is not a confirmed booking. We review each request and confirm or decline it. You can follow the status on the tracking link you receive.</p>
+
+  <h2>Prices</h2>
+  <p>Prices shown on the website are starting prices. The final fare depends on your route, dates, number of travellers and car, and is agreed with you before we confirm the trip. No payment is taken on this website.</p>
+
+  <h2>Your details</h2>
+  <p>Please give accurate contact and trip details. We may decline requests we cannot verify.</p>
+
+  <h2>Changes and cancellations</h2>
+  <p>See our <a href="/cancellation-policy">cancellation policy</a>.</p>
+
+  <h2>Travel conditions</h2>
+  <p>Mountain roads can be affected by weather, landslides, snow and government restrictions. Routes and timings may change for safety; your driver's decisions on safety are final.</p>
+
+  <h2>Contact</h2>
+  <p>Questions about these terms: see our <a href="/contact">contact page</a>.</p>
+</LegalPage>

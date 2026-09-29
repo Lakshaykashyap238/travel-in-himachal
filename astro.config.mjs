@@ -22,6 +22,11 @@ export default defineConfig({
       filter: (page) => !page.includes('/admin') && !page.includes('/track'),
     }),
   ],
+  image: {
+    // Photos the owner uploads in /admin live in Supabase Storage; they are
+    // downloaded and optimised at build time, then served by Cloudflare.
+    remotePatterns: [{ protocol: 'https', hostname: '**.supabase.co' }],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

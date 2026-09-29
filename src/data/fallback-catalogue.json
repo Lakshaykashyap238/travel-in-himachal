@@ -1,0 +1,592 @@
+{
+    "packages": [
+        {
+            "name": "Shimla & Kufri Tour",
+            "slug": "shimla-kufri-3-days",
+            "places": [
+                "Jakhoo Temple",
+                "The Ridge",
+                "Mall Road",
+                "Christ Church",
+                "Kufri",
+                "Green Valley",
+                "Mashobra",
+                "Naldehra",
+                "Chail",
+                "Rohru"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/shimla.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 10,
+            "description": null,
+            "duration_days": 3,
+            "starting_price": null,
+            "duration_nights": 2,
+            "destination_slug": "shimla"
+        },
+        {
+            "name": "Kangra & Bir Billing Tour",
+            "slug": "kangra-bir-billing-3-days",
+            "places": [
+                "Kangra Fort",
+                "Masroor Temple",
+                "Kareri Lake",
+                "Bir Billing",
+                "Baijnath Temple"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/kangra.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 20,
+            "description": null,
+            "duration_days": 3,
+            "starting_price": null,
+            "duration_nights": 2,
+            "destination_slug": "kangra"
+        },
+        {
+            "name": "Dharamshala Tour",
+            "slug": "dharamshala-3-days",
+            "places": [
+                "McLeodganj",
+                "Bhagsu Waterfall",
+                "Triund",
+                "Dal Lake",
+                "Namgyal Monastery",
+                "St. John Church"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/dharamshala.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 30,
+            "description": null,
+            "duration_days": 3,
+            "starting_price": null,
+            "duration_nights": 2,
+            "destination_slug": "dharamshala"
+        },
+        {
+            "name": "Spiti & Kaza Tour",
+            "slug": "spiti-kaza-7-days",
+            "places": [
+                "Key Monastery",
+                "Chandratal Lake",
+                "Kaza",
+                "Hikkim",
+                "Langza",
+                "Komic"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/spiti.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 40,
+            "description": null,
+            "duration_days": 7,
+            "starting_price": null,
+            "duration_nights": 6,
+            "destination_slug": "spiti-valley"
+        },
+        {
+            "name": "McLeodganj Tour",
+            "slug": "mcleodganj-3-days",
+            "places": [
+                "Bhagsu Falls",
+                "Triund",
+                "Dal Lake",
+                "Namgyal Monastery"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/mcleodganj.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 50,
+            "description": null,
+            "duration_days": 3,
+            "starting_price": null,
+            "duration_nights": 2,
+            "destination_slug": "mcleodganj"
+        },
+        {
+            "name": "Kasauli Tour",
+            "slug": "kasauli-2-days",
+            "places": [
+                "Monkey Point",
+                "Gilbert Trail",
+                "Sunset Point",
+                "Christ Church",
+                "Mall Road"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/kasauli.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 60,
+            "description": null,
+            "duration_days": 2,
+            "starting_price": null,
+            "duration_nights": 1,
+            "destination_slug": "kasauli"
+        },
+        {
+            "name": "Kullu, Kasol & Manikaran Sahib Tour",
+            "slug": "kullu-kasol-manikaran-4-days",
+            "places": [
+                "Manikaran Sahib",
+                "Tosh",
+                "Kheerganga",
+                "Chalal",
+                "Pulga",
+                "Malana"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/manikaran.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 70,
+            "description": null,
+            "duration_days": 4,
+            "starting_price": null,
+            "duration_nights": 3,
+            "destination_slug": "kasol"
+        },
+        {
+            "name": "Dalhousie & Khajjiar Tour",
+            "slug": "dalhousie-khajjiar-3-days",
+            "places": [
+                "Khajjiar",
+                "Panchpula",
+                "Dainkund Peak",
+                "Satdhara Falls",
+                "St. John's Church"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/dalhousie.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 80,
+            "description": null,
+            "duration_days": 3,
+            "starting_price": null,
+            "duration_nights": 2,
+            "destination_slug": "dalhousie"
+        },
+        {
+            "name": "Kinnaur & Sangla Valley Tour",
+            "slug": "kinnaur-sangla-6-days",
+            "places": [
+                "Kalpa",
+                "Sangla Valley",
+                "Chitkul",
+                "Reckong Peo"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/kinnaur.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 90,
+            "description": null,
+            "duration_days": 6,
+            "starting_price": null,
+            "duration_nights": 5,
+            "destination_slug": "kinnaur"
+        },
+        {
+            "name": "Chamba & Bharmour Tour",
+            "slug": "chamba-bharmour-4-days",
+            "places": [
+                "Khajjiar",
+                "Chamunda Temple",
+                "Bhuri Singh Museum",
+                "Chamera Lake"
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/chamba.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 100,
+            "description": null,
+            "duration_days": 4,
+            "starting_price": null,
+            "duration_nights": 3,
+            "destination_slug": "chamba"
+        },
+        {
+            "name": "Tirthan Valley & Jibhi Tour",
+            "slug": "tirthan-jibhi-3-days",
+            "places": [
+            ],
+            "summary": null,
+            "best_time": "Mar – Jun",
+            "is_active": true,
+            "itinerary": [
+            ],
+            "exclusions": [
+            ],
+            "group_size": "2 – 6 people",
+            "image_path": "/images/tours/manali.jpg",
+            "inclusions": [
+                "Private cab with experienced driver",
+                "Pickup and drop"
+            ],
+            "sort_order": 110,
+            "description": null,
+            "duration_days": 3,
+            "starting_price": null,
+            "duration_nights": 2,
+            "destination_slug": null
+        }
+    ],
+    "settings": {
+        "about": "Travelling is not just about reaching a destination, but about everything that happens along the way — winding mountain roads, peaceful valleys, snow-covered peaks and the warmth of local people. We plan tours and rides that are comfortable and dependable, so you spend less time worrying about the journey and more time enjoying the mountains.",
+        "email": "support@travelinhimachal.co.in",
+        "hours": null,
+        "phone": "+917876846613",
+        "address": "Himachal Pradesh, India",
+        "tagline": "Tours and cabs across Himachal Pradesh",
+        "whatsapp": null,
+        "stat_years": null,
+        "facebook_url": null,
+        "founder_name": "Lakshay Kashyap",
+        "business_name": "Travel In Himachal",
+        "instagram_url": null,
+        "stat_travellers": null,
+        "google_review_url": null,
+        "cancellation_policy": null
+    },
+    "vehicles": [
+        {
+            "name": "Suzuki Dzire",
+            "slug": "suzuki-dzire",
+            "seats": 4,
+            "luggage": 3,
+            "features": [
+                "Air conditioning",
+                "Music system",
+                "Power windows",
+                "Comfortable seats",
+                "Boot space",
+                "First aid kit"
+            ],
+            "is_active": true,
+            "image_path": "/images/fleet/dzire.png",
+            "sort_order": 10,
+            "description": "Comfortable sedan for couples and small families.",
+            "price_per_day": 2500
+        },
+        {
+            "name": "Maruti Ertiga",
+            "slug": "maruti-ertiga",
+            "seats": 5,
+            "luggage": 4,
+            "features": [
+                "Air conditioning",
+                "Music system",
+                "Power windows",
+                "Comfortable seats",
+                "Boot space",
+                "First aid kit"
+            ],
+            "is_active": true,
+            "image_path": "/images/fleet/ertiga.png",
+            "sort_order": 20,
+            "description": "Spacious MPV for families and groups.",
+            "price_per_day": 3500
+        }
+    ],
+    "destinations": [
+        {
+            "name": "Shimla",
+            "slug": "shimla",
+            "places": [
+                "Jakhoo Temple",
+                "The Ridge",
+                "Mall Road",
+                "Christ Church",
+                "Kufri",
+                "Green Valley",
+                "Mashobra",
+                "Naldehra",
+                "Chail",
+                "Rohru"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/shimla.jpg",
+            "sort_order": 10,
+            "description": null
+        },
+        {
+            "name": "Manali",
+            "slug": "manali",
+            "places": [
+                "Hadimba Temple",
+                "Solang Valley",
+                "Rohtang Pass",
+                "Atal Tunnel",
+                "Jogini Waterfall",
+                "Vashisht Temple",
+                "Old Manali",
+                "Manu Temple"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/manali.jpg",
+            "sort_order": 20,
+            "description": null
+        },
+        {
+            "name": "Dharamshala",
+            "slug": "dharamshala",
+            "places": [
+                "McLeodganj",
+                "Bhagsu Waterfall",
+                "Triund",
+                "Dal Lake",
+                "Namgyal Monastery",
+                "St. John Church"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/dharamshala.jpg",
+            "sort_order": 30,
+            "description": null
+        },
+        {
+            "name": "Spiti Valley",
+            "slug": "spiti-valley",
+            "places": [
+                "Key Monastery",
+                "Chandratal Lake",
+                "Kaza",
+                "Hikkim",
+                "Langza",
+                "Komic"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/spiti.jpg",
+            "sort_order": 40,
+            "description": null
+        },
+        {
+            "name": "Kasol",
+            "slug": "kasol",
+            "places": [
+                "Manikaran Sahib",
+                "Tosh",
+                "Kheerganga",
+                "Chalal",
+                "Pulga",
+                "Malana"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/kasol.jpg",
+            "sort_order": 50,
+            "description": null
+        },
+        {
+            "name": "Kangra",
+            "slug": "kangra",
+            "places": [
+                "Kangra Fort",
+                "Masroor Temple",
+                "Kareri Lake",
+                "Bir Billing",
+                "Baijnath Temple"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/kangra.jpg",
+            "sort_order": 60,
+            "description": null
+        },
+        {
+            "name": "Dalhousie",
+            "slug": "dalhousie",
+            "places": [
+                "Khajjiar",
+                "Panchpula",
+                "Dainkund Peak",
+                "Satdhara Falls",
+                "St. John's Church"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/dalhousie.jpg",
+            "sort_order": 70,
+            "description": null
+        },
+        {
+            "name": "Mandi",
+            "slug": "mandi",
+            "places": [
+                "Prashar Lake",
+                "Rewalsar Lake",
+                "Bhutnath Temple",
+                "Barot Valley"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/prashar-lake.jpg",
+            "sort_order": 80,
+            "description": null
+        },
+        {
+            "name": "McLeodganj",
+            "slug": "mcleodganj",
+            "places": [
+                "Bhagsu Falls",
+                "Triund",
+                "Dal Lake",
+                "Namgyal Monastery"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/mcleodganj.jpg",
+            "sort_order": 90,
+            "description": null
+        },
+        {
+            "name": "Kinnaur",
+            "slug": "kinnaur",
+            "places": [
+                "Kalpa",
+                "Sangla Valley",
+                "Chitkul",
+                "Reckong Peo"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/kinnaur.jpg",
+            "sort_order": 100,
+            "description": null
+        },
+        {
+            "name": "Chamba",
+            "slug": "chamba",
+            "places": [
+                "Khajjiar",
+                "Chamunda Temple",
+                "Bhuri Singh Museum",
+                "Chamera Lake"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/chamba.jpg",
+            "sort_order": 110,
+            "description": null
+        },
+        {
+            "name": "Kasauli",
+            "slug": "kasauli",
+            "places": [
+                "Monkey Point",
+                "Gilbert Trail",
+                "Sunset Point",
+                "Christ Church",
+                "Mall Road"
+            ],
+            "summary": null,
+            "is_active": true,
+            "image_path": "/images/tours/kasauli.jpg",
+            "sort_order": 120,
+            "description": null
+        }
+    ]
+}

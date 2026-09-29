@@ -1,0 +1,40 @@
+name: Publish content
+
+# Triggered by the owner's "Publish changes" button (publish-site Edge
+# Function). Rebuilds the static website from the latest tours, cars,
+# destinations, photos and business details, then uploads it.
+# No code or database changes — those go through deploy.yml.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-content
+  cancel-in-progress: true   # a newer publish supersedes an older one
+
+jobs:
+  website:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+        env:
+          PUBLIC_SITE_URL: ${{ vars.PUBLIC_SITE_URL }}
+          PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
+          PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
+          PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+          REQUIRE_LIVE_CATALOGUE: 'true'
+      - name: Upload to Cloudflare Pages
+        run: npx --yes wrangler@4 pages deploy dist --project-name="${{ vars.CLOUDFLARE_PAGES_PROJECT }}" --branch=main --commit-dirty=true
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}

@@ -1,0 +1,53 @@
+---
+import Icon from './Icon.astro';
+import { formatPhone, whatsappLink, type SiteSettings } from '@/lib/catalogue';
+interface Props { settings: SiteSettings }
+const { settings: s } = Astro.props;
+const year = new Date().getFullYear();
+---
+<footer class="bg-night text-slate-300">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
+    <div>
+      <p class="text-xl font-bold text-white">{s.business_name}</p>
+      {s.tagline && <p class="mt-2 text-sm text-slate-400">{s.tagline}</p>}
+      <div class="mt-5 flex gap-3">
+        {s.instagram_url && <a href={s.instagram_url} class="rounded-full bg-white/10 p-2 hover:bg-white/20" rel="noopener" target="_blank"><Icon name="instagram" label="Instagram" /></a>}
+        {s.facebook_url && <a href={s.facebook_url} class="rounded-full bg-white/10 p-2 hover:bg-white/20" rel="noopener" target="_blank"><Icon name="facebook" label="Facebook" /></a>}
+        {s.whatsapp && <a href={whatsappLink(s.whatsapp)} class="rounded-full bg-white/10 p-2 hover:bg-white/20" rel="noopener" target="_blank"><Icon name="whatsapp" label="WhatsApp" /></a>}
+      </div>
+    </div>
+
+    <nav aria-label="Explore">
+      <p class="font-semibold text-white">Explore</p>
+      <ul class="mt-4 space-y-2 text-sm">
+        <li><a class="hover:text-white" href="/tours">Tour packages</a></li>
+        <li><a class="hover:text-white" href="/destinations">Destinations</a></li>
+        <li><a class="hover:text-white" href="/fleet">Cab booking</a></li>
+        <li><a class="hover:text-white" href="/book">Book a trip</a></li>
+        <li><a class="hover:text-white" href="/about">About us</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <p class="font-semibold text-white">Contact</p>
+      <ul class="mt-4 space-y-3 text-sm">
+        {s.address && <li class="flex gap-2"><Icon name="pin" class="mt-0.5 h-4 w-4 shrink-0" />{s.address}</li>}
+        {s.phone && <li><a class="flex gap-2 hover:text-white" href={`tel:${s.phone}`}><Icon name="phone" class="mt-0.5 h-4 w-4 shrink-0" />{formatPhone(s.phone)}</a></li>}
+        {s.email && <li><a class="flex gap-2 break-all hover:text-white" href={`mailto:${s.email}`}><Icon name="mail" class="mt-0.5 h-4 w-4 shrink-0" />{s.email}</a></li>}
+        {s.hours && <li class="flex gap-2"><Icon name="clock" class="mt-0.5 h-4 w-4 shrink-0" />{s.hours}</li>}
+      </ul>
+    </div>
+
+    <nav aria-label="Legal">
+      <p class="font-semibold text-white">Policies</p>
+      <ul class="mt-4 space-y-2 text-sm">
+        <li><a class="hover:text-white" href="/privacy">Privacy policy</a></li>
+        <li><a class="hover:text-white" href="/terms">Terms &amp; conditions</a></li>
+        <li><a class="hover:text-white" href="/cancellation-policy">Cancellation policy</a></li>
+      </ul>
+    </nav>
+  </div>
+  <div class="border-t border-white/10">
+    <p class="mx-auto max-w-7xl px-4 py-5 text-xs text-slate-500">© {year} {s.business_name}. All rights reserved.</p>
+  </div>
+</footer>

@@ -1,0 +1,46 @@
+---
+import CatalogueImage from '@/components/CatalogueImage.astro';
+import Icon from './Icon.astro';
+import { durationLabel, formatInr, resolveImage, type Tour } from '@/lib/catalogue';
+interface Props { tour: Tour; eager?: boolean }
+const { tour: t, eager = false } = Astro.props;
+const img = resolveImage(t.image_path);
+---
+<article class="group flex flex-col overflow-hidden rounded-2xl bg-white shadow-[0_6px_24px_rgba(0,0,0,.08)] ring-1 ring-black/5 transition hover:-translate-y-1 hover:shadow-[0_14px_34px_rgba(0,0,0,.12)]">
+  <a href={`/tours/${t.slug}`} class="relative block aspect-[4/3] overflow-hidden bg-slate-100">
+    {img && (
+      <CatalogueImage
+        src={img}
+        alt={t.name}
+        widths={[360, 540, 720]}
+        sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+        loading={eager ? 'eager' : 'lazy'}
+        class="h-full w-full object-cover transition duration-700 group-hover:scale-105"
+      />
+    )}
+    {(t.best_time || t.group_size) && (
+      <div class="absolute bottom-3 left-3 flex gap-3 rounded-lg bg-black/55 px-3 py-1.5 text-[11px] text-white backdrop-blur">
+        {t.best_time && <span><span class="block text-white/70">Best time</span><strong>{t.best_time}</strong></span>}
+        {t.group_size && <span class="border-l border-white/30 pl-3"><span class="block text-white/70">Group size</span><strong>{t.group_size}</strong></span>}
+      </div>
+    )}
+  </a>
+  <div class="flex flex-1 flex-col gap-2 p-4">
+    <h3 class="text-base font-semibold leading-snug"><a href={`/tours/${t.slug}`} class="hover:text-brand">{t.name}</a></h3>
+    <p class="flex items-center gap-1.5 text-sm text-slate-600"><Icon name="calendar" class="h-4 w-4" />{durationLabel(t)}</p>
+    <p class="flex items-center gap-1.5 text-xs text-slate-500"><Icon name="car" class="h-4 w-4 text-brand" />Cab included · <Icon name="shield" class="h-4 w-4 text-brand" />Experienced driver</p>
+    <div class="mt-auto flex items-end justify-between gap-2 pt-3">
+      <div>
+        {t.starting_price != null ? (
+          <>
+            <span class="block text-xs text-slate-500">Starting from</span>
+            <span class="text-lg font-bold text-brand">{formatInr(t.starting_price)}</span><span class="text-xs text-slate-500"> / traveller</span>
+          </>
+        ) : (
+          <span class="text-sm font-semibold text-slate-700">Price on request</span>
+        )}
+      </div>
+      <a href={`/book?tour=${t.slug}`} class="shrink-0 rounded-full bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark">Book now</a>
+    </div>
+  </div>
+</article>

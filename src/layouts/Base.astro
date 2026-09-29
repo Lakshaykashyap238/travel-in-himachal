@@ -1,18 +1,42 @@
 ---
 import '@/styles/global.css';
-import { SITE } from '@/lib/site';
+import Header from '@/components/Header.astro';
+import Footer from '@/components/Footer.astro';
+import { getCatalogue } from '@/lib/catalogue';
 
 interface Props {
   title: string;
   description: string;
-  /** Private pages (admin, tracking) must never be indexed. */
+  /** Private pages (tracking, admin) must never be indexed. */
   noindex?: boolean;
+  /** Absolute or site-relative URL for link previews. */
   image?: string;
+  /** Extra JSON-LD objects for this page. */
+  jsonLd?: object[];
+  /** Hide header/footer (e.g. admin). */
+  bare?: boolean;
 }
 
-const { title, description, noindex = false, image = '/og-default.jpg' } = Astro.props;
-const canonical = new URL(Astro.url.pathname, Astro.site);
-const fullTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
+const { title, description, noindex = false, image, jsonLd = [], bare = false } = Astro.props;
+const { settings } = await getCatalogue();
+// Clean public URLs (Cloudflare serves /tours/x for tours/x.html); must match the sitemap.
+const cleanPath = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '/') || '/';
+const canonical = new URL(cleanPath, Astro.site);
+const fullTitle = title === settings.business_name ? title : `${title} | ${settings.business_name}`;
+const ogImage = image ? new URL(image, Astro.site) : undefined;
+
+const business = {
+  '@context': 'https://schema.org',
+  '@type': ['TravelAgency', 'TaxiService'],
+  '@id': new URL('/#business', Astro.site).toString(),
+  name: settings.business_name,
+  url: Astro.site?.toString(),
+  ...(settings.phone && { telephone: settings.phone }),
+  ...(settings.email && { email: settings.email }),
+  areaServed: { '@type': 'State', name: 'Himachal Pradesh' },
+  address: { '@type': 'PostalAddress', streetAddress: settings.address ?? undefined, addressRegion: 'Himachal Pradesh', addressCountry: 'IN' },
+  sameAs: [settings.instagram_url, settings.facebook_url].filter(Boolean),
+};
 ---
 <!doctype html>
 <html lang="en-IN">
@@ -23,18 +47,22 @@ const fullTitle = title === SITE.name ? title : `${title} | ${SITE.name}`;
     <meta name="description" content={description} />
     {noindex ? <meta name="robots" content="noindex, nofollow" /> : <link rel="canonical" href={canonical} />}
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:site_name" content={settings.business_name} />
     <meta property="og:title" content={fullTitle} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
-    <meta property="og:image" content={new URL(image, Astro.site)} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
     <meta property="og:locale" content="en_IN" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#0a7a2f" />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="sitemap" href="/sitemap-index.xml" />
+    {!noindex && <script type="application/ld+json" set:html={JSON.stringify([business, ...jsonLd])} />}
     <slot name="head" />
   </head>
-  <body class="min-h-screen bg-white text-ink antialiased">
-    <slot />
+  <body class="flex min-h-screen flex-col bg-white text-ink antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2">Skip to content</a>
+    {!bare && <Header businessName={settings.business_name} phone={settings.phone} />}
+    <main id="main" class="flex-1"><slot /></main>
+    {!bare && <Footer settings={settings} />}
   </body>
 </html>

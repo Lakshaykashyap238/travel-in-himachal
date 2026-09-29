@@ -56,3 +56,8 @@ token_verifications = 30
 enabled = true
 verify_jwt = true   # the website sends the public anon key
 import_map = "./functions/create-booking/deno.json"
+
+[functions.publish-site]
+enabled = true
+verify_jwt = true   # must be a logged-in user; the database checks it is the owner
+import_map = "./functions/publish-site/deno.json"

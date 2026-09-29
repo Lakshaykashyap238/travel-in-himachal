@@ -31,6 +31,8 @@ Everything runs on free plans. **Follow the zero-cost rules below at every step.
    - `TURNSTILE_SECRET_KEY` — from Cloudflare Turnstile (step 3)
    - `IP_HASH_SALT` — 32+ random characters (`openssl rand -hex 32`)
    - `ALLOWED_ORIGINS` — `https://<domain>,https://www.<domain>`
+   - `GITHUB_REPO` — `owner/repo-name` of this project's GitHub repository
+   - `GITHUB_DISPATCH_TOKEN` — a GitHub **fine-grained** token limited to this one repository with only **Actions: Read and write**. Used by the owner's "Publish changes" button to rebuild the site
 
 ## 3. Cloudflare
 

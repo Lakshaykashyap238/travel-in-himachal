@@ -1,0 +1,44 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import Icon from '@/components/Icon.astro';
+import { formatPhone, getCatalogue, whatsappLink } from '@/lib/catalogue';
+import { breadcrumbLd } from '@/lib/seo';
+
+const { settings: s } = await getCatalogue();
+const crumbs = [{ href: '/contact', label: 'Contact' }];
+---
+<Base title="Contact us" description={`Contact ${s.business_name}${s.phone ? ` on ${formatPhone(s.phone)}` : ''} for tours and cab bookings in Himachal Pradesh.`} jsonLd={[breadcrumbLd(Astro.site, crumbs)]}>
+  <PageHeader eyebrow="Contact us" title="Let's talk. We're here to help." intro="Have a question or planning a trip? Call, message or email us — or send a booking request and we'll call you back." crumbs={crumbs} />
+  <div class="mx-auto grid max-w-5xl gap-5 px-4 pb-16 sm:grid-cols-2">
+    {s.phone && (
+      <a href={`tel:${s.phone}`} class="flex items-start gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 hover:ring-brand">
+        <span class="rounded-xl bg-brand/10 p-3 text-brand"><Icon name="phone" class="h-6 w-6" /></span>
+        <span><span class="block text-sm text-slate-500">Call us</span><span class="text-lg font-semibold">{formatPhone(s.phone)}</span></span>
+      </a>
+    )}
+    {(s.whatsapp ?? s.phone) && (
+      <a href={whatsappLink((s.whatsapp ?? s.phone)!, `Hello ${s.business_name}, I'd like to plan a trip.`)} target="_blank" rel="noopener" class="flex items-start gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 hover:ring-brand">
+        <span class="rounded-xl bg-brand/10 p-3 text-brand"><Icon name="whatsapp" class="h-6 w-6" /></span>
+        <span><span class="block text-sm text-slate-500">WhatsApp</span><span class="text-lg font-semibold">Message us</span></span>
+      </a>
+    )}
+    {s.email && (
+      <a href={`mailto:${s.email}`} class="flex items-start gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 hover:ring-brand">
+        <span class="rounded-xl bg-brand/10 p-3 text-brand"><Icon name="mail" class="h-6 w-6" /></span>
+        <span class="min-w-0"><span class="block text-sm text-slate-500">Email</span><span class="block break-all text-lg font-semibold">{s.email}</span></span>
+      </a>
+    )}
+    {s.address && (
+      <div class="flex items-start gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
+        <span class="rounded-xl bg-brand/10 p-3 text-brand"><Icon name="pin" class="h-6 w-6" /></span>
+        <span><span class="block text-sm text-slate-500">Address</span><span class="text-lg font-semibold">{s.address}</span>{s.hours && <span class="mt-1 block text-sm text-slate-500">{s.hours}</span>}</span>
+      </div>
+    )}
+    <div class="rounded-2xl bg-brand p-8 text-center text-white sm:col-span-2">
+      <p class="text-2xl font-semibold">Ready to book?</p>
+      <p class="mt-1 text-white/85">Send a request online — no payment needed. We'll confirm the fare with you.</p>
+      <a href="/book" class="mt-5 inline-block rounded-full bg-white px-6 py-3 font-semibold text-brand hover:bg-white/90">Send a booking request</a>
+    </div>
+  </div>
+</Base>

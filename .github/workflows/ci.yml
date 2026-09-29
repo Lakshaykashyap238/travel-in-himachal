@@ -52,12 +52,15 @@ jobs:
           TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
 
   functions:
-    name: Edge Functions — type check & tests
+    name: Edge Function ${{ matrix.fn }} — type check & tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    strategy:
+      matrix:
+        fn: [create-booking, publish-site]
     defaults:
       run:
-        working-directory: supabase/functions/create-booking
+        working-directory: supabase/functions/${{ matrix.fn }}
     steps:
       - uses: actions/checkout@v4
       - uses: denoland/setup-deno@v2

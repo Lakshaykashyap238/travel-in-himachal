@@ -1,0 +1,24 @@
+---
+// Renders a catalogue photo that is either bundled with the site
+// (ImageMetadata) or uploaded by the owner to Supabase Storage (URL string).
+// Both are optimised to responsive WebP at build time.
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  src: ImageMetadata | string;
+  alt: string;
+  widths: number[];
+  sizes: string;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+
+const { src, alt, widths, sizes, class: cls, loading = 'lazy', fetchpriority } = Astro.props;
+---
+{typeof src === 'string' ? (
+  <Image src={src} inferSize alt={alt} widths={widths} sizes={sizes} class={cls} loading={loading} fetchpriority={fetchpriority} />
+) : (
+  <Image src={src} alt={alt} widths={widths} sizes={sizes} class={cls} loading={loading} fetchpriority={fetchpriority} />
+)}

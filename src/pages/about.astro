@@ -1,0 +1,23 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+import { getCatalogue } from '@/lib/catalogue';
+import { breadcrumbLd } from '@/lib/seo';
+
+const { settings: s } = await getCatalogue();
+const crumbs = [{ href: '/about', label: 'About us' }];
+---
+<Base title="About us" description={`About ${s.business_name}: tours and private cabs across Himachal Pradesh.`} jsonLd={[breadcrumbLd(Astro.site, crumbs)]}>
+  <PageHeader eyebrow="About us" title="Discover Himachal. Travel with us." intro="Making your journey through the mountains comfortable, reliable and memorable." crumbs={crumbs} />
+  <div class="mx-auto max-w-3xl px-4 pb-16">
+    {s.about && <p class="whitespace-pre-line text-lg leading-relaxed text-slate-700">{s.about}</p>}
+    {s.founder_name && (
+      <p class="mt-8 text-right"><span class="block text-lg font-semibold">{s.founder_name}</span><span class="text-sm uppercase tracking-widest text-brand">Founder</span></p>
+    )}
+    <div class="mt-12 rounded-2xl bg-slate-50 p-8 text-center">
+      <p class="text-sm font-bold uppercase tracking-widest text-brand">Same roads · new stories</p>
+      <p class="mt-2 text-2xl font-semibold">Your travel story starts here.</p>
+      <a href="/book" class="mt-5 inline-block rounded-full bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark">Plan your trip</a>
+    </div>
+  </div>
+</Base>

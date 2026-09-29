@@ -1,0 +1,100 @@
+---
+import { getImage } from 'astro:assets';
+import desk4 from '@/assets/hero/desk4.jpg';
+import desk22 from '@/assets/hero/desk22.jpg';
+import desk3 from '@/assets/hero/desk3.jpg';
+import desk16 from '@/assets/hero/desk16.jpg';
+import slide3 from '@/assets/hero/slide3.jpg';
+import slide1 from '@/assets/hero/slide1.jpg';
+import slide2 from '@/assets/hero/slide2.jpg';
+import slide4 from '@/assets/hero/slide4.jpg';
+
+// Slides and copy from the original site (typos fixed).
+const slides = [
+  { desk: desk4, mobile: slide3, tag: 'Welcome to Himachal', title: 'Journey Through the Woods', desc: 'Tours and private cabs across Himachal Pradesh, planned by people who know the roads.' },
+  { desk: desk22, mobile: slide1, tag: 'Himalayan escape', title: 'Into the Frozen Himalayas', desc: 'Discover breathtaking glaciers, snow-covered peaks and the untouched beauty of the Himalayas.' },
+  { desk: desk3, mobile: slide2, tag: 'Explore the hills', title: 'Where Nature Comes Alive', desc: 'Wander through peaceful valleys, pine forests and breathtaking mountain landscapes.' },
+  { desk: desk16, mobile: slide4, tag: 'Chase the horizon', title: 'Adventure Beyond the Ordinary', desc: 'Follow mountain trails and experience unforgettable views beneath the Himalayan sky.' },
+];
+
+const rendered = await Promise.all(
+  slides.map(async (s) => ({
+    ...s,
+    deskImg: await getImage({ src: s.desk, widths: [1280, 1920, 2560], sizes: '100vw', format: 'webp', quality: 72 }),
+    mobImg: await getImage({ src: s.mobile, widths: [480, 800, 1080], sizes: '100vw', format: 'webp', quality: 72 }),
+  })),
+);
+---
+<section class="relative h-[78vh] min-h-[460px] max-h-[820px] overflow-hidden bg-night" aria-roledescription="carousel" aria-label="Highlights" data-slider>
+  {rendered.map((s, i) => (
+    <div
+      class:list={['absolute inset-0 transition-opacity duration-1000', i === 0 ? 'opacity-100' : 'opacity-0']}
+      data-slide
+      aria-hidden={i === 0 ? 'false' : 'true'}
+      role="group"
+      aria-roledescription="slide"
+      aria-label={`${i + 1} of ${rendered.length}`}
+    >
+      <picture>
+        <source media="(min-width: 768px)" srcset={s.deskImg.srcSet.attribute} sizes="100vw" type="image/webp" />
+        <img
+          src={s.mobImg.src}
+          srcset={s.mobImg.srcSet.attribute}
+          sizes="100vw"
+          alt=""
+          class="h-full w-full object-cover"
+          loading={i === 0 ? 'eager' : 'lazy'}
+          fetchpriority={i === 0 ? 'high' : 'auto'}
+          decoding="async"
+        />
+      </picture>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10"></div>
+      <div class="absolute inset-x-0 bottom-[14%] mx-auto max-w-7xl px-4 text-white">
+        <p class="text-sm font-extrabold uppercase tracking-[0.18em] text-accent">{s.tag}</p>
+        {i === 0 ? (
+          <h1 class="mt-3 max-w-2xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">{s.title}</h1>
+        ) : (
+          <p class="mt-3 max-w-2xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">{s.title}</p>
+        )}
+        <p class="mt-4 max-w-xl text-base text-white/90 sm:text-lg">{s.desc}</p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href="/tours" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink hover:bg-white/90">Explore tours</a>
+          <a href="/book?type=cab" class="rounded-full border-2 border-white px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-ink">Book a cab</a>
+        </div>
+      </div>
+    </div>
+  ))}
+
+  <div class="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-2">
+    {rendered.map((_, i) => (
+      <button type="button" class="h-2.5 w-2.5 rounded-full bg-white/50 aria-[current=true]:w-6 aria-[current=true]:bg-white transition-all" aria-label={`Show slide ${i + 1}`} aria-current={i === 0 ? 'true' : 'false'} data-dot={i}></button>
+    ))}
+  </div>
+</section>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-slider]');
+  if (root) {
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-dot]')];
+    let current = 0;
+    let timer: number | undefined;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const show = (n: number) => {
+      current = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => {
+        s.classList.toggle('opacity-100', i === current);
+        s.classList.toggle('opacity-0', i !== current);
+        s.setAttribute('aria-hidden', String(i !== current));
+      });
+      dots.forEach((d, i) => d.setAttribute('aria-current', String(i === current)));
+    };
+    const start = () => { if (!reduce) timer = window.setInterval(() => show(current + 1), 6000); };
+    const stop = () => window.clearInterval(timer);
+    dots.forEach((d) => d.addEventListener('click', () => { stop(); show(Number(d.dataset.dot)); start(); }));
+    root.addEventListener('mouseenter', stop);
+    root.addEventListener('mouseleave', start);
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    start();
+  }
+</script>

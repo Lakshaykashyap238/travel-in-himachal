@@ -1,0 +1,18 @@
+---
+import Base from '@/layouts/Base.astro';
+import PageHeader from '@/components/PageHeader.astro';
+interface Props { title: string; description: string; path: string; updated?: string }
+const { title, description, path } = Astro.props;
+---
+<Base title={title} description={description}>
+  <PageHeader title={title} crumbs={[{ href: path, label: title }]} />
+  <div class="legal mx-auto max-w-3xl px-4 pb-16 text-slate-700">
+    <slot />
+  </div>
+</Base>
+<style>
+  .legal :global(h2) { margin-top: 2rem; font-size: 1.25rem; font-weight: 700; color: var(--color-ink); }
+  .legal :global(p), .legal :global(ul) { margin-top: 0.75rem; line-height: 1.7; }
+  .legal :global(ul) { list-style: disc; padding-left: 1.25rem; }
+  .legal :global(a) { color: var(--color-brand); text-decoration: underline; }
+</style>

@@ -328,3 +328,57 @@ describe('catalogue and staff management', () => {
     expect((await as('authenticated', 'select * from public.push_subscriptions', [], ownerId)).rowCount).toBe(0);
   });
 });
+
+describe('admin-editable content and publishing', () => {
+  it('visitors read business details and 12 destinations, but cannot edit them', async () => {
+    const s = await as('anon', 'select business_name, phone from public.site_settings');
+    expect(s.rows[0].business_name).toBe('Travel In Himachal');
+    expect((await as('anon', 'select slug from public.destinations')).rowCount).toBe(12);
+    await expect(as('anon', `update public.site_settings set phone = '+911111111111'`)).rejects.toThrow(/permission denied/);
+    await expect(as('anon', 'select * from public.publish_state')).rejects.toThrow(/permission denied/);
+  });
+
+  it('tours carry the places they cover', async () => {
+    const r = await as('anon', `select places from public.packages where slug = 'shimla-kufri-3-days'`);
+    expect(r.rows[0].places).toContain('Jakhoo Temple');
+  });
+
+  it('staff cannot edit business details; the owner can, and it flags unpublished changes', async () => {
+    const before = (await db.query('select content_changed_at from public.publish_state')).rows[0].content_changed_at;
+    const staffTry = await as('authenticated', `update public.site_settings set tagline = 'x' returning 1`, [], staffId);
+    expect(staffTry.rowCount).toBe(0);
+    await as('authenticated', `update public.site_settings set phone = '+919812345678', stat_years = 12`, [], ownerId);
+    const after = (await db.query('select content_changed_at from public.publish_state')).rows[0].content_changed_at;
+    expect(after).not.toBeNull();
+    expect(after).not.toEqual(before);
+    const s = await as('anon', 'select phone, stat_years from public.site_settings');
+    expect(s.rows[0]).toEqual({ phone: '+919812345678', stat_years: 12 });
+  });
+
+  it('rejects bad values in business details', async () => {
+    await expect(as('authenticated', `update public.site_settings set phone = '12345'`, [], ownerId)).rejects.toThrow(/check/);
+    await expect(as('authenticated', `update public.site_settings set instagram_url = 'javascript:alert(1)'`, [], ownerId)).rejects.toThrow(/check/);
+  });
+
+  it('the owner can set a tour price, photo and itinerary', async () => {
+    const r = await as('authenticated',
+      `update public.packages set starting_price = 11500, image_path = 'catalogue/spiti-2026.webp',
+         itinerary = '[{"day":1,"title":"Shimla to Narkanda","details":"Drive via Kufri"}]'::jsonb
+       where slug = 'spiti-kaza-7-days' returning starting_price, itinerary`, [], ownerId);
+    expect(r.rows[0].starting_price).toBe(11500);
+    expect(r.rows[0].itinerary[0].title).toBe('Shimla to Narkanda');
+    await expect(as('authenticated', `update public.packages set itinerary = '{"not":"array"}' where slug = 'spiti-kaza-7-days'`, [], ownerId))
+      .rejects.toThrow(/check/);
+  });
+
+  it('only the owner can publish, at most once every 2 minutes', async () => {
+    await expect(as('authenticated', 'select public.request_publish()', [], staffId)).rejects.toThrow(/not_authorized/);
+    await expect(as('anon', 'select public.request_publish()')).rejects.toThrow(/permission denied/);
+    await db.query('update public.publish_state set last_publish_at = null');
+    const first = await as('authenticated', 'select public.request_publish() as at', [], ownerId);
+    expect(first.rows[0].at).toBeTruthy();
+    await expect(as('authenticated', 'select public.request_publish()', [], ownerId)).rejects.toThrow(/too_soon/);
+    const st = await as('authenticated', 'select last_publish_by from public.publish_state', [], staffId);
+    expect(st.rows[0].last_publish_by).toBe(ownerId);
+  });
+});

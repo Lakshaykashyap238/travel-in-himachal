@@ -1,0 +1,64 @@
+---
+import { getImage } from 'astro:assets';
+import CatalogueImage from '@/components/CatalogueImage.astro';
+import Base from '@/layouts/Base.astro';
+import Icon from '@/components/Icon.astro';
+import TourCard from '@/components/TourCard.astro';
+import { getCatalogue, resolveImage, type Destination } from '@/lib/catalogue';
+import { breadcrumbLd } from '@/lib/seo';
+
+export async function getStaticPaths() {
+  const { destinations } = await getCatalogue();
+  return destinations.map((destination) => ({ params: { slug: destination.slug }, props: { destination } }));
+}
+
+const { destination: d } = Astro.props as { destination: Destination };
+const { tours } = await getCatalogue();
+const toursHere = tours.filter((t) => t.destination_slug === d.slug);
+const img = resolveImage(d.image_path);
+const og = img ? await getImage({ src: img, width: 1200, format: 'jpg', inferSize: typeof img === 'string' }) : undefined;
+const crumbs = [{ href: '/destinations', label: 'Destinations' }, { href: `/destinations/${d.slug}`, label: d.name }];
+const description = d.summary ?? `${d.name} tour packages and cab booking. Places to see: ${d.places.slice(0, 5).join(', ')}.`;
+
+const placeLd = {
+  '@context': 'https://schema.org',
+  '@type': 'TouristDestination',
+  name: `${d.name}, Himachal Pradesh`,
+  description,
+  ...(og && { image: new URL(og.src, Astro.site).toString() }),
+  includesAttraction: d.places.map((p) => ({ '@type': 'TouristAttraction', name: p })),
+};
+---
+<Base title={`${d.name} tour packages & cab booking`} description={description} image={og?.src} jsonLd={[placeLd, breadcrumbLd(Astro.site, crumbs)]}>
+  <div class="relative h-[40vh] min-h-[280px] overflow-hidden bg-night">
+    {img && <CatalogueImage src={img} alt={d.name} widths={[640, 1024, 1600]} sizes="100vw" loading="eager" fetchpriority="high" class="h-full w-full object-cover opacity-90" />}
+    <div class="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent"></div>
+    <div class="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 pb-8 text-white">
+      <nav aria-label="Breadcrumb" class="mb-3 text-sm text-white/80"><a href="/" class="hover:text-white">Home</a> / <a href="/destinations" class="hover:text-white">Destinations</a></nav>
+      <h1 class="text-4xl font-extrabold sm:text-5xl">{d.name}</h1>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-7xl space-y-12 px-4 py-10">
+    {d.description && <p class="max-w-3xl whitespace-pre-line text-lg text-slate-700">{d.description}</p>}
+
+    {d.places.length > 0 && (
+      <section>
+        <h2 class="text-2xl font-bold">Places to see in {d.name}</h2>
+        <ul class="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {d.places.map((p) => <li class="flex items-center gap-2 rounded-xl bg-slate-50 px-4 py-3"><Icon name="pin" class="h-4 w-4 text-brand" />{p}</li>)}
+        </ul>
+      </section>
+    )}
+
+    <section>
+      <h2 class="text-2xl font-bold">{toursHere.length ? `Tours to ${d.name}` : `Visit ${d.name} with us`}</h2>
+      {toursHere.length > 0 ? (
+        <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{toursHere.map((t) => <TourCard tour={t} />)}</div>
+      ) : (
+        <p class="mt-3 text-slate-600">Book a private cab to {d.name} and plan the stops with your driver.</p>
+      )}
+      <a href="/book?type=cab" class="mt-6 inline-block rounded-full bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark">Book a cab to {d.name}</a>
+    </section>
+  </div>
+</Base>

@@ -8,19 +8,25 @@ Runs entirely on free plans with no payment method on any account — see [docs/
 |---|---|
 | Website | Astro + React + TypeScript + Tailwind CSS, static, on Cloudflare Pages |
 | Database | Supabase Postgres (Mumbai) with row-level security |
-| Booking API | Supabase Edge Function `create-booking` (Deno) |
+| Booking API | Supabase Edge Functions `create-booking` and `publish-site` (Deno) |
 | Staff login | Supabase Auth, email + password + authenticator app |
 | Real-time | Supabase Realtime |
 | Bot protection | Cloudflare Turnstile + database rate limits |
 | CI/CD & backups | GitHub Actions |
 
+## Content and publishing
+All tours, cars, destinations, photos and business details live in the database and are edited by the owner in `/admin`. The public site is pre-built static HTML (fast, and easy for Google to read), so edits go live when the owner presses **Publish changes**: the `publish-site` function checks they're the owner, then triggers `.github/workflows/publish-content.yml`, which rebuilds from the live catalogue, optimises any uploaded photos and uploads the site (about 3 minutes).
+
 ## Project layout
 ```
-src/                         website (Astro pages, React components)
+src/pages/                   public pages: home, tours/[slug], destinations/[slug], fleet, book, track, about, contact, policies
+src/components/              layout, cards, BookingForm and TrackBooking (React)
+src/lib/catalogue.ts         loads tours/cars/settings from Supabase at build time (fallback: src/data)
 supabase/migrations/         database schema, security rules, catalogue data
 supabase/functions/
   _shared/booking-schema.ts  booking rules shared by the form and the server
   create-booking/            the booking API + its tests
+  publish-site/              the owner's "Publish changes" button + its tests
 tests/db/                    database security & workflow tests
 .github/workflows/           ci, deploy, nightly backup
 docs/                        setup, runbook, owner inputs
@@ -41,6 +47,7 @@ TEST_DATABASE_URL=postgres://postgres:postgres@localhost:5432/postgres npm run t
 
 # booking API (needs Deno 2)
 cd supabase/functions/create-booking && deno test
+cd supabase/functions/publish-site && deno test
 
 # website
 npx astro check && npm run build

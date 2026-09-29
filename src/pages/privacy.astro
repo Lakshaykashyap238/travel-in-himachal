@@ -1,0 +1,37 @@
+---
+import LegalPage from '@/components/LegalPage.astro';
+import { formatPhone, getCatalogue } from '@/lib/catalogue';
+const { settings: s } = await getCatalogue();
+const contact = [s.email, s.phone && formatPhone(s.phone)].filter(Boolean).join(' or ');
+---
+<LegalPage title="Privacy policy" description={`How ${s.business_name} collects and uses your personal data.`} path="/privacy">
+  <p>This notice explains what personal data {s.business_name} collects when you use this website, why, and your rights under India's Digital Personal Data Protection Act, 2023.</p>
+
+  <h2>What we collect</h2>
+  <ul>
+    <li><strong>Booking details you give us:</strong> your name, mobile number, email address (optional), travel date, number of travellers, pickup and drop-off locations, and any notes.</li>
+    <li><strong>Security data:</strong> a one-way scrambled (hashed) version of your IP address, used only to stop spam and fake bookings. We cannot turn it back into your IP address.</li>
+    <li><strong>Anonymous visit statistics:</strong> page views counted without cookies and without identifying you.</li>
+  </ul>
+  <p>We do not take payments online and we never ask for card or bank details on this website.</p>
+
+  <h2>Why we use it</h2>
+  <ul>
+    <li>To review your booking request, contact you about it, and provide the tour or cab.</li>
+    <li>To send you updates about your booking by email, if you gave an email address.</li>
+    <li>To protect the website from abuse.</li>
+  </ul>
+  <p>We do not sell your data or use it for advertising.</p>
+
+  <h2>Who can see it</h2>
+  <p>Only our owner and authorised staff, through a secure login. Your data is stored with our service providers — Supabase (database, hosted in Mumbai, India), Cloudflare (website and security) and, if you gave an email, our email provider — who process it only on our behalf.</p>
+
+  <h2>How long we keep it</h2>
+  <p>We keep booking records for as long as needed for the trip and our legal and accounting obligations, and then delete them. Security data is deleted after a short period.</p>
+
+  <h2>Your rights</h2>
+  <p>You can ask us to show, correct or delete your personal data, or withdraw your consent, at any time{contact && <> by contacting us at {contact}</>}. Deleting your data may mean we can no longer provide a booked trip.</p>
+
+  <h2>Contact</h2>
+  <p>{s.business_name}{s.address && `, ${s.address}`}.{contact && <> Contact: {contact}.</>}</p>
+</LegalPage>
