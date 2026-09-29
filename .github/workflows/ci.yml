@@ -57,7 +57,7 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        fn: [create-booking, publish-site]
+        fn: [create-booking, publish-site, notify, invite-staff]
     defaults:
       run:
         working-directory: supabase/functions/${{ matrix.fn }}

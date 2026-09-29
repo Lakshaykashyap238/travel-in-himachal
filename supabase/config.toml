@@ -61,3 +61,13 @@ import_map = "./functions/create-booking/deno.json"
 enabled = true
 verify_jwt = true   # must be a logged-in user; the database checks it is the owner
 import_map = "./functions/publish-site/deno.json"
+
+[functions.invite-staff]
+enabled = true
+verify_jwt = true   # logged-in owner only (checked again in the database)
+import_map = "./functions/invite-staff/deno.json"
+
+[functions.notify]
+enabled = true
+verify_jwt = false  # called by the database with a shared secret header, not a user login
+import_map = "./functions/notify/deno.json"

@@ -1,0 +1,25 @@
+---
+// Staff dashboard. A client-side app: nothing about bookings is in this HTML;
+// all data is loaded after sign-in and protected by the database rules.
+import '@/styles/global.css';
+import AdminApp from '@/admin/AdminApp';
+---
+<!doctype html>
+<html lang="en-IN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Admin · Travel In Himachal</title>
+    <meta name="theme-color" content="#0a7a2f" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="manifest" href="/admin.webmanifest" />
+    <link rel="apple-touch-icon" href="/admin-icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="TIH Admin" />
+  </head>
+  <body class="bg-slate-100 text-ink antialiased">
+    <AdminApp client:only="react" />
+    <noscript><p style="padding:2rem">The admin dashboard needs JavaScript.</p></noscript>
+  </body>
+</html>

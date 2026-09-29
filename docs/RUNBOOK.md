@@ -8,8 +8,23 @@ Cloudflare → Workers & Pages → `travel-in-himachal` → Deployments → choo
 Database changes are never rolled back automatically: fix forward with a new migration.
 
 ## Add or remove a staff member
-Owner, in `/admin` → Staff. (Until that screen ships in week 4: invite the user in Supabase → Authentication, then insert a row in `public.staff` with role `staff`.)
-To remove access immediately: set `is_active = false`. Their login stops working for bookings at once.
+Owner, in `/admin` → **Staff** → Add a person. They get an email to set a password, then set up an authenticator app on first sign-in.
+To remove access immediately: **Remove access**. Their login stops working at once. The last owner can't be removed or demoted.
+
+## Someone lost their phone (authenticator)
+1. Owner (or you) in Supabase → **Authentication → Users** → the person → remove their MFA factor.
+2. They sign in with their password and scan a new QR code.
+3. If the lost phone had alerts on, it stops getting them once removed: Supabase → Table editor → `push_subscriptions` → delete that person's rows.
+If the **only** owner loses their phone, step 1 is done by whoever has the Supabase account (the owner's email).
+
+## Alerts not arriving
+- Dashboard open? New bookings still show and chime there.
+- Supabase → Table editor → `notification_outbox`: rows with `sent_at` empty and `last_error` filled show why. Failed rows retry every 5 minutes, up to 5 times.
+- `last_error` mentions Vault / notify_url → redo SETUP step 2.9.
+- Phone alerts only: in `/admin` → Alerts, turn off and on again on that device.
+
+## Website content
+Owners edit tours, cars, places, prices, photos and business details in `/admin`, then press **Publish changes**. The site rebuilds in about 3 minutes. If it doesn't update: GitHub → Actions → "Publish content" shows the error; the live site keeps the previous version.
 
 ## Restore a backup
 Backups are encrypted `pg_dump` files kept 30 days as artifacts of the "Nightly backup & keep-alive" workflow.
@@ -34,4 +49,4 @@ Restore drill: do this once before launch and every 3 months. The drill was run 
 | GitHub Actions minutes | Deploys pause until the next month; the live site is unaffected. |
 
 ## Secrets rotation
-Rotate if anyone with access leaves: Supabase DB password and access token, Cloudflare API token, Turnstile secret, IP hash salt. Update the GitHub environment secrets and Supabase function secrets, then redeploy.
+Rotate if anyone with access leaves: Supabase DB password and access token, Cloudflare API token, Turnstile secret, IP hash salt, GitHub dispatch token, NOTIFY_SECRET (update Vault `notify_secret` too), Resend API key. Update the GitHub environment secrets and Supabase function secrets, then redeploy.

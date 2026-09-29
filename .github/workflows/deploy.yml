@@ -42,6 +42,8 @@ jobs:
         run: |
           supabase functions deploy create-booking --project-ref "$PROJECT_REF"
           supabase functions deploy publish-site --project-ref "$PROJECT_REF"
+          supabase functions deploy invite-staff --project-ref "$PROJECT_REF"
+          supabase functions deploy notify --project-ref "$PROJECT_REF" --no-verify-jwt
 
   website:
     name: Cloudflare Pages — website
@@ -62,6 +64,7 @@ jobs:
           PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+          PUBLIC_VAPID_PUBLIC_KEY: ${{ vars.PUBLIC_VAPID_PUBLIC_KEY }}
       - name: Upload to Cloudflare Pages
         run: npx --yes wrangler@4 pages deploy dist --project-name="${{ vars.CLOUDFLARE_PAGES_PROJECT }}" --branch=main --commit-dirty=true
         env:

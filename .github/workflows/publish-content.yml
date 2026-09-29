@@ -32,6 +32,7 @@ jobs:
           PUBLIC_SUPABASE_URL: ${{ vars.PUBLIC_SUPABASE_URL }}
           PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
+          PUBLIC_VAPID_PUBLIC_KEY: ${{ vars.PUBLIC_VAPID_PUBLIC_KEY }}
           REQUIRE_LIVE_CATALOGUE: 'true'
       - name: Upload to Cloudflare Pages
         run: npx --yes wrangler@4 pages deploy dist --project-name="${{ vars.CLOUDFLARE_PAGES_PROJECT }}" --branch=main --commit-dirty=true

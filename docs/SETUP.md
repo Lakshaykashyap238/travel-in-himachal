@@ -33,6 +33,21 @@ Everything runs on free plans. **Follow the zero-cost rules below at every step.
    - `ALLOWED_ORIGINS` — `https://<domain>,https://www.<domain>`
    - `GITHUB_REPO` — `owner/repo-name` of this project's GitHub repository
    - `GITHUB_DISPATCH_TOKEN` — a GitHub **fine-grained** token limited to this one repository with only **Actions: Read and write**. Used by the owner's "Publish changes" button to rebuild the site
+   - `SITE_URL` — `https://<domain>` (links in emails and invites)
+   - `BUSINESS_NAME` — `Travel In Himachal`
+   - `NOTIFY_SECRET` — 32+ random characters (`openssl rand -hex 32`); the same value goes into Vault (step 9)
+   - `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY` — phone alert keys: run `npx web-push generate-vapid-keys` once
+   - `VAPID_SUBJECT` — `mailto:<owner email>`
+   - `RESEND_API_KEY`, `EMAIL_FROM` — from Resend (step 2.10), e.g. `Travel In Himachal <bookings@<domain>>`. Leave out to skip emails; phone alerts still work
+9. **Alerts wiring** (makes new-booking alerts and 30-minute reminders fire):
+   - **Database → Extensions:** enable `pg_net` and `pg_cron`.
+   - **SQL Editor**, run once (use your values):
+     ```sql
+     select vault.create_secret('https://<project-ref>.supabase.co/functions/v1/notify', 'notify_url');
+     select vault.create_secret('<same NOTIFY_SECRET as above>', 'notify_secret');
+     ```
+   - Re-run the latest migration (or push again) so the 5-minute job is scheduled: check **Integrations → Cron** shows `tih-notification-jobs`.
+10. **Resend (free, no card):** add and verify the domain (DNS records in Cloudflare), create an API key. Then **Supabase → Authentication → Emails → SMTP Settings:** host `smtp.resend.com`, port `465`, user `resend`, password = the API key, sender = `EMAIL_FROM`. This replaces Supabase's built-in mailer, which only allows a few emails per hour — needed for staff invites and password resets.
 
 ## 3. Cloudflare
 
@@ -54,6 +69,7 @@ Create a **private** repository and push this code. Then, in **Settings → Envi
 | `PUBLIC_SUPABASE_URL` | Supabase Project URL |
 | `PUBLIC_SUPABASE_ANON_KEY` | Supabase anon key |
 | `PUBLIC_TURNSTILE_SITE_KEY` | Turnstile site key |
+| `PUBLIC_VAPID_PUBLIC_KEY` | the VAPID **public** key (same as the function secret) |
 | `SUPABASE_PROJECT_REF` | the part before `.supabase.co` |
 | `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account ID |
 | `CLOUDFLARE_PAGES_PROJECT` | `travel-in-himachal` |
@@ -78,7 +94,9 @@ Pushing to `main` then tests and deploys everything automatically.
    insert into public.staff (user_id, full_name, role)
    select id, 'Owner Name', 'owner' from auth.users where email = 'owner@example.com';
    ```
-3. The owner logs in at `/admin` and enrols the authenticator app. From then on, the owner adds staff from the admin dashboard.
+3. The owner logs in at `/admin`, scans the QR code with an authenticator app (Google Authenticator, Microsoft Authenticator…) and enters the 6-digit code. From then on, the owner adds staff from **Staff** in the dashboard.
+4. On each phone that should ring for bookings: open `/admin` → **Alerts** → **Turn on for this device**. On iPhone, first Share → Add to Home Screen and open from that icon.
+5. Make a test booking on the website and check the phone alert, the owner email and the dashboard all fire. Accept it with a fare, then reject a second one, and confirm the customer emails arrive.
 
 ## 6. After the first deploy
 

@@ -26,13 +26,14 @@ async function as<T extends pg.QueryResultRow = any>(
   sql: string,
   params: unknown[] = [],
   userId?: string,
+  aal: 'aal1' | 'aal2' = 'aal2',
 ): Promise<pg.QueryResult<T>> {
   const client = await db.connect();
   try {
     await client.query('begin');
     await client.query(`set local role ${role}`);
     await client.query(`select set_config('request.jwt.claims', $1, true)`, [
-      JSON.stringify(userId ? { sub: userId, role } : { role }),
+      JSON.stringify(userId ? { sub: userId, role, aal } : { role }),
     ]);
     const res = await client.query<T>(sql, params);
     await client.query('commit');
@@ -380,5 +381,100 @@ describe('admin-editable content and publishing', () => {
     await expect(as('authenticated', 'select public.request_publish()', [], ownerId)).rejects.toThrow(/too_soon/);
     const st = await as('authenticated', 'select last_publish_by from public.publish_state', [], staffId);
     expect(st.rows[0].last_publish_by).toBe(ownerId);
+  });
+});
+
+
+describe('two-factor login is required for staff', () => {
+  it('a staff password login without the authenticator code sees nothing', async () => {
+    expect((await as('authenticated', 'select * from public.bookings', [], staffId, 'aal1')).rowCount).toBe(0);
+    const { rows } = await createBooking(booking());
+    const id = (await db.query('select id from public.bookings where reference = $1', [rows[0].reference])).rows[0].id;
+    await expect(as('authenticated', `select public.set_booking_status($1, 'accepted', 100)`, [id], staffId, 'aal1')).rejects.toThrow(/not_authorized/);
+  });
+
+  it('an owner without the authenticator code cannot edit prices or publish', async () => {
+    const r = await as('authenticated', `update public.vehicles set price_per_day = 1 returning 1`, [], ownerId, 'aal1');
+    expect(r.rowCount).toBe(0);
+    await expect(as('authenticated', 'select public.request_publish()', [], ownerId, 'aal1')).rejects.toThrow(/not_authorized/);
+  });
+
+  it('staff can still read their own staff record before finishing MFA (to be sent to the MFA step)', async () => {
+    const r = await as('authenticated', 'select role from public.staff where user_id = $1', [staffId], staffId, 'aal1');
+    expect(r.rows[0].role).toBe('staff');
+  });
+});
+
+describe('dashboard helpers', () => {
+  it('history shows who did what, by name', async () => {
+    const { rows } = await createBooking(booking());
+    const id = (await db.query('select id from public.bookings where reference = $1', [rows[0].reference])).rows[0].id;
+    await as('authenticated', `select public.set_booking_status($1, 'accepted', 5000, null, 'OK on call')`, [id], staffId);
+    const h = await as('authenticated', 'select kind, actor_name, note from public.booking_history($1)', [id], ownerId);
+    expect(h.rows).toEqual([
+      { kind: 'created', actor_name: 'Customer', note: null },
+      { kind: 'status_changed', actor_name: 'Desk Staff', note: 'OK on call' },
+    ]);
+  });
+
+  it('history and staff names are hidden from non-staff', async () => {
+    expect((await as('authenticated', 'select * from public.staff_directory()', [], outsiderId)).rowCount).toBe(0);
+    await expect(as('anon', 'select * from public.staff_directory()')).rejects.toThrow(/permission denied/);
+    expect((await as('authenticated', 'select * from public.staff_directory()', [], staffId)).rowCount).toBeGreaterThanOrEqual(2);
+  });
+});
+
+describe('notification queue', () => {
+  const outboxFor = async (reference: string) =>
+    (await db.query(
+      `select o.kind from public.notification_outbox o join public.bookings b on b.id = o.booking_id where b.reference = $1 order by o.id`,
+      [reference],
+    )).rows.map((r) => r.kind);
+
+  it('a new booking queues a staff alert', async () => {
+    const { rows } = await createBooking(booking());
+    expect(await outboxFor(rows[0].reference)).toEqual(['booking_created']);
+  });
+
+  it('accepting a booking with an email queues the customer email; without email it does not', async () => {
+    const a = await createBooking(booking());
+    const b = await createBooking(booking({ email: '' }));
+    for (const ref of [a.rows[0].reference, b.rows[0].reference]) {
+      const id = (await db.query('select id from public.bookings where reference = $1', [ref])).rows[0].id;
+      await as('authenticated', `select public.set_booking_status($1, 'accepted', 4000)`, [id], staffId);
+    }
+    expect(await outboxFor(a.rows[0].reference)).toEqual(['booking_created', 'booking_decided']);
+    expect(await outboxFor(b.rows[0].reference)).toEqual(['booking_created']);
+  });
+
+  it('bookings pending for over 30 minutes get exactly one reminder', async () => {
+    const { rows } = await createBooking(booking());
+    await db.query(`update public.bookings set created_at = now() - interval '45 minutes' where reference = $1`, [rows[0].reference]);
+    await db.query('select public.run_notification_jobs()');
+    await db.query('select public.run_notification_jobs()');
+    expect(await outboxFor(rows[0].reference)).toEqual(['booking_created', 'pending_reminder']);
+  });
+
+  it('nobody but the service can see or run the queue', async () => {
+    await expect(as('authenticated', 'select * from public.notification_outbox', [], ownerId)).rejects.toThrow(/permission denied/);
+    await expect(as('authenticated', 'select public.run_notification_jobs()', [], ownerId)).rejects.toThrow(/permission denied/);
+    await expect(as('anon', 'select * from public.staff_alert_recipients()')).rejects.toThrow(/permission denied/);
+    const r = await as('service_role', 'select email from public.staff_alert_recipients() order by email');
+    expect(r.rows.map((x) => x.email)).toContain('owner@x.in');
+  });
+});
+
+describe('owner safety', () => {
+  it('the last active owner cannot be deactivated, demoted or deleted', async () => {
+    await expect(as('authenticated', `update public.staff set is_active = false where user_id = $1`, [ownerId], ownerId)).rejects.toThrow(/last_owner/);
+    await expect(as('authenticated', `update public.staff set role = 'staff' where user_id = $1`, [ownerId], ownerId)).rejects.toThrow(/last_owner/);
+    await expect(as('authenticated', `delete from public.staff where user_id = $1`, [ownerId], ownerId)).rejects.toThrow(/last_owner/);
+  });
+
+  it('the owner can deactivate a staff member, which cuts their access at once', async () => {
+    await as('authenticated', `update public.staff set is_active = false where user_id = $1`, [staffId], ownerId);
+    expect((await as('authenticated', 'select * from public.bookings', [], staffId)).rowCount).toBe(0);
+    await as('authenticated', `update public.staff set is_active = true where user_id = $1`, [staffId], ownerId);
+    expect((await as('authenticated', 'select * from public.bookings', [], staffId)).rowCount).toBeGreaterThan(0);
   });
 });
