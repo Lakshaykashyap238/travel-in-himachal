@@ -59,7 +59,7 @@ Everything runs on free plans. **Follow the zero-cost rules below at every step.
 
 ## 4. GitHub
 
-Create a **private** repository and push this code. Then, in **Settings → Environments**, create an environment called `production` with:
+Create a **private** repository and push this code. Then, in **Settings → Secrets and variables → Actions**, add these as **repository** secrets and variables. (Don't use Environments: on GitHub Free they don't work in private repositories.)
 
 **Variables**
 

@@ -49,4 +49,4 @@ Restore drill: do this once before launch and every 3 months. The drill was run 
 | GitHub Actions minutes | Deploys pause until the next month; the live site is unaffected. |
 
 ## Secrets rotation
-Rotate if anyone with access leaves: Supabase DB password and access token, Cloudflare API token, Turnstile secret, IP hash salt, GitHub dispatch token, NOTIFY_SECRET (update Vault `notify_secret` too), Resend API key. Update the GitHub environment secrets and Supabase function secrets, then redeploy.
+Rotate if anyone with access leaves: Supabase DB password and access token, Cloudflare API token, Turnstile secret, IP hash salt, GitHub dispatch token, NOTIFY_SECRET (update Vault `notify_secret` too), Resend API key. Update the GitHub repository secrets and Supabase function secrets, then redeploy.

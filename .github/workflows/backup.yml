@@ -19,7 +19,6 @@ jobs:
   backup:
     runs-on: ubuntu-latest
     timeout-minutes: 15
-    environment: production
     steps:
       - name: Keep-alive — touch the public API
         run: |
