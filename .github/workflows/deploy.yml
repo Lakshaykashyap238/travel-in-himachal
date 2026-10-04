@@ -28,15 +28,16 @@ jobs:
     env:
       SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
       SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      # Session pooler (IPv4). GitHub runners can't reach the IPv6-only direct host.
+      DB_URL: ${{ secrets.SUPABASE_DB_POOLER_URL }}
       PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
     steps:
       - uses: actions/checkout@v4
       - uses: supabase/setup-cli@v1
         with:
           version: latest
-      - run: supabase link --project-ref "$PROJECT_REF"
       - name: Apply database migrations
-        run: supabase db push --include-all
+        run: supabase db push --include-all --db-url "$DB_URL"
       - name: Deploy Edge Functions
         run: |
           supabase functions deploy create-booking --project-ref "$PROJECT_REF"
@@ -47,6 +48,8 @@ jobs:
   website:
     name: Cloudflare Pages — website
     needs: supabase
+    # Skipped until the Cloudflare account is set up (docs/SETUP.md §3–4).
+    if: ${{ vars.CLOUDFLARE_PAGES_PROJECT != '' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:

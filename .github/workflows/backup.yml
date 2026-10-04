@@ -43,6 +43,10 @@ jobs:
           PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
         run: |
           set -euo pipefail
+          if [ -z "$PASSPHRASE" ]; then
+            echo "::warning::BACKUP_PASSPHRASE is not set yet, so no backup was taken (keep-alive still ran)."
+            exit 0
+          fi
           stamp=$(date -u +%Y-%m-%dT%H%MZ)
           /usr/lib/postgresql/17/bin/pg_dump "$DB_URL" \
             --format=custom --no-owner \
@@ -56,6 +60,7 @@ jobs:
           echo "FILE=tih-$stamp.dump.gpg" >> "$GITHUB_ENV"
 
       - uses: actions/upload-artifact@v4
+        if: ${{ env.FILE != '' }}
         with:
           name: ${{ env.FILE }}
           path: ${{ env.FILE }}
