@@ -51,9 +51,9 @@ Restore drill: do this once before launch and every 3 months. The drill was run 
 ## Secrets rotation
 Rotate if anyone with access leaves: Supabase DB password and access token, Cloudflare API token, Turnstile secret, IP hash salt, GitHub dispatch token, NOTIFY_SECRET (update Vault `notify_secret` too), Resend API key. Update the GitHub repository secrets and Supabase function secrets, then redeploy.
 
-## Renew the Supabase access token (every 90 days)
-The GitHub token `SUPABASE_ACCESS_TOKEN` expires 90 days after it was created. When it expires, deploys and the owner's **Publish changes** fail; the live website and bookings keep working.
-1. Supabase → avatar → Account → Access Tokens → Generate new token: name `github-tih`, longest expiry, Resource access = Project → travel-in-himachal, Permissions = Full access, then set Account and organization to None except Organizations and Projects (account-wide) = Read, and Infrastructure and delivery to None (Development/Production Branches may stay Read).
+## Renew the Supabase access token (yearly)
+The GitHub token `SUPABASE_ACCESS_TOKEN` expires one year after it was created (first one: early October 2027). When it expires, deploys and the owner's **Publish changes** fail; the live website and bookings keep working.
+1. Supabase → avatar → Account → Access Tokens → Generate new token: name `github-tih`, Custom expiry, one year ahead, Resource access = Project → travel-in-himachal, Permissions = Full access, then set Account and organization to None except Organizations and Projects (account-wide) = Read, and Infrastructure and delivery to None (Development/Production Branches may stay Read).
 2. GitHub → Settings → Secrets and variables → Actions → `SUPABASE_ACCESS_TOKEN` → Update → paste.
 3. Delete the old token in Supabase.
 Set a calendar reminder about a week before each expiry.
