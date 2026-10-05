@@ -59,7 +59,7 @@ jobs:
           ls -lh tih-*.gpg
           echo "FILE=tih-$stamp.dump.gpg" >> "$GITHUB_ENV"
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v5
         if: ${{ env.FILE != '' }}
         with:
           name: ${{ env.FILE }}

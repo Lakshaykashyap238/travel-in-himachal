@@ -30,8 +30,12 @@ export async function callFunction<T = unknown>(name: string, body: unknown = {}
 export function photoUrl(path: string | null | undefined): string | null {
   if (!path) return null;
   if (path.startsWith('catalogue/')) return `${SUPABASE_URL}/storage/v1/object/public/${path}`;
-  return null; // bundled photo from the original site (optimised at build time)
+  // Photos that came with the original site live in src/assets.
+  if (path.startsWith('/images/')) return bundledPhotos[`/src/assets/${path.slice('/images/'.length)}`] ?? null;
+  return null;
 }
+
+const bundledPhotos = import.meta.glob<string>('/src/assets/**/*.{jpg,jpeg,png,webp}', { eager: true, query: '?url', import: 'default' });
 
 /** Turn a database error into a sentence for the admin. */
 export function friendlyError(e: { message?: string; code?: string } | null | undefined): string {
