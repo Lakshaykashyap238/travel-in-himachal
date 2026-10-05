@@ -193,6 +193,15 @@ function qrSrc(qr: string): string {
   return svg.startsWith('%3C') ? qr : `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
+type PendingFactor = { id: string; qr: string; secret: string };
+const PENDING_KEY = 'tih-admin-mfa-pending';
+function readPending(): PendingFactor | null {
+  try { return JSON.parse(sessionStorage.getItem(PENDING_KEY) ?? 'null'); } catch { return null; }
+}
+function savePending(f: PendingFactor | null) {
+  try { if (f) sessionStorage.setItem(PENDING_KEY, JSON.stringify(f)); else sessionStorage.removeItem(PENDING_KEY); } catch { /* private mode */ }
+}
+
 function MfaEnroll({ onDone, onSignOut }: { onDone: () => void; onSignOut: () => void }) {
   const [factor, setFactor] = useState<{ id: string; qr: string; secret: string } | null>(null);
   const [code, setCode] = useState('');
@@ -204,9 +213,17 @@ function MfaEnroll({ onDone, onSignOut }: { onDone: () => void; onSignOut: () =>
     // setup is in flight, an older run must not overwrite the newer key.
     let cancelled = false;
     (async () => {
-      // Remove any half-finished setup from a previous attempt.
       const { data: f } = await supabase.auth.mfa.listFactors();
-      for (const x of f?.all ?? []) if (x.status !== 'verified') await supabase.auth.mfa.unenroll({ factorId: x.id });
+      const pending = (f?.all ?? []).filter((x) => x.status !== 'verified');
+      // Phones often reload the page when you switch to the authenticator app
+      // and back. Reuse the key already shown (and typed into the app) instead
+      // of creating a new one, which would make every code "wrong".
+      const saved = readPending();
+      if (saved && pending.some((x) => x.id === saved.id)) {
+        if (!cancelled) setFactor(saved);
+        return;
+      }
+      for (const x of pending) await supabase.auth.mfa.unenroll({ factorId: x.id });
       if (cancelled) return;
       const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: `Authenticator ${Date.now()}` });
       if (cancelled) {
@@ -214,7 +231,9 @@ function MfaEnroll({ onDone, onSignOut }: { onDone: () => void; onSignOut: () =>
         return;
       }
       if (error) return setError(friendlyError(error));
-      setFactor({ id: data.id, qr: qrSrc(data.totp.qr_code), secret: data.totp.secret });
+      const next = { id: data.id, qr: qrSrc(data.totp.qr_code), secret: data.totp.secret };
+      savePending(next);
+      setFactor(next);
     })();
     return () => { cancelled = true; };
   }, []);
@@ -227,8 +246,10 @@ function MfaEnroll({ onDone, onSignOut }: { onDone: () => void; onSignOut: () =>
     setBusy(false);
     if (error) {
       console.warn('MFA verify failed', error);
-      return setError('That code didn’t work. Use the newest code from the app, and check your phone’s time is set automatically.');
+      const detail = error.message ? ` (${error.message})` : '';
+      return setError(`That code didn’t work${detail}. Use the newest code from the app, and check your phone’s time is set automatically.`);
     }
+    savePending(null);
     onDone();
   }
 
