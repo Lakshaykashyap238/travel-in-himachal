@@ -184,6 +184,15 @@ function CodeInput({ value, onChange }: { value: string; onChange: (v: string) =
   );
 }
 
+// Supabase returns the QR as an SVG data URL that is not URL-encoded; its
+// "#" colour values cut the image short, so browsers draw a blank square.
+function qrSrc(qr: string): string {
+  const prefix = qr.match(/^data:image\/svg\+xml;[^,]*,/)?.[0];
+  if (!prefix) return qr;
+  const svg = qr.slice(prefix.length);
+  return svg.startsWith('%3C') ? qr : `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
 function MfaEnroll({ onDone, onSignOut }: { onDone: () => void; onSignOut: () => void }) {
   const [factor, setFactor] = useState<{ id: string; qr: string; secret: string } | null>(null);
   const [code, setCode] = useState('');
@@ -191,14 +200,23 @@ function MfaEnroll({ onDone, onSignOut }: { onDone: () => void; onSignOut: () =>
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Only the latest run may show a key: if this screen re-mounts while a
+    // setup is in flight, an older run must not overwrite the newer key.
+    let cancelled = false;
     (async () => {
       // Remove any half-finished setup from a previous attempt.
       const { data: f } = await supabase.auth.mfa.listFactors();
       for (const x of f?.all ?? []) if (x.status !== 'verified') await supabase.auth.mfa.unenroll({ factorId: x.id });
-      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: `Authenticator ${new Date().toISOString().slice(0, 10)}` });
+      if (cancelled) return;
+      const { data, error } = await supabase.auth.mfa.enroll({ factorType: 'totp', friendlyName: `Authenticator ${Date.now()}` });
+      if (cancelled) {
+        if (data) await supabase.auth.mfa.unenroll({ factorId: data.id });
+        return;
+      }
       if (error) return setError(friendlyError(error));
-      setFactor({ id: data.id, qr: data.totp.qr_code, secret: data.totp.secret });
+      setFactor({ id: data.id, qr: qrSrc(data.totp.qr_code), secret: data.totp.secret });
     })();
+    return () => { cancelled = true; };
   }, []);
 
   async function submit(e: { preventDefault(): void }) {
@@ -207,7 +225,10 @@ function MfaEnroll({ onDone, onSignOut }: { onDone: () => void; onSignOut: () =>
     setBusy(true);
     const { error } = await supabase.auth.mfa.challengeAndVerify({ factorId: factor.id, code });
     setBusy(false);
-    if (error) return setError('That code didn’t work. Check the time on your phone and try the newest code.');
+    if (error) {
+      console.warn('MFA verify failed', error);
+      return setError('That code didn’t work. Use the newest code from the app, and check your phone’s time is set automatically.');
+    }
     onDone();
   }
 
@@ -217,7 +238,11 @@ function MfaEnroll({ onDone, onSignOut }: { onDone: () => void; onSignOut: () =>
       {factor ? (
         <form onSubmit={submit} className="mt-5 space-y-4">
           <img src={factor.qr} alt="QR code for your authenticator app" className="mx-auto h-48 w-48 rounded-xl bg-white p-2 ring-1 ring-slate-200" />
-          <p className="text-center text-xs text-slate-500">Can’t scan? Enter this key: <span className="select-all break-all font-mono">{factor.secret}</span></p>
+          <div className="text-center text-xs text-slate-500">
+            <p>Can’t scan? In the app choose “Enter a setup key”, type this key, and pick “Time based”:</p>
+            <p className="mt-1 select-all font-mono text-sm tracking-wider text-ink">{factor.secret.match(/.{1,4}/g)?.join(' ')}</p>
+            <p className="mt-1">The key only uses letters A–Z and numbers 2–7 (no zero or one). Spaces don’t matter.</p>
+          </div>
           <CodeInput value={code} onChange={setCode} />
           {error && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-800" role="alert">{error}</p>}
           <Button type="submit" className="w-full" busy={busy} disabled={code.length !== 6}>Turn on and continue</Button>
