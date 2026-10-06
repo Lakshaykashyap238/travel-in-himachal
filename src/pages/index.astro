@@ -6,7 +6,17 @@ import TourCard from '@/components/TourCard.astro';
 import Icon from '@/components/Icon.astro';
 import { formatInr, getCatalogue, resolveImage } from '@/lib/catalogue';
 
-const { settings, tours, destinations, vehicles } = await getCatalogue();
+const { settings, tours, destinations, vehicles, reviews } = await getCatalogue();
+const shownReviews = reviews.slice(0, 6);
+const avgRating = reviews.length ? (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1) : null;
+
+const quickLinks = [
+  { href: '/tours', icon: 'mountain', label: 'Tours', note: `${tours.length} tours` },
+  { href: '/destinations', icon: 'pin', label: 'Destinations', note: `${destinations.length} places` },
+  { href: '/fleet', icon: 'car', label: 'Cabs', note: `${vehicles.length} cars` },
+  { href: '/about', icon: 'info', label: 'About us', note: 'Who we are' },
+  { href: '/contact', icon: 'phone', label: 'Contact', note: 'Call or WhatsApp' },
+] as const;
 
 const promises = [
   { icon: 'car', text: 'Private cab with every tour' },
@@ -33,6 +43,23 @@ const stats = [
   description={`${settings.tagline ?? 'Tours and cabs across Himachal Pradesh'}. Book Shimla, Manali, Spiti, Dharamshala, Kasol and more — ${tours.length} tour packages and private cabs.`}
 >
   <HeroSlider />
+
+  <!-- Every section, one tap from the home page -->
+  <nav class="border-b border-black/10 bg-white" aria-label="Explore">
+    <ul class="mx-auto flex max-w-7xl snap-x gap-3 overflow-x-auto px-4 py-4 [scrollbar-width:none] lg:grid lg:grid-cols-5 lg:overflow-visible">
+      {quickLinks.map((q) => (
+        <li class="w-[42%] shrink-0 snap-start sm:w-[30%] lg:w-auto">
+          <a href={q.href} class="flex h-full items-center gap-3 rounded-xl border border-black/10 p-3 hover:border-brand hover:bg-mist">
+            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-brand text-white"><Icon name={q.icon} class="h-6 w-6" /></span>
+            <span class="min-w-0">
+              <span class="block font-semibold leading-tight text-ink">{q.label}</span>
+              <span class="block truncate text-sm text-stone">{q.note}</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
 
   <!-- What every trip includes: the promises a traveller cares about first -->
   <section class="bg-night text-white" aria-label="Included with every trip">
@@ -61,6 +88,7 @@ const stats = [
       <div>
         <h2 id="why-heading" class="display text-4xl uppercase sm:text-6xl">Travel with people who drive these roads every day</h2>
         <p class="mt-5 max-w-xl text-lg text-stone">We make your journey comfortable, safe and memorable, from an easy booking to a driver who knows the mountains.</p>
+        <a href="/about" class="mt-4 inline-block font-semibold text-brand underline-offset-4 hover:underline">More about us</a>
         {stats.length > 0 && (
           <dl class="mt-10 flex flex-wrap gap-x-12 gap-y-6">
             {stats.map((s) => (
@@ -83,6 +111,35 @@ const stats = [
       </ul>
     </div>
   </section>
+
+
+  {(shownReviews.length > 0 || settings.google_review_url) && (
+    <section class="py-16 sm:py-20" aria-labelledby="reviews-heading">
+      <div class="mx-auto max-w-7xl px-4">
+        <div class="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h2 id="reviews-heading" class="display text-4xl uppercase sm:text-6xl">What travellers say</h2>
+            {avgRating && <p class="mt-3 text-lg text-stone"><span class="font-semibold text-ink">{avgRating} out of 5</span> from {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</p>}
+          </div>
+          {settings.google_review_url && <a href={settings.google_review_url} target="_blank" rel="noopener" class="font-semibold text-brand underline-offset-4 hover:underline">Read all reviews on Google</a>}
+        </div>
+        {shownReviews.length > 0 ? (
+          <ul class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {shownReviews.map((r) => (
+              <li class="flex flex-col rounded-xl bg-mist p-6">
+                <p class="text-xl tracking-wider text-accent" aria-label={`${r.rating} out of 5 stars`}>{'★'.repeat(r.rating)}<span class="text-black/15">{'★'.repeat(5 - r.rating)}</span></p>
+                <blockquote class="mt-3 flex-1 text-ink">“{r.body}”</blockquote>
+                <p class="mt-5 font-semibold">{r.name}{r.place && <span class="font-normal text-stone">, {r.place}</span>}</p>
+                <p class="text-sm text-stone">{[r.trip, `on ${r.source}`].filter(Boolean).join(', ')}</p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p class="mt-6 max-w-xl text-lg text-stone">See what our travellers have written about their trips with us.</p>
+        )}
+      </div>
+    </section>
+  )}
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:py-20" aria-labelledby="dest-heading">
     <div class="flex flex-wrap items-end justify-between gap-4">

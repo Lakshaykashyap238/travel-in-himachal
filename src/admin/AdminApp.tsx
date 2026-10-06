@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { AuthGate } from './Auth';
 import { BookingsPage } from './Bookings';
-import { CarsPage, DestinationsPage, ToursPage } from './Content';
+import { CarsPage, DestinationsPage, ReviewsPage, ToursPage } from './Content';
 import { SettingsPage } from './Settings';
 import { StaffPage } from './Staff';
 import { callFunction, supabase } from './lib/supabase';
@@ -10,12 +10,12 @@ import type { StaffMember } from './lib/types';
 import { playChime, timeAgo, unlockSound } from './lib/util';
 import { Button, ToastProvider, cx, useToast } from './ui';
 
-type Route = { page: 'bookings'; id: string | null } | { page: 'tours' | 'cars' | 'destinations' | 'settings' | 'staff' | 'alerts' };
+type Route = { page: 'bookings'; id: string | null } | { page: 'tours' | 'cars' | 'destinations' | 'reviews' | 'settings' | 'staff' | 'alerts' };
 
 function parseHash(): Route {
   const [, page, id] = window.location.hash.replace(/^#/, '').split('/');
   if (page === 'bookings' || !page) return { page: 'bookings', id: id ?? null };
-  if (['tours', 'cars', 'destinations', 'settings', 'staff', 'alerts'].includes(page)) return { page } as Route;
+  if (['tours', 'cars', 'destinations', 'reviews', 'settings', 'staff', 'alerts'].includes(page)) return { page } as Route;
   return { page: 'bookings', id: null };
 }
 
@@ -42,6 +42,7 @@ const NAV = [
   { page: 'tours', label: 'Tours', owner: true },
   { page: 'cars', label: 'Cars', owner: true },
   { page: 'destinations', label: 'Destinations', owner: true },
+  { page: 'reviews', label: 'Reviews', owner: true },
   { page: 'settings', label: 'Business details', owner: true },
   { page: 'staff', label: 'Staff', owner: true },
   { page: 'alerts', label: 'Alerts', owner: false },
@@ -122,6 +123,7 @@ function Dashboard({ me, signOut }: { me: StaffMember; signOut: () => void }) {
         {page === 'tours' && <ToursPage />}
         {page === 'cars' && <CarsPage />}
         {page === 'destinations' && <DestinationsPage />}
+        {page === 'reviews' && <ReviewsPage />}
         {page === 'settings' && <SettingsPage />}
         {page === 'staff' && <StaffPage me={me} />}
         {page === 'alerts' && <AlertsPage me={me} />}

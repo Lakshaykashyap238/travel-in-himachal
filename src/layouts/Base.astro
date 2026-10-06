@@ -2,6 +2,7 @@
 import '@/styles/global.css';
 import Header from '@/components/Header.astro';
 import Footer from '@/components/Footer.astro';
+import MobileNav from '@/components/MobileNav.astro';
 import { getCatalogue } from '@/lib/catalogue';
 
 interface Props {
@@ -59,10 +60,11 @@ const business = {
     {!noindex && <script type="application/ld+json" set:html={JSON.stringify([business, ...jsonLd])} />}
     <slot name="head" />
   </head>
-  <body class="flex min-h-screen flex-col bg-white text-ink antialiased">
+  <body class:list={['flex min-h-screen flex-col bg-white text-ink antialiased', !bare && 'pb-16 lg:pb-0']}>
     <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-4 focus:py-2">Skip to content</a>
     {!bare && <Header businessName={settings.business_name} phone={settings.phone} />}
     <main id="main" class="flex-1"><slot /></main>
     {!bare && <Footer settings={settings} />}
+    {!bare && <MobileNav phone={settings.phone} />}
   </body>
 </html>

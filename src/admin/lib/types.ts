@@ -125,3 +125,16 @@ export const STATUS_TONE: Record<BookingStatus, string> = {
   completed: 'bg-slate-100 text-slate-700 ring-slate-300',
   cancelled: 'bg-slate-100 text-slate-500 ring-slate-300',
 };
+
+export interface ReviewRow {
+  id: string;
+  name: string;
+  place: string | null;
+  trip: string | null;
+  rating: number;
+  body: string;
+  source: string;
+  image_path: string | null;
+  is_active: boolean;
+  sort_order: number;
+}

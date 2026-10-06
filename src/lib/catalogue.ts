@@ -72,11 +72,22 @@ export interface Destination {
   sort_order: number;
 }
 
+export interface Review {
+  name: string;
+  place: string | null;
+  trip: string | null;
+  rating: number;
+  body: string;
+  source: string;
+  sort_order: number;
+}
+
 export interface Catalogue {
   settings: SiteSettings;
   tours: Tour[];
   vehicles: Vehicle[];
   destinations: Destination[];
+  reviews: Review[];
   source: 'live' | 'fallback';
 }
 
@@ -94,13 +105,15 @@ async function rest<T>(path: string): Promise<T> {
 }
 
 async function loadLive(): Promise<Catalogue> {
-  const [settings, tours, vehicles, destinations] = await Promise.all([
+  const [settings, tours, vehicles, destinations, reviews] = await Promise.all([
     rest<SiteSettings[]>('site_settings?select=*'),
     rest<(Omit<Tour, 'destination_slug'> & { destinations: { slug: string } | null })[]>(
       'packages?select=*,destinations(slug)&is_active=eq.true&order=sort_order,name',
     ),
     rest<Vehicle[]>('vehicles?select=*&is_active=eq.true&order=sort_order,name'),
     rest<Destination[]>('destinations?select=*&is_active=eq.true&order=sort_order,name'),
+    // Older databases may not have the reviews table yet; the site still builds.
+    rest<Review[]>('reviews?select=name,place,trip,rating,body,source,sort_order&is_active=eq.true&order=sort_order,created_at.desc').catch(() => [] as Review[]),
   ]);
   if (!settings[0]) throw new Error('site_settings row missing');
   return {
@@ -108,6 +121,7 @@ async function loadLive(): Promise<Catalogue> {
     tours: tours.map(({ destinations: d, ...t }) => ({ ...t, destination_slug: d?.slug ?? null })),
     vehicles,
     destinations,
+    reviews,
     source: 'live',
   };
 }
@@ -126,8 +140,8 @@ export function getCatalogue(): Promise<Catalogue> {
     } else if (REQUIRE_LIVE) {
       throw new Error('REQUIRE_LIVE_CATALOGUE is set but PUBLIC_SUPABASE_URL / PUBLIC_SUPABASE_ANON_KEY are missing');
     }
-    const f = fallback as unknown as Omit<Catalogue, 'source' | 'tours'> & { packages: Tour[] };
-    return { settings: f.settings, tours: f.packages, vehicles: f.vehicles, destinations: f.destinations, source: 'fallback' };
+    const f = fallback as unknown as Omit<Catalogue, 'source' | 'tours' | 'reviews'> & { packages: Tour[]; reviews?: Review[] };
+    return { settings: f.settings, tours: f.packages, vehicles: f.vehicles, destinations: f.destinations, reviews: f.reviews ?? [], source: 'fallback' };
   })();
   return cached;
 }

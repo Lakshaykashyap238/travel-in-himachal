@@ -1,7 +1,7 @@
 // Tours, cars and destinations editors (owner only).
 import { useCallback, useEffect, useState, type ReactNode } from 'react';
 import { friendlyError, photoUrl, supabase } from './lib/supabase';
-import type { DestinationRow, TourRow, VehicleRow } from './lib/types';
+import type { DestinationRow, ReviewRow, TourRow, VehicleRow } from './lib/types';
 import { inr, lines, slugify } from './lib/util';
 import { PhotoPicker } from './PhotoPicker';
 import { Badge, Button, Card, EmptyState, Field, Modal, Spinner, Toggle, inputClass, useToast } from './ui';
@@ -40,12 +40,12 @@ function ListShell<T extends { id: string; name: string; is_active: boolean; ima
   );
 }
 
-function useRows<T>(table: string, order = 'sort_order') {
+function useRows<T>(table: string, order = 'sort_order', then = 'name') {
   const [rows, setRows] = useState<T[] | null>(null);
   const reload = useCallback(async () => {
-    const { data } = await supabase.from(table).select('*').order(order).order('name');
+    const { data } = await supabase.from(table).select('*').order(order).order(then, then === 'created_at' ? { ascending: false } : undefined);
     setRows((data ?? []) as T[]);
-  }, [table, order]);
+  }, [table, order, then]);
   useEffect(() => { void reload(); }, [reload]);
   return { rows, reload };
 }
@@ -330,3 +330,85 @@ function DestinationForm({ initial, onDone }: { initial: Partial<DestinationRow>
   );
 }
 
+
+// ── Reviews ───────────────────────────────────────────────────────────
+const SOURCES = ['Google', 'WhatsApp', 'Instagram', 'Facebook', 'In person', 'Other'];
+const stars = (n: number) => '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n);
+
+export function ReviewsPage() {
+  const { rows, reload } = useRows<ReviewRow>('reviews', 'sort_order', 'created_at');
+  const [editing, setEditing] = useState<Partial<ReviewRow> | null>(null);
+  return (
+    <>
+      <ListShell title="Reviews" intro="Real reviews from your customers, shown on the home page. Copy them from Google or WhatsApp with the customer's name." rows={rows}
+        render={(r) => `${stars(r.rating)} ${r.body}`}
+        onNew={() => setEditing({})} onEdit={setEditing} />
+      <Modal open={editing !== null} onClose={() => setEditing(null)} title={editing?.id ? `Edit review: ${editing.name}` : 'Add a review'} wide>
+        {editing && <ReviewForm initial={editing} onDone={() => { setEditing(null); void reload(); }} />}
+      </Modal>
+    </>
+  );
+}
+
+function ReviewForm({ initial, onDone }: { initial: Partial<ReviewRow>; onDone: () => void }) {
+  const toast = useToast();
+  const isNew = !initial.id;
+  const [f, setF] = useState({
+    name: initial.name ?? '', place: initial.place ?? '', trip: initial.trip ?? '', rating: String(initial.rating ?? 5),
+    body: initial.body ?? '', source: initial.source ?? 'Google', is_active: initial.is_active ?? true, sort_order: String(initial.sort_order ?? 100),
+  });
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const set = (k: keyof typeof f) => (v: string | boolean) => setF((x) => ({ ...x, [k]: v }));
+
+  async function save(e: { preventDefault(): void }) {
+    e.preventDefault();
+    setError(null);
+    if (f.name.trim().length < 2) return setError("Add the customer's name.");
+    if (f.body.trim().length < 10) return setError('Paste the review text (at least a sentence).');
+    const row = {
+      name: f.name.trim(), place: f.place.trim() || null, trip: f.trip.trim() || null, rating: Number(f.rating),
+      body: f.body.trim(), source: f.source, is_active: f.is_active, sort_order: numOrNull(f.sort_order) ?? 100,
+    };
+    setBusy(true);
+    const { error } = isNew ? await supabase.from('reviews').insert(row) : await supabase.from('reviews').update(row).eq('id', initial.id!);
+    setBusy(false);
+    if (error) return setError(friendlyError(error));
+    toast(isNew ? 'Review added' : 'Review saved');
+    onDone();
+  }
+
+  async function remove() {
+    if (!window.confirm(`Delete the review from ${initial.name}?`)) return;
+    const { error } = await supabase.from('reviews').delete().eq('id', initial.id!);
+    if (error) return setError(friendlyError(error));
+    toast('Review deleted');
+    onDone();
+  }
+
+  return (
+    <form onSubmit={save} className="space-y-5">
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Customer's name">{(id) => <input id={id} value={f.name} maxLength={60} onChange={(e) => set('name')(e.target.value)} className={inputClass} />}</Field>
+        <Field label="From (optional)" hint="e.g. Delhi">{(id) => <input id={id} value={f.place} maxLength={60} onChange={(e) => set('place')(e.target.value)} className={inputClass} />}</Field>
+        <Field label="Trip (optional)" hint="e.g. Spiti tour, May 2026">{(id) => <input id={id} value={f.trip} maxLength={80} onChange={(e) => set('trip')(e.target.value)} className={inputClass} />}</Field>
+        <div className="grid grid-cols-2 gap-4">
+          <Field label="Stars">{(id) => (
+            <select id={id} value={f.rating} onChange={(e) => set('rating')(e.target.value)} className={inputClass}>
+              {[5, 4, 3, 2, 1].map((n) => <option key={n} value={n}>{stars(n)}</option>)}
+            </select>
+          )}</Field>
+          <Field label="Where it was posted">{(id) => (
+            <select id={id} value={f.source} onChange={(e) => set('source')(e.target.value)} className={inputClass}>
+              {SOURCES.map((s) => <option key={s}>{s}</option>)}
+            </select>
+          )}</Field>
+        </div>
+      </div>
+      <Field label="Review" hint="The customer's own words. Only add real reviews.">{(id) => <textarea id={id} rows={5} maxLength={700} value={f.body} onChange={(e) => set('body')(e.target.value)} className={inputClass} />}</Field>
+      <Field label="Order" hint="Lower numbers show first.">{(id) => <input id={id} inputMode="numeric" value={f.sort_order} onChange={(e) => set('sort_order')(e.target.value)} className={inputClass} />}</Field>
+      <Toggle checked={f.is_active} onChange={(v) => set('is_active')(v)} label={f.is_active ? 'Shown on the website' : 'Hidden from the website'} />
+      <FormActions busy={busy} error={error} isNew={isNew} onDelete={remove} onCancel={onDone} />
+    </form>
+  );
+}
