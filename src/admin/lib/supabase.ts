@@ -2,7 +2,9 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 
 export const SUPABASE_URL = (import.meta.env.PUBLIC_SUPABASE_URL as string | undefined) ?? '';
 const ANON_KEY = (import.meta.env.PUBLIC_SUPABASE_ANON_KEY as string | undefined) ?? '';
-export const VAPID_PUBLIC_KEY = (import.meta.env.PUBLIC_VAPID_PUBLIC_KEY as string | undefined) ?? '';
+// Tolerate a pasted "PUBLIC: " prefix, spaces or quotes around the key.
+export const VAPID_PUBLIC_KEY = ((import.meta.env.PUBLIC_VAPID_PUBLIC_KEY as string | undefined) ?? '')
+  .replace(/^\s*PUBLIC:\s*/i, '').replace(/[\s"']/g, '');
 
 export const adminConfigured = Boolean(SUPABASE_URL && ANON_KEY);
 

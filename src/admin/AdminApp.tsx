@@ -185,8 +185,9 @@ function AlertsPage({ me }: { me: StaffMember }) {
     setBusy(true);
     try {
       setState(state === 'on' ? await disablePush() : await enablePush(me.user_id));
-    } catch {
-      toast('Couldn’t change alerts on this device.', 'error');
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : String((e as { message?: string })?.message ?? e);
+      toast(`Couldn’t change alerts on this device (${msg}).`, 'error');
     }
     setBusy(false);
   }
