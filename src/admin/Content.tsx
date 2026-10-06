@@ -332,7 +332,7 @@ function DestinationForm({ initial, onDone }: { initial: Partial<DestinationRow>
 
 
 // ── Reviews ───────────────────────────────────────────────────────────
-const SOURCES = ['Google', 'WhatsApp', 'Instagram', 'Facebook', 'In person', 'Other'];
+const SOURCES = ['Website', 'Google', 'WhatsApp', 'Instagram', 'Facebook', 'In person', 'Other'];
 const stars = (n: number) => '★★★★★'.slice(0, n) + '☆☆☆☆☆'.slice(0, 5 - n);
 
 export function ReviewsPage() {
@@ -341,7 +341,7 @@ export function ReviewsPage() {
   return (
     <>
       <ListShell title="Reviews" intro="Real reviews from your customers, shown on the home page. Copy them from Google or WhatsApp with the customer's name." rows={rows}
-        render={(r) => `${stars(r.rating)} ${r.body}`}
+        render={(r) => `${r.from_customer && !r.is_active ? 'Waiting for your approval · ' : ''}${stars(r.rating)} ${r.body}`}
         onNew={() => setEditing({})} onEdit={setEditing} />
       <Modal open={editing !== null} onClose={() => setEditing(null)} title={editing?.id ? `Edit review: ${editing.name}` : 'Add a review'} wide>
         {editing && <ReviewForm initial={editing} onDone={() => { setEditing(null); void reload(); }} />}
@@ -407,6 +407,7 @@ function ReviewForm({ initial, onDone }: { initial: Partial<ReviewRow>; onDone: 
       </div>
       <Field label="Review" hint="The customer's own words. Only add real reviews.">{(id) => <textarea id={id} rows={5} maxLength={700} value={f.body} onChange={(e) => set('body')(e.target.value)} className={inputClass} />}</Field>
       <Field label="Order" hint="Lower numbers show first.">{(id) => <input id={id} inputMode="numeric" value={f.sort_order} onChange={(e) => set('sort_order')(e.target.value)} className={inputClass} />}</Field>
+      {initial.from_customer && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-900">Sent by the customer from the website{initial.trip ? ` (${initial.trip})` : ''}. Turn on “Shown on the website” to approve it.</p>}
       <Toggle checked={f.is_active} onChange={(v) => set('is_active')(v)} label={f.is_active ? 'Shown on the website' : 'Hidden from the website'} />
       <FormActions busy={busy} error={error} isNew={isNew} onDelete={remove} onCancel={onDone} />
     </form>

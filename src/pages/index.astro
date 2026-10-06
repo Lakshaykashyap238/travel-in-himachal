@@ -113,7 +113,7 @@ const stats = [
   </section>
 
 
-  {(shownReviews.length > 0 || settings.google_review_url) && (
+  {(
     <section class="py-16 sm:py-20" aria-labelledby="reviews-heading">
       <div class="mx-auto max-w-7xl px-4">
         <div class="flex flex-wrap items-end justify-between gap-4">
@@ -121,7 +121,10 @@ const stats = [
             <h2 id="reviews-heading" class="display text-4xl uppercase sm:text-6xl">What travellers say</h2>
             {avgRating && <p class="mt-3 text-lg text-stone"><span class="font-semibold text-ink">{avgRating} out of 5</span> from {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}</p>}
           </div>
-          {settings.google_review_url && <a href={settings.google_review_url} target="_blank" rel="noopener" class="font-semibold text-brand underline-offset-4 hover:underline">Read all reviews on Google</a>}
+          <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
+            {settings.google_review_url && <a href={settings.google_review_url} target="_blank" rel="noopener" class="font-semibold text-brand underline-offset-4 hover:underline">Read reviews on Google</a>}
+            <a href="/review" class="rounded-md border-2 border-ink px-5 py-2 font-semibold hover:bg-ink hover:text-white">Write a review</a>
+          </div>
         </div>
         {shownReviews.length > 0 ? (
           <ul class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -135,7 +138,7 @@ const stats = [
             ))}
           </ul>
         ) : (
-          <p class="mt-6 max-w-xl text-lg text-stone">See what our travellers have written about their trips with us.</p>
+          <p class="mt-6 max-w-xl text-lg text-stone">Travelled with us? Be the first to tell other travellers how your trip went.</p>
         )}
       </div>
     </section>

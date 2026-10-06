@@ -137,4 +137,5 @@ export interface ReviewRow {
   image_path: string | null;
   is_active: boolean;
   sort_order: number;
+  from_customer?: boolean;
 }
