@@ -15,20 +15,20 @@ const crumbs = [{ href: '/fleet', label: 'Cab booking' }];
     {vehicles.map((v, i) => {
       const img = resolveImage(v.image_path);
       return (
-        <article class="overflow-hidden rounded-2xl bg-white shadow-[0_10px_30px_rgba(0,0,0,.08)] ring-1 ring-black/5">
-          <div class="bg-gradient-to-b from-[rgb(3,89,164)] to-[rgb(3,70,130)] p-6">
+        <article class="overflow-hidden rounded-xl bg-white ring-1 ring-black/10">
+          <div class="bg-night p-6">
             {img && <CatalogueImage src={img} alt={v.name} widths={[480, 800]} sizes="(min-width:1024px) 45vw, 100vw" loading={i < 2 ? 'eager' : 'lazy'} class="mx-auto max-h-64 w-auto object-contain" />}
           </div>
           <div class="grid gap-6 p-6 sm:grid-cols-2">
             <div>
-              <h2 class="text-2xl font-bold">{v.name}</h2>
-              <p class="mt-2 flex flex-wrap gap-4 text-sm text-slate-600">
+              <h2 class="display text-4xl uppercase">{v.name}</h2>
+              <p class="mt-2 flex flex-wrap gap-4 text-sm text-stone">
                 <span class="flex items-center gap-1.5"><Icon name="users" class="h-4 w-4" />{v.seats} seats</span>
                 <span class="flex items-center gap-1.5"><Icon name="luggage" class="h-4 w-4" />{v.luggage} bags</span>
               </p>
-              {v.description && <p class="mt-3 text-slate-600">{v.description}</p>}
+              {v.description && <p class="mt-3 text-stone">{v.description}</p>}
               <p class="mt-4">{v.price_per_day != null ? <><span class="text-sm text-slate-500">Starting from </span><span class="text-2xl font-bold">{formatInr(v.price_per_day)}</span><span class="text-slate-500"> / day</span></> : <span class="font-semibold">Price on request</span>}</p>
-              <a href={`/book?type=cab&car=${v.slug}`} class="mt-4 inline-block rounded-full bg-ink px-6 py-3 font-semibold text-white hover:bg-black">Book this car</a>
+              <a href={`/book?type=cab&car=${v.slug}`} class="mt-4 inline-block rounded-md bg-ink px-6 py-3 font-semibold text-white hover:bg-black">Book this car</a>
             </div>
             {v.features.length > 0 && (
               <div>

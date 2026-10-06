@@ -48,18 +48,18 @@ const rendered = await Promise.all(
           decoding="async"
         />
       </picture>
-      <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-black/10"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-night/90 via-night/35 to-black/10"></div>
       <div class="absolute inset-x-0 bottom-[14%] mx-auto max-w-7xl px-4 text-white">
-        <p class="text-sm font-extrabold uppercase tracking-[0.18em] text-accent">{s.tag}</p>
+        <p class="flex items-center gap-2 text-base font-medium text-white/90"><span class="h-[3px] w-8 bg-accent" aria-hidden="true"></span>{s.tag}</p>
         {i === 0 ? (
-          <h1 class="mt-3 max-w-2xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">{s.title}</h1>
+          <h1 class="display mt-3 max-w-3xl text-5xl uppercase sm:text-7xl lg:text-8xl">{s.title}</h1>
         ) : (
-          <p class="mt-3 max-w-2xl text-4xl font-extrabold leading-tight sm:text-5xl lg:text-6xl">{s.title}</p>
+          <p class="display mt-3 max-w-3xl text-5xl uppercase sm:text-7xl lg:text-8xl">{s.title}</p>
         )}
         <p class="mt-4 max-w-xl text-base text-white/90 sm:text-lg">{s.desc}</p>
         <div class="mt-7 flex flex-wrap gap-3">
-          <a href="/tours" class="rounded-full bg-white px-6 py-3 text-sm font-semibold text-ink hover:bg-white/90">Explore tours</a>
-          <a href="/book?type=cab" class="rounded-full border-2 border-white px-6 py-3 text-sm font-semibold text-white hover:bg-white hover:text-ink">Book a cab</a>
+          <a href="/tours" class="rounded-md bg-accent px-6 py-3 font-semibold text-ink hover:bg-white">Explore tours</a>
+          <a href="/book?type=cab" class="rounded-md border-2 border-white/80 px-6 py-3 font-semibold text-white hover:bg-white hover:text-ink">Book a cab</a>
         </div>
       </div>
     </div>

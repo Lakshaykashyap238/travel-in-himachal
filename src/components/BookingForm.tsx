@@ -178,16 +178,16 @@ export default function BookingForm({ tours, cars, turnstileSiteKey, phone }: Pr
     const trackUrl = `/track#${done.trackingToken}`;
     return (
       <div className="rounded-2xl bg-white p-8 text-center shadow-[0_10px_30px_rgba(0,0,0,.08)] ring-1 ring-black/5" role="status">
-        <div className="mx-auto grid h-14 w-14 place-items-center rounded-full bg-brand/10 text-2xl text-brand">✓</div>
+        <div className="mx-auto grid h-14 w-14 place-items-center rounded-md bg-brand/10 text-2xl text-brand">✓</div>
         <h2 className="mt-4 text-2xl font-bold">Booking request sent</h2>
-        <p className="mt-2 text-slate-600">Your reference is</p>
+        <p className="mt-2 text-stone">Your reference is</p>
         <p className="mt-1 font-mono text-3xl font-bold tracking-wider">{done.reference}</p>
-        <p className="mx-auto mt-4 max-w-md text-slate-600">
+        <p className="mx-auto mt-4 max-w-md text-stone">
           We’ll review your request and call you to confirm the fare. Follow the status on your private tracking page — bookmark it or save the link.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-3">
-          <a href={trackUrl} className="rounded-full bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark">Track my booking</a>
-          {phone && <a href={`tel:${phone}`} className="rounded-full border border-slate-300 px-6 py-3 font-semibold hover:bg-slate-50">Call us</a>}
+          <a href={trackUrl} className="rounded-md bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark">Track my booking</a>
+          {phone && <a href={`tel:${phone}`} className="rounded-md border border-slate-300 px-6 py-3 font-semibold hover:bg-mist">Call us</a>}
         </div>
       </div>
     );
@@ -211,7 +211,7 @@ export default function BookingForm({ tours, cars, turnstileSiteKey, phone }: Pr
         <legend className={label}>What would you like to book?</legend>
         <div className="mt-2 grid grid-cols-2 gap-2 rounded-xl bg-slate-100 p-1">
           {(['tour', 'cab'] as const).map((t) => (
-            <label key={t} className={`cursor-pointer rounded-lg px-4 py-2.5 text-center font-semibold transition ${type === t ? 'bg-white shadow-sm' : 'text-slate-600'}`}>
+            <label key={t} className={`cursor-pointer rounded-lg px-4 py-2.5 text-center font-semibold transition ${type === t ? 'bg-white shadow-sm' : 'text-stone'}`}>
               <input type="radio" name="type" value={t} checked={type === t} onChange={() => setType(t)} className="sr-only" />
               {t === 'tour' ? 'Tour package' : 'Cab only'}
             </label>
@@ -309,7 +309,7 @@ export default function BookingForm({ tours, cars, turnstileSiteKey, phone }: Pr
 
       {formError && <p className="mt-4 rounded-xl bg-red-50 p-4 text-sm text-red-800" role="alert">{formError}</p>}
 
-      <button type="submit" disabled={submitting || !backendConfigured} className="mt-6 w-full rounded-full bg-brand px-6 py-4 text-lg font-semibold text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60">
+      <button type="submit" disabled={submitting || !backendConfigured} className="mt-6 w-full rounded-md bg-brand px-6 py-4 text-lg font-semibold text-white hover:bg-brand-dark disabled:cursor-not-allowed disabled:opacity-60">
         {submitting ? 'Sending…' : 'Send booking request'}
       </button>
       <p className="mt-3 text-center text-sm text-slate-500">No payment now. We’ll call you to confirm the fare.</p>

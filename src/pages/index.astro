@@ -8,10 +8,12 @@ import { formatInr, getCatalogue, resolveImage } from '@/lib/catalogue';
 
 const { settings, tours, destinations, vehicles } = await getCatalogue();
 
-const services = [
-  'Customized tour packages', 'Airport pickup & drop', 'Honeymoon packages', 'Family tours',
-  'Adventure trips', 'Hotel booking assistance', 'Experienced drivers', 'Safe & comfortable travel',
-];
+const promises = [
+  { icon: 'car', text: 'Private cab with every tour' },
+  { icon: 'wallet', text: 'Fare agreed before you travel' },
+  { icon: 'shield', text: 'Verified, experienced drivers' },
+  { icon: 'headset', text: 'Call us before, during or after your trip' },
+] as const;
 
 const reasons = [
   { icon: 'click', title: 'Easy booking', text: 'Book a tour or cab online in a few minutes, and track your booking status on your own link.' },
@@ -32,73 +34,69 @@ const stats = [
 >
   <HeroSlider />
 
-  <!-- Services strip (the original site's gold-star marquee) -->
-  <div class="overflow-hidden bg-[#252525] py-3 text-sm text-white" aria-label="Our services">
-    <ul class="marquee flex w-max gap-12 whitespace-nowrap">
-      {[...services, ...services].map((s, i) => (
-        <li aria-hidden={i >= services.length ? 'true' : undefined} class="flex items-center gap-3"><span class="text-accent">★</span>{s}</li>
+  <!-- What every trip includes: the promises a traveller cares about first -->
+  <section class="bg-night text-white" aria-label="Included with every trip">
+    <ul class="mx-auto grid max-w-7xl gap-x-8 gap-y-3 px-4 py-5 text-[15px] sm:grid-cols-2 lg:grid-cols-4">
+      {promises.map((p) => (
+        <li class="flex items-center gap-3"><Icon name={p.icon} class="h-5 w-5 shrink-0 text-accent" />{p.text}</li>
       ))}
     </ul>
-  </div>
+  </section>
 
-  <section class="mx-auto max-w-7xl px-4 py-16" aria-labelledby="tours-heading">
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:py-20" aria-labelledby="tours-heading">
     <div class="flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <p class="text-sm font-bold uppercase tracking-widest text-accent">Tour packages</p>
-        <h2 id="tours-heading" class="mt-1 text-3xl font-bold">Our tour packages</h2>
+      <div class="max-w-2xl">
+        <h2 id="tours-heading" class="display text-4xl uppercase sm:text-6xl">Tour packages</h2>
+        <p class="mt-3 text-lg text-stone">Each tour comes with a private cab and a driver who knows the hill roads.</p>
       </div>
-      <a href="/tours" class="flex items-center gap-1 font-semibold text-brand hover:underline">All tours <Icon name="arrow" class="h-4 w-4" /></a>
+      <a href="/tours" class="font-semibold text-brand underline-offset-4 hover:underline">See all {tours.length} tours</a>
     </div>
-    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div class="mt-10 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
       {tours.slice(0, 8).map((t, i) => <TourCard tour={t} eager={i < 4} />)}
     </div>
   </section>
 
-  <section class="bg-slate-50 py-16" aria-labelledby="why-heading">
-    <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 lg:grid-cols-2">
+  <section class="bg-mist py-16 sm:py-20" aria-labelledby="why-heading">
+    <div class="mx-auto grid max-w-7xl gap-12 px-4 lg:grid-cols-[1fr_1.2fr] lg:items-start">
       <div>
-        <p class="text-sm font-bold uppercase tracking-widest text-accent">Why choose us</p>
-        <h2 id="why-heading" class="mt-2 text-3xl font-bold leading-tight sm:text-4xl">Your trusted travel partner in Himachal</h2>
-        <p class="mt-4 max-w-xl text-slate-600">We make your journey comfortable, safe and memorable — from an easy booking to a driver who knows the mountains.</p>
+        <h2 id="why-heading" class="display text-4xl uppercase sm:text-6xl">Travel with people who drive these roads every day</h2>
+        <p class="mt-5 max-w-xl text-lg text-stone">We make your journey comfortable, safe and memorable, from an easy booking to a driver who knows the mountains.</p>
         {stats.length > 0 && (
-          <dl class="mt-8 flex flex-wrap gap-4">
+          <dl class="mt-10 flex flex-wrap gap-x-12 gap-y-6">
             {stats.map((s) => (
-              <div class="min-w-32 rounded-2xl bg-white p-5 shadow-sm ring-1 ring-black/5">
-                <dt class="text-sm text-slate-500">{s.label}</dt>
-                <dd class="text-3xl font-bold text-ink">{s.value}</dd>
+              <div class="border-l-[3px] border-accent pl-4">
+                <dd class="display text-5xl text-ink">{s.value}</dd>
+                <dt class="mt-1 text-stone">{s.label}</dt>
               </div>
             ))}
           </dl>
         )}
       </div>
-      <div class="grid gap-5 sm:grid-cols-2">
+      <ul class="grid gap-x-10 gap-y-8 sm:grid-cols-2">
         {reasons.map((r) => (
-          <div class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5">
-            <span class="inline-flex rounded-xl bg-brand/10 p-3 text-brand"><Icon name={r.icon} class="h-6 w-6" /></span>
-            <h3 class="mt-4 text-lg font-semibold">{r.title}</h3>
-            <p class="mt-2 text-sm text-slate-600">{r.text}</p>
-          </div>
+          <li>
+            <Icon name={r.icon} class="h-7 w-7 text-brand" />
+            <h3 class="mt-3 text-2xl font-bold">{r.title}</h3>
+            <p class="mt-1 text-stone">{r.text}</p>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   </section>
 
-  <section class="mx-auto max-w-7xl px-4 py-16" aria-labelledby="dest-heading">
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:py-20" aria-labelledby="dest-heading">
     <div class="flex flex-wrap items-end justify-between gap-4">
-      <div>
-        <p class="text-sm font-bold uppercase tracking-widest text-accent">Destinations</p>
-        <h2 id="dest-heading" class="mt-1 text-3xl font-bold">Places we cover</h2>
-      </div>
-      <a href="/destinations" class="flex items-center gap-1 font-semibold text-brand hover:underline">All destinations <Icon name="arrow" class="h-4 w-4" /></a>
+      <h2 id="dest-heading" class="display text-4xl uppercase sm:text-6xl">Places we cover</h2>
+      <a href="/destinations" class="font-semibold text-brand underline-offset-4 hover:underline">All destinations</a>
     </div>
-    <div class="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+    <div class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
       {destinations.slice(0, 6).map((d) => {
         const img = resolveImage(d.image_path);
         return (
-          <a href={`/destinations/${d.slug}`} class="group relative aspect-[3/4] overflow-hidden rounded-2xl bg-slate-200">
-            {img && <CatalogueImage src={img} alt="" widths={[240, 400]} sizes="(min-width: 1024px) 16vw, 50vw" class="h-full w-full object-cover transition duration-700 group-hover:scale-105" />}
-            <span class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></span>
-            <span class="absolute bottom-3 left-3 text-lg font-semibold text-white">{d.name}</span>
+          <a href={`/destinations/${d.slug}`} class="group relative aspect-[3/4] overflow-hidden rounded-xl bg-night">
+            {img && <CatalogueImage src={img} alt="" widths={[240, 400]} sizes="(min-width: 1024px) 16vw, 50vw" class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.03] motion-reduce:transition-none" />}
+            <span class="absolute inset-0 bg-gradient-to-t from-night/85 to-transparent"></span>
+            <span class="display absolute bottom-3 left-3 text-2xl uppercase text-white">{d.name}</span>
           </a>
         );
       })}
@@ -106,21 +104,21 @@ const stats = [
   </section>
 
   {vehicles.length > 0 && (
-    <section class="bg-[rgb(3,89,164)] py-16 text-white" aria-labelledby="fleet-heading">
+    <section class="bg-night py-16 text-white sm:py-20" aria-labelledby="fleet-heading">
       <div class="mx-auto max-w-7xl px-4">
-        <h2 id="fleet-heading" class="text-3xl font-bold">Private cabs for every journey</h2>
-        <p class="mt-2 max-w-2xl text-white/85">Well-maintained cars with experienced, verified drivers. One-way, round trip, airport or local sightseeing.</p>
-        <div class="mt-8 grid gap-6 md:grid-cols-2">
+        <h2 id="fleet-heading" class="display text-4xl uppercase sm:text-6xl">Private cabs</h2>
+        <p class="mt-3 max-w-2xl text-lg text-white/80">Clean, well-kept cars with verified drivers, for one-way trips, round trips, airport pickups and local sightseeing.</p>
+        <div class="mt-10 grid gap-6 md:grid-cols-2">
           {vehicles.map((v) => {
             const img = resolveImage(v.image_path);
             return (
-              <div class="flex items-center gap-5 rounded-2xl bg-white p-5 text-ink">
-                {img && <CatalogueImage src={img} alt={v.name} widths={[240, 400]} sizes="200px" class="w-40 shrink-0 object-contain sm:w-48" />}
+              <div class="flex items-center gap-5 rounded-xl bg-white/[0.06] p-5 ring-1 ring-white/10">
+                {img && <CatalogueImage src={img} alt={v.name} widths={[240, 400]} sizes="200px" class="w-40 shrink-0 object-contain sm:w-52" />}
                 <div>
-                  <h3 class="text-xl font-bold">{v.name}</h3>
-                  <p class="mt-1 text-sm text-slate-600">{v.seats} seats · {v.luggage} bags · AC</p>
-                  <p class="mt-2 text-sm">{v.price_per_day != null ? <><span class="text-lg font-bold">{formatInr(v.price_per_day)}</span> / day</> : 'Price on request'}</p>
-                  <a href={`/book?type=cab&car=${v.slug}`} class="mt-3 inline-block rounded-full bg-ink px-4 py-2 text-sm font-semibold text-white hover:bg-black">Book this car</a>
+                  <h3 class="text-3xl font-bold">{v.name}</h3>
+                  <p class="mt-1 text-white/75">{v.seats} seats, {v.luggage} bags, AC</p>
+                  <p class="mt-2">{v.price_per_day != null ? <><span class="text-xl font-semibold">{formatInr(v.price_per_day)}</span><span class="text-white/75"> per day</span></> : <span class="text-white/75">Price on request</span>}</p>
+                  <a href={`/book?type=cab&car=${v.slug}`} class="mt-4 inline-block rounded-md bg-accent px-5 py-2 font-semibold text-ink hover:bg-white">Book this car</a>
                 </div>
               </div>
             );
@@ -130,18 +128,17 @@ const stats = [
     </section>
   )}
 
-  <section class="mx-auto max-w-4xl px-4 py-16 text-center">
-    <h2 class="text-3xl font-bold">Ready to plan your trip?</h2>
-    <p class="mt-3 text-slate-600">Send your booking request in two minutes. We'll confirm the fare and call you back.</p>
-    <div class="mt-6 flex flex-wrap justify-center gap-3">
-      <a href="/book" class="rounded-full bg-brand px-6 py-3 font-semibold text-white hover:bg-brand-dark">Book now</a>
-      {settings.google_review_url && <a href={settings.google_review_url} target="_blank" rel="noopener" class="rounded-full border border-slate-300 px-6 py-3 font-semibold hover:bg-slate-50">Read our Google reviews</a>}
+  <section class="mx-auto max-w-7xl px-4 py-16 sm:py-24">
+    <div class="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
+      <div>
+        <h2 class="display text-5xl uppercase sm:text-7xl">Ready to plan your trip?</h2>
+        <p class="mt-4 max-w-xl text-lg text-stone">Send a booking request in two minutes. We'll confirm the fare and call you back. No payment needed now.</p>
+      </div>
+      <div class="flex flex-wrap gap-3 lg:justify-end">
+        <a href="/book" class="rounded-md bg-brand px-7 py-3.5 text-lg font-semibold text-white hover:bg-brand-dark">Send a booking request</a>
+        {settings.phone && <a href={`tel:${settings.phone}`} class="rounded-md border-2 border-ink px-7 py-3.5 text-lg font-semibold hover:bg-ink hover:text-white">Call us</a>}
+      </div>
     </div>
   </section>
 </Base>
 
-<style>
-  .marquee { animation: marquee 40s linear infinite; }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  @media (prefers-reduced-motion: reduce) { .marquee { animation: none; } }
-</style>

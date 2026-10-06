@@ -5,11 +5,11 @@ interface Props { settings: SiteSettings }
 const { settings: s } = Astro.props;
 const year = new Date().getFullYear();
 ---
-<footer class="bg-night text-slate-300">
+<footer class="bg-night text-white/75">
   <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
     <div>
-      <p class="text-xl font-bold text-white">{s.business_name}</p>
-      {s.tagline && <p class="mt-2 text-sm text-slate-400">{s.tagline}</p>}
+      <p class="display text-3xl uppercase text-white">{s.business_name}</p>
+      {s.tagline && <p class="mt-2 text-sm text-white/60">{s.tagline}</p>}
       <div class="mt-5 flex gap-3">
         {s.instagram_url && <a href={s.instagram_url} class="rounded-full bg-white/10 p-2 hover:bg-white/20" rel="noopener" target="_blank"><Icon name="instagram" label="Instagram" /></a>}
         {s.facebook_url && <a href={s.facebook_url} class="rounded-full bg-white/10 p-2 hover:bg-white/20" rel="noopener" target="_blank"><Icon name="facebook" label="Facebook" /></a>}
@@ -48,6 +48,6 @@ const year = new Date().getFullYear();
     </nav>
   </div>
   <div class="border-t border-white/10">
-    <p class="mx-auto max-w-7xl px-4 py-5 text-xs text-slate-500">© {year} {s.business_name}. All rights reserved.</p>
+    <p class="mx-auto max-w-7xl px-4 py-5 text-xs text-white/50">© {year} {s.business_name}. All rights reserved.</p>
   </div>
 </footer>

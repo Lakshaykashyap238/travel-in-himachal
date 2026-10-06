@@ -14,13 +14,13 @@ const crumbs = [{ href: '/destinations', label: 'Destinations' }];
     {destinations.map((d, i) => {
       const img = resolveImage(d.image_path);
       return (
-        <a href={`/destinations/${d.slug}`} class="group overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-black/5 hover:shadow-lg">
+        <a href={`/destinations/${d.slug}`} class="group overflow-hidden rounded-xl bg-white ring-1 ring-black/10 hover:ring-brand">
           <div class="aspect-[16/10] overflow-hidden bg-slate-200">
             {img && <CatalogueImage src={img} alt="" widths={[400, 640]} sizes="(min-width:1024px) 33vw, (min-width:640px) 50vw, 100vw" loading={i < 3 ? 'eager' : 'lazy'} class="h-full w-full object-cover transition duration-700 group-hover:scale-105" />}
           </div>
           <div class="p-5">
-            <h2 class="text-xl font-bold group-hover:text-brand">{d.name}</h2>
-            {d.places.length > 0 && <p class="mt-2 text-sm text-slate-600">{d.places.slice(0, 4).join(' · ')}{d.places.length > 4 && ` +${d.places.length - 4} more`}</p>}
+            <h2 class="display text-3xl uppercase group-hover:text-brand">{d.name}</h2>
+            {d.places.length > 0 && <p class="mt-2 text-sm text-stone">{d.places.slice(0, 4).join(', ')}{d.places.length > 4 && ` +${d.places.length - 4} more`}</p>}
           </div>
         </a>
       );

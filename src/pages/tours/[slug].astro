@@ -38,14 +38,14 @@ const tripLd = {
 ---
 <Base title={`${t.name} – ${durationLabel(t)}`} description={description} image={og?.src} jsonLd={[tripLd, breadcrumbLd(Astro.site, crumbs)]}>
   <article>
-    <div class="relative h-[42vh] min-h-[300px] overflow-hidden bg-night">
+    <div class="relative h-[52vh] min-h-[340px] overflow-hidden bg-night">
       {img && <CatalogueImage src={img} alt={t.name} widths={[640, 1024, 1600]} sizes="100vw" loading="eager" fetchpriority="high" class="h-full w-full object-cover opacity-90" />}
-      <div class="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent"></div>
+      <div class="absolute inset-0 bg-gradient-to-t from-night/90 via-night/30 to-transparent"></div>
       <div class="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 pb-8 text-white">
         <nav aria-label="Breadcrumb" class="mb-3 text-sm text-white/80">
           <a href="/" class="hover:text-white">Home</a> / <a href="/tours" class="hover:text-white">Tour packages</a>
         </nav>
-        <h1 class="text-3xl font-extrabold sm:text-5xl">{t.name}</h1>
+        <h1 class="display text-5xl uppercase sm:text-7xl">{t.name}</h1>
         <p class="mt-2 flex items-center gap-2 text-lg"><Icon name="calendar" />{durationLabel(t)}</p>
       </div>
     </div>
@@ -59,7 +59,7 @@ const tripLd = {
           <section>
             <h2 class="text-2xl font-bold">Places you'll see</h2>
             <ul class="mt-4 grid gap-3 sm:grid-cols-2">
-              {t.places.map((p) => <li class="flex items-center gap-2 rounded-xl bg-slate-50 px-4 py-3"><Icon name="pin" class="h-4 w-4 text-brand" />{p}</li>)}
+              {t.places.map((p) => <li class="flex items-center gap-2 rounded-xl bg-mist px-4 py-3"><Icon name="pin" class="h-4 w-4 text-brand" />{p}</li>)}
             </ul>
           </section>
         )}
@@ -70,10 +70,10 @@ const tripLd = {
             <ol class="mt-4 space-y-4 border-l-2 border-brand/30 pl-6">
               {t.itinerary.map((d) => (
                 <li class="relative">
-                  <span class="absolute -left-[33px] top-0.5 grid h-4 w-4 place-items-center rounded-full bg-brand ring-4 ring-white"></span>
+                  <span class="absolute -left-[33px] top-0.5 grid h-4 w-4 place-items-center rounded-md bg-brand ring-4 ring-white"></span>
                   <p class="text-sm font-semibold text-brand">Day {d.day}</p>
                   <h3 class="font-semibold">{d.title}</h3>
-                  {d.details && <p class="mt-1 text-slate-600">{d.details}</p>}
+                  {d.details && <p class="mt-1 text-stone">{d.details}</p>}
                 </li>
               ))}
             </ol>
@@ -98,14 +98,14 @@ const tripLd = {
         )}
 
         {destination && (
-          <p class="text-slate-600">More about the area: <a href={`/destinations/${destination.slug}`} class="font-semibold text-brand hover:underline">{destination.name}</a></p>
+          <p class="text-stone">More about the area: <a href={`/destinations/${destination.slug}`} class="font-semibold text-brand hover:underline">{destination.name}</a></p>
         )}
       </div>
 
       <aside class="lg:sticky lg:top-24 lg:self-start">
-        <div class="rounded-2xl bg-white p-6 shadow-[0_10px_30px_rgba(0,0,0,.08)] ring-1 ring-black/5">
+        <div class="rounded-xl border-t-4 border-accent bg-white p-6 shadow-[0_8px_30px_rgba(15,36,24,.10)] ring-1 ring-black/5">
           {t.starting_price != null ? (
-            <p><span class="block text-sm text-slate-500">Starting from</span><span class="text-3xl font-bold text-brand">{formatInr(t.starting_price)}</span> <span class="text-slate-500">/ traveller</span></p>
+            <p><span class="block text-sm text-stone">From</span><span class="display text-4xl text-ink">{formatInr(t.starting_price)}</span> <span class="text-stone">per person</span></p>
           ) : (
             <p class="text-xl font-bold">Price on request</p>
           )}
@@ -115,8 +115,8 @@ const tripLd = {
             {t.group_size && <div class="flex justify-between gap-4"><dt class="text-slate-500">Group size</dt><dd class="font-medium">{t.group_size}</dd></div>}
             <div class="flex justify-between gap-4"><dt class="text-slate-500">Transport</dt><dd class="font-medium">Private cab + driver</dd></div>
           </dl>
-          <a href={`/book?tour=${t.slug}`} class="mt-6 block rounded-full bg-brand px-6 py-3 text-center font-semibold text-white hover:bg-brand-dark">Book this tour</a>
-          {settings.phone && <a href={`tel:${settings.phone}`} class="mt-3 block rounded-full border border-slate-300 px-6 py-3 text-center font-semibold hover:bg-slate-50">Call to ask a question</a>}
+          <a href={`/book?tour=${t.slug}`} class="mt-6 block rounded-md bg-brand px-6 py-3 text-center font-semibold text-white hover:bg-brand-dark">Book this tour</a>
+          {settings.phone && <a href={`tel:${settings.phone}`} class="mt-3 block rounded-md border border-slate-300 px-6 py-3 text-center font-semibold hover:bg-mist">Call to ask a question</a>}
           <p class="mt-4 text-center text-xs text-slate-500">No payment now. We confirm the fare with you before the trip.</p>
         </div>
       </aside>
@@ -124,7 +124,7 @@ const tripLd = {
   </article>
 
   {related.length > 0 && (
-    <section class="bg-slate-50 py-14">
+    <section class="bg-mist py-14">
       <div class="mx-auto max-w-7xl px-4">
         <h2 class="text-2xl font-bold">You may also like</h2>
         <div class="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">{related.map((r) => <TourCard tour={r} />)}</div>

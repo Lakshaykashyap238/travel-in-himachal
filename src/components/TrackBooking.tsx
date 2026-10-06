@@ -67,15 +67,15 @@ export default function TrackBooking({ phone }: Props) {
     return (
       <div className={box}>
         <h2 className="text-xl font-bold">Tracking link not recognised</h2>
-        <p className="mt-2 text-slate-600">Open the full link you received after booking. If you’ve lost it, call us with your booking reference.</p>
+        <p className="mt-2 text-stone">Open the full link you received after booking. If you’ve lost it, call us with your booking reference.</p>
       </div>
     );
-  if (booking === undefined && !error) return <div className={box} aria-busy="true"><p className="text-slate-600">Loading your booking…</p></div>;
+  if (booking === undefined && !error) return <div className={box} aria-busy="true"><p className="text-stone">Loading your booking…</p></div>;
   if (booking === null)
     return (
       <div className={box}>
         <h2 className="text-xl font-bold">Booking not found</h2>
-        <p className="mt-2 text-slate-600">This link doesn’t match a booking. Please check you copied the whole link, or call us with your reference.</p>
+        <p className="mt-2 text-stone">This link doesn’t match a booking. Please check you copied the whole link, or call us with your reference.</p>
       </div>
     );
 
@@ -107,7 +107,7 @@ export default function TrackBooking({ phone }: Props) {
 
           <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-6">
             <p className="text-xs text-slate-500">{checkedAt && `Updated ${checkedAt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })} · refreshes automatically`}</p>
-            {phone && <a href={`tel:${phone}`} className="rounded-full border border-slate-300 px-5 py-2 text-sm font-semibold hover:bg-slate-50">Call us about this booking</a>}
+            {phone && <a href={`tel:${phone}`} className="rounded-md border border-slate-300 px-5 py-2 text-sm font-semibold hover:bg-mist">Call us about this booking</a>}
           </div>
         </>
       )}
