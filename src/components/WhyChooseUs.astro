@@ -1,0 +1,115 @@
+---
+// "Why Choose Us" section from the original home page: orange tag with lines,
+// big heading, intro, stat boxes, and four coloured feature cards.
+// The stats come from Business details in the admin panel (and the real
+// destination count), so they are never made up.
+import { faLocationDot, faAward, faCalendarCheck, faTags, faHeadset } from '@fortawesome/free-solid-svg-icons';
+import { faFaceSmile } from '@fortawesome/free-regular-svg-icons';
+import { faSvg } from '@/lib/fa';
+
+interface Props { travellers: number | null; years: number | null; destinations: number }
+const { travellers, years, destinations } = Astro.props;
+
+const stats = [
+  travellers ? { icon: faFaceSmile, value: `${travellers.toLocaleString('en-IN')}+`, label: 'Happy Travelers' } : null,
+  destinations ? { icon: faLocationDot, value: `${destinations}`, label: 'Destinations' } : null,
+  years ? { icon: faAward, value: `${years}+`, label: 'Years Of Experience' } : null,
+].filter(Boolean) as { icon: typeof faAward; value: string; label: string }[];
+
+const features = [
+  { icon: faCalendarCheck, color: 'blue', title: 'Easy Booking', text: 'Book your cab and tour package in just a few clicks. Quick, simple and hassle-free.' },
+  { icon: faTags, color: 'orange', title: 'Affordable Prices', text: 'Enjoy the best travel deals with transparent pricing and absolutely no hidden charges.' },
+  { icon: faLocationDot, color: 'green', title: 'Local Destination', text: 'Discover the breathtaking beauty of Himachal with carefully selected destinations.' },
+  { icon: faHeadset, color: 'purple', title: '24/7 Support', text: 'Our travel experts are always available to assist you before, during and after your trip.' },
+];
+---
+<section class="why-choose-us" aria-labelledby="why-heading">
+  <div class="why-left">
+    <span class="section-tag"><span class="line"></span>WHY CHOOSE US<span class="line"></span></span>
+    <h2 id="why-heading">Your Trusted <br />Travel Partner in <br />Himachal</h2>
+    <p>We are dedicated to making your journey comfortable, safe and memorable. From easy booking to 24/7 support, we provide everything you need for the perfect Himachal adventure.</p>
+    {stats.length > 0 && (
+      <div class="stats">
+        {stats.map((s) => (
+          <div class="stat-box">
+            <span class="stat-icon"><Fragment set:html={faSvg(s.icon)} /></span>
+            <h3>{s.value}</h3>
+            <span class="stat-label">{s.label}</span>
+          </div>
+        ))}
+      </div>
+    )}
+  </div>
+
+  <div class="why-right">
+    {features.map((f) => (
+      <div class="feature-card">
+        <div class:list={['icon-box', f.color]}><Fragment set:html={faSvg(f.icon)} /></div>
+        <h3>{f.title}</h3>
+        <p>{f.text}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .why-choose-us {
+    width: 100%; padding: clamp(45px, 7vw, 90px) clamp(20px, 6vw, 80px);
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(25px, 5vw, 70px); align-items: center;
+    background: #e2e0e02f; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  }
+  .why-left { width: 100%; max-width: 550px; min-width: 0; }
+  .section-tag { display: flex; align-items: center; gap: 12px; color: #ff6b2c; font-size: clamp(11px, 1.1vw, 14px); font-weight: 700; letter-spacing: 2px; margin-bottom: 18px; }
+  .line { width: 40px; height: 2px; flex-shrink: 0; background: #ff6b2c; border-radius: 10px; }
+  .why-left h2 { margin: 0 0 22px; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: clamp(28px, 3.5vw, 48px); line-height: 1.2; color: #1b1b1b; font-weight: 700; }
+  .why-left p { margin: 0 0 35px; font-size: clamp(13px, 1.2vw, 16px); color: #6d6d6d; line-height: 1.9; }
+  .stats { width: 100%; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(8px, 1.5vw, 20px); margin-top: 45px; }
+  .stat-box { min-width: 0; background: #fff; border-radius: 18px; padding: clamp(12px, 2vw, 20px); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); transition: 0.3s; }
+  .stat-box:hover { transform: translateY(-6px); }
+  .stat-icon { width: clamp(38px, 4vw, 48px); height: clamp(38px, 4vw, 48px); background: #fff3ee; color: #ff6b2c; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: clamp(14px, 1.6vw, 18px); margin-bottom: 15px; }
+  .stat-box h3 { margin: 0 0 5px; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: clamp(18px, 2vw, 24px); color: #1f1f1f; line-height: 1.2; font-weight: 700; }
+  .stat-label { display: block; font-size: clamp(10px, 1.1vw, 14px); color: #777; line-height: 1.4; }
+  .why-right { width: 100%; min-width: 0; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(14px, 2vw, 24px); align-items: start; }
+  .feature-card { min-width: 0; background: #fff; border-radius: 22px; padding: clamp(18px, 2.2vw, 28px); box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); transition: transform 0.35s ease, box-shadow 0.35s ease; min-height: clamp(220px, 25vw, 260px); }
+  .feature-card:hover { transform: translateY(-8px); box-shadow: 0 25px 45px rgba(0, 0, 0, 0.15); }
+  .feature-card h3 { margin: 0 0 15px; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: clamp(16px, 1.8vw, 22px); line-height: 1.25; color: #222; font-weight: 700; }
+  .feature-card p { margin: 0; font-size: clamp(12px, 1.15vw, 15px); color: #6d6d6d; line-height: 1.7; }
+  .icon-box { width: clamp(45px, 5vw, 65px); height: clamp(45px, 5vw, 65px); border-radius: 18px; display: flex; justify-content: center; align-items: center; margin-bottom: clamp(14px, 2vw, 22px); font-size: clamp(20px, 2.2vw, 28px); }
+  .blue { background: #eaf3ff; color: #2f80ed; }
+  .orange { background: #fff1e7; color: #ff7a30; }
+  .green { background: #ecfaf2; color: #1cbe6d; }
+  .purple { background: #f4edff; color: #8b5cf6; }
+  .why-choose-us :global(.fa) { display: inline-block; }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .why-left { max-width: 100%; }
+    .why-left h2 { font-size: clamp(30px, 4vw, 42px); }
+    .why-left p { font-size: clamp(14px, 1.5vw, 16px); line-height: 1.7; }
+    .stats { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+    .stat-box { flex: 1 1 100px; padding: 15px; }
+    .stat-icon { width: 42px; height: 42px; font-size: 16px; }
+    .stat-label { font-size: 12px; }
+    .feature-card { min-height: clamp(220px, 28vw, 260px); padding: clamp(18px, 2.5vw, 25px); }
+    .feature-card h3 { font-size: clamp(17px, 2vw, 21px); }
+    .feature-card p { font-size: clamp(13px, 1.4vw, 15px); line-height: 1.6; }
+    .icon-box { width: 55px; height: 55px; margin-bottom: 18px; font-size: 24px; }
+  }
+  @media (max-width: 767px) {
+    .why-choose-us { grid-template-columns: 1fr; gap: 40px; padding: 60px 20px; }
+    .why-left { max-width: 100%; text-align: center; }
+    .section-tag { justify-content: center; }
+    .why-left h2 { font-size: 36px; }
+    .why-left p { font-size: 16px; }
+    .stats { display: flex; justify-content: center; gap: 12px; margin-top: 30px; }
+    .stat-box { flex: 1 1 0; padding: 16px 10px; text-align: center; }
+    .stat-icon { margin: 0 auto 12px; width: 44px; height: 44px; font-size: 18px; }
+    .stat-box h3 { font-size: 20px; }
+    .stat-label { font-size: 11px; color: #232222; }
+    .why-right { grid-template-columns: 1fr; gap: 24px; }
+    .feature-card { padding: 28px; min-height: 0; }
+    .feature-card:hover { transform: none; }
+    .feature-card h3 { font-size: 22px; }
+    .feature-card p { font-size: 15px; line-height: 1.8; }
+    .icon-box { width: 65px; height: 65px; margin-bottom: 22px; font-size: 28px; }
+  }
+</style>

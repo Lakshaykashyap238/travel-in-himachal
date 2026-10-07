@@ -6,24 +6,11 @@ import Marquee from '@/components/Marquee.astro';
 import Preloader from '@/components/Preloader.astro';
 import QuickBooking from '@/components/QuickBooking.astro';
 import ReviewsSlider from '@/components/ReviewsSlider.astro';
+import WhyChooseUs from '@/components/WhyChooseUs.astro';
 import TourCard from '@/components/TourCard.astro';
-import Icon from '@/components/Icon.astro';
 import { getCatalogue, resolveImage } from '@/lib/catalogue';
 
 const { settings, tours, destinations, reviews } = await getCatalogue();
-
-const reasons = [
-  { icon: 'click', title: 'Easy booking', text: 'Book a tour or cab online in a few minutes, and track your booking status on your own link.' },
-  { icon: 'wallet', title: 'Clear pricing', text: 'The fare is agreed with you before your trip is confirmed. No surprises on the road.' },
-  { icon: 'mountain', title: 'Local knowledge', text: 'Routes, stops and timings planned by people who drive these mountain roads.' },
-  { icon: 'headset', title: 'Help when you need it', text: 'Call us before, during or after your trip.' },
-] as const;
-
-const stats = [
-  settings.stat_travellers ? { value: `${settings.stat_travellers.toLocaleString('en-IN')}+`, label: 'Happy travellers' } : null,
-  destinations.length ? { value: `${destinations.length}`, label: 'Destinations' } : null,
-  settings.stat_years ? { value: `${settings.stat_years}+`, label: 'Years of experience' } : null,
-].filter(Boolean) as { value: string; label: string }[];
 ---
 <Base
   title={settings.business_name}
@@ -33,7 +20,6 @@ const stats = [
   <QuickBooking />
   <HeroSlider />
   <Marquee />
-
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:py-20" aria-labelledby="tours-heading">
     <div class="flex flex-wrap items-end justify-between gap-4">
@@ -48,34 +34,7 @@ const stats = [
     </div>
   </section>
 
-  <section class="bg-mist py-16 sm:py-20" aria-labelledby="why-heading">
-    <div class="mx-auto grid max-w-7xl gap-12 px-4 lg:grid-cols-[1fr_1.2fr] lg:items-start">
-      <div>
-        <h2 id="why-heading" class="display text-4xl uppercase sm:text-6xl">Travel with people who drive these roads every day</h2>
-        <p class="mt-5 max-w-xl text-lg text-stone">We make your journey comfortable, safe and memorable, from an easy booking to a driver who knows the mountains.</p>
-        <a href="/about" class="mt-4 inline-block font-semibold text-brand underline-offset-4 hover:underline">More about us</a>
-        {stats.length > 0 && (
-          <dl class="mt-10 flex flex-wrap gap-x-12 gap-y-6">
-            {stats.map((s) => (
-              <div class="border-l-[3px] border-accent pl-4">
-                <dd class="display text-5xl text-ink">{s.value}</dd>
-                <dt class="mt-1 text-stone">{s.label}</dt>
-              </div>
-            ))}
-          </dl>
-        )}
-      </div>
-      <ul class="grid gap-x-10 gap-y-8 sm:grid-cols-2">
-        {reasons.map((r) => (
-          <li>
-            <Icon name={r.icon} class="h-7 w-7 text-brand" />
-            <h3 class="mt-3 text-2xl font-bold">{r.title}</h3>
-            <p class="mt-1 text-stone">{r.text}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  </section>
+  <WhyChooseUs travellers={settings.stat_travellers} years={settings.stat_years} destinations={destinations.length} />
 
 
 
