@@ -187,7 +187,13 @@ function BookingDetail({ id, me, names, onClose, onChanged }: {
     return () => { void supabase.removeChannel(ch); };
   }, [id, load]);
 
-  const waText = b ? `Hello ${b.customer_name}, this is about your booking ${b.reference} (${tripLabel(b)}, ${fmtDate(b.travel_date)}).` : '';
+  const trackLink = b ? `${window.location.origin}/track#${b.tracking_token}` : '';
+  const waText = !b ? ''
+    : b.status === 'accepted'
+      ? `Hello ${b.customer_name}, your booking ${b.reference} with Travel In Himachal is CONFIRMED ✅\n\n${tripLabel(b)}, ${fmtDate(b.travel_date)}${b.agreed_fare != null ? `\nFare: ${inr(b.agreed_fare)}` : ''}\n\nTrack your booking: ${trackLink}\n\nWe'll share the driver's details before your trip.`
+      : b.status === 'rejected'
+        ? `Hello ${b.customer_name}, sorry, we can't take your booking ${b.reference} (${tripLabel(b)}, ${fmtDate(b.travel_date)}).${b.rejection_reason ? `\nReason: ${b.rejection_reason}` : ''}\nReply here if you'd like another date or car.`
+        : `Hello ${b.customer_name}, this is about your booking ${b.reference} (${tripLabel(b)}, ${fmtDate(b.travel_date)}).`;
 
   return (
     <Modal open={Boolean(id)} onClose={onClose} title={b ? `Booking ${b.reference}` : 'Booking'} wide>
@@ -208,7 +214,7 @@ function BookingDetail({ id, me, names, onClose, onChanged }: {
               {b.email && <p className="break-all text-sm text-slate-600">{b.email}</p>}
               <div className="mt-3 flex flex-wrap gap-2">
                 <a href={`tel:${b.phone}`} className="rounded-xl bg-ink px-4 py-2 text-sm font-semibold text-white">📞 Call</a>
-                <a href={whatsappUrl(b.phone, waText)} target="_blank" rel="noopener" className="rounded-xl bg-[#25D366] px-4 py-2 text-sm font-semibold text-white">WhatsApp</a>
+                <a href={whatsappUrl(b.phone, waText)} target="_blank" rel="noopener" className="rounded-xl bg-[#25D366] px-4 py-2 text-sm font-semibold text-white">{b.status === 'accepted' ? 'Send confirmation on WhatsApp' : 'WhatsApp'}</a>
               </div>
             </div>
             <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">

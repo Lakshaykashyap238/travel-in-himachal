@@ -157,6 +157,11 @@ const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.me
               <input type="text" id="dropoffLocation" placeholder="Enter Drop-off location" maxlength="200" />
               <small class="field-error" data-err="dropoff"></small>
             </div>
+            <div class="booking-input email-field">
+              <label for="bookingEmail">Email <span class="optional">(optional — get your confirmation by email)</span></label>
+              <input type="email" id="bookingEmail" placeholder="Enter your email address" autocomplete="email" maxlength="160" />
+              <small class="field-error" data-err="email"></small>
+            </div>
           </div>
           <button type="button" class="booking-primary-btn" id="saveNextBtn">Save &amp; Next <span>→</span></button>
         </div>
@@ -170,6 +175,7 @@ const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.me
               <div class="summary-info-grid">
                 <div class="summary-item"><span>Name</span><strong id="summaryName">—</strong></div>
                 <div class="summary-item"><span>Mobile</span><strong id="summaryMobile">—</strong></div>
+                <div class="summary-item" id="summaryEmailRow" hidden><span>Email</span><strong id="summaryEmail">—</strong></div>
                 <div class="summary-item"><span>Travellers</span><strong id="summaryTravellers">1 Traveller</strong></div>
               </div>
             </div>
@@ -298,6 +304,8 @@ const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.me
   .form-section-title p { margin: 5px 0 0; font-size: 12px; color: #8a929f; }
   .booking-tour-pill { margin: -6px 0 16px; padding: 10px 14px; border-radius: 10px; background: #eef6ff; border: 1px solid #d9eaff; font-size: 13px; color: #1266c5; font-weight: 700; }
   .booking-fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .email-field { grid-column: 1 / -1; }
+  .booking-input label .optional { font-weight: 400; color: #8a929f; }
   .booking-input { display: flex; flex-direction: column; gap: 6px; position: relative; width: 100%; }
   .booking-input label { font-size: 11px; font-weight: 600; color: #555; }
   .booking-input input { width: 100%; height: 47px; padding: 12px 45px 12px 15px; border: 1px solid #dedede; border-radius: 10px; outline: none; background: #f8f8f8; font-size: 13px; color: #111; transition: 0.2s; }
@@ -484,6 +492,7 @@ const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.me
   const step2 = $('bookingStep2');
   const nameInput = $<HTMLInputElement>('bookingName');
   const mobileInput = $<HTMLInputElement>('userMobile');
+  const emailInput = $<HTMLInputElement>('bookingEmail');
   const dateInput = $<HTMLInputElement>('bookingDate');
   const pickupInput = $<HTMLInputElement>('pickupLocation');
   const dropInput = $<HTMLInputElement>('dropoffLocation');
@@ -596,7 +605,7 @@ const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.me
     input?.setAttribute('aria-invalid', msg ? 'true' : 'false');
   };
   // Clear a field's error as soon as it is corrected.
-  ([['name', nameInput], ['phone', mobileInput], ['pickup', pickupInput], ['dropoff', dropInput]] as const).forEach(([k, el]) =>
+  ([['name', nameInput], ['phone', mobileInput], ['pickup', pickupInput], ['dropoff', dropInput], ['email', emailInput]] as const).forEach(([k, el]) =>
     el.addEventListener('input', () => setErr(k, '', el)),
   );
   dateInput.addEventListener('change', () => setErr('date', '', dateInput));
@@ -625,6 +634,8 @@ const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.me
     check('date', datePicker.selectedDates.length > 0, 'Please select your booking date.', dateInput);
     check('pickup', pickupInput.value.trim().length >= 2, 'Please enter pickup location.', pickupInput);
     if (!isTourBooking) check('dropoff', dropInput.value.trim().length >= 2, 'Please enter drop-off location.', dropInput);
+    const email = emailInput.value.trim();
+    check('email', email === '' || /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email), 'Please enter a valid email address.', emailInput);
     if (firstBad) {
       (firstBad as HTMLInputElement).focus();
       if (firstBad === dateInput) datePicker.open();
@@ -638,6 +649,8 @@ const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.me
     const car = cars[currentCar];
     $('summaryName').textContent = nameInput.value.trim();
     $('summaryMobile').textContent = phoneE164();
+    $('summaryEmail').textContent = emailInput.value.trim();
+    $('summaryEmailRow').hidden = emailInput.value.trim() === '';
     $('summaryTravellers').textContent = `${travellers} ${travellers === 1 ? 'Traveller' : 'Travellers'}`;
     $('summaryPickup').textContent = pickupInput.value.trim();
     $('summaryDate').textContent = dateInput.value;
@@ -694,6 +707,7 @@ const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.me
       vehicleSlug: car.slug,
       customerName: nameInput.value.trim(),
       phone: phoneE164(),
+      email: emailInput.value.trim(),
       travelDate: isoDate(datePicker.selectedDates[0]),
       travellers,
       pickup: pickupInput.value.trim(),
