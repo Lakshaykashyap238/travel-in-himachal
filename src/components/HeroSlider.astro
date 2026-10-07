@@ -1,4 +1,7 @@
 ---
+// Hero slider rebuilt to match the original site exactly: slides move sideways
+// (0.8 s ease), dark overlay, marigold tag, bold white headline, outlined EXPLORE
+// pill, square arrow buttons, dots, auto-advance every 6 s.
 import { getImage } from 'astro:assets';
 import desk4 from '@/assets/hero/desk4.jpg';
 import desk22 from '@/assets/hero/desk22.jpg';
@@ -9,12 +12,12 @@ import slide1 from '@/assets/hero/slide1.jpg';
 import slide2 from '@/assets/hero/slide2.jpg';
 import slide4 from '@/assets/hero/slide4.jpg';
 
-// Slides and copy from the original site (typos fixed).
+// Copy from the original site (spelling fixed).
 const slides = [
-  { desk: desk4, mobile: slide3, tag: 'Welcome to Himachal', title: 'Journey Through the Woods', desc: 'Tours and private cabs across Himachal Pradesh, planned by people who know the roads.' },
-  { desk: desk22, mobile: slide1, tag: 'Himalayan escape', title: 'Into the Frozen Himalayas', desc: 'Discover breathtaking glaciers, snow-covered peaks and the untouched beauty of the Himalayas.' },
-  { desk: desk3, mobile: slide2, tag: 'Explore the hills', title: 'Where Nature Comes Alive', desc: 'Wander through peaceful valleys, pine forests and breathtaking mountain landscapes.' },
-  { desk: desk16, mobile: slide4, tag: 'Chase the horizon', title: 'Adventure Beyond the Ordinary', desc: 'Follow mountain trails and experience unforgettable views beneath the Himalayan sky.' },
+  { desk: desk4, mobile: slide3, tag: 'Welcome to Himachal', title: 'Journey Through The Woods', desc: '' },
+  { desk: desk22, mobile: slide1, tag: 'Himalayan Escape', title: 'Into The Frozen Himalayas', desc: 'Discover breathtaking glaciers, snow-covered peaks and the untouched beauty of the Himalayas.' },
+  { desk: desk3, mobile: slide2, tag: 'Explore The Hills', title: 'Where Nature Comes Alive', desc: 'Wander through peaceful valleys, pine forests and breathtaking mountain landscapes.' },
+  { desk: desk16, mobile: slide4, tag: 'Chase The Horizon', title: 'Adventure Beyond the Ordinary', desc: 'Follow the mountain trails and experience unforgettable views beneath the Himalayan sky.' },
 ];
 
 const rendered = await Promise.all(
@@ -25,76 +28,158 @@ const rendered = await Promise.all(
   })),
 );
 ---
-<section class="relative h-[78vh] min-h-[460px] max-h-[820px] overflow-hidden bg-night" aria-roledescription="carousel" aria-label="Highlights" data-slider>
-  {rendered.map((s, i) => (
-    <div
-      class:list={['absolute inset-0 transition-opacity duration-1000', i === 0 ? 'opacity-100' : 'opacity-0']}
-      data-slide
-      aria-hidden={i === 0 ? 'false' : 'true'}
-      role="group"
-      aria-roledescription="slide"
-      aria-label={`${i + 1} of ${rendered.length}`}
-    >
-      <picture>
-        <source media="(min-width: 768px)" srcset={s.deskImg.srcSet.attribute} sizes="100vw" type="image/webp" />
-        <img
-          src={s.mobImg.src}
-          srcset={s.mobImg.srcSet.attribute}
-          sizes="100vw"
-          alt=""
-          class="h-full w-full object-cover"
-          loading={i === 0 ? 'eager' : 'lazy'}
-          fetchpriority={i === 0 ? 'high' : 'auto'}
-          decoding="async"
-        />
-      </picture>
-      <div class="absolute inset-0 bg-gradient-to-t from-night/90 via-night/35 to-black/10"></div>
-      <div class="absolute inset-x-0 bottom-[14%] mx-auto max-w-7xl px-4 text-white">
-        <p class="flex items-center gap-2 text-base font-medium text-white/90"><span class="h-[3px] w-8 bg-accent" aria-hidden="true"></span>{s.tag}</p>
-        {i === 0 ? (
-          <h1 class="display mt-3 max-w-3xl text-5xl uppercase sm:text-7xl lg:text-8xl">{s.title}</h1>
-        ) : (
-          <p class="display mt-3 max-w-3xl text-5xl uppercase sm:text-7xl lg:text-8xl">{s.title}</p>
-        )}
-        <p class="mt-4 max-w-xl text-base text-white/90 sm:text-lg">{s.desc}</p>
-        <div class="mt-7 flex flex-wrap gap-3">
-          <a href="/tours" class="rounded-md bg-accent px-6 py-3 font-semibold text-ink hover:bg-white">Explore tours</a>
-          <a href="/book?type=cab" class="rounded-md border-2 border-white/80 px-6 py-3 font-semibold text-white hover:bg-white hover:text-ink">Book a cab</a>
+<section class="slider" aria-roledescription="carousel" aria-label="Highlights" data-slider>
+  <button type="button" class="btn prev" aria-label="Previous slide" data-prev>&#10094;</button>
+
+  <div class="slides" data-slides>
+    {rendered.map((s, i) => (
+      <div class="slide" role="group" aria-roledescription="slide" aria-label={`${i + 1} of ${rendered.length}`} aria-hidden={i === 0 ? 'false' : 'true'} data-slide>
+        <picture>
+          <source media="(min-width: 768px)" srcset={s.deskImg.srcSet.attribute} sizes="100vw" type="image/webp" />
+          <img
+            src={s.mobImg.src}
+            srcset={s.mobImg.srcSet.attribute}
+            sizes="100vw"
+            alt=""
+            loading="eager"
+            fetchpriority={i === 0 ? 'high' : 'low'}
+            decoding="async"
+          />
+        </picture>
+        <div class="overlay"></div>
+        <div class="slide-content">
+          <p class="tag">{s.tag}</p>
+          {i === 0 ? <h1>{s.title}</h1> : <p class="h1">{s.title}</p>}
+          {s.desc && <p class="desc">{s.desc}</p>}
+          <div class="hero-btns">
+            <a href="#marqueeNav" class="explore" data-explore tabindex={i === 0 ? 0 : -1}>EXPLORE</a>
+          </div>
         </div>
       </div>
-    </div>
-  ))}
+    ))}
+  </div>
 
-  <div class="absolute bottom-5 left-1/2 flex -translate-x-1/2 gap-2">
+  <button type="button" class="btn next" aria-label="Next slide" data-next>&#10095;</button>
+
+  <div class="dots">
     {rendered.map((_, i) => (
-      <button type="button" class="h-2.5 w-2.5 rounded-full bg-white/50 aria-[current=true]:w-6 aria-[current=true]:bg-white transition-all" aria-label={`Show slide ${i + 1}`} aria-current={i === 0 ? 'true' : 'false'} data-dot={i}></button>
+      <button type="button" class:list={['dot', { active: i === 0 }]} aria-label={`Show slide ${i + 1}`} aria-current={i === 0 ? 'true' : 'false'} data-dot={i}></button>
     ))}
   </div>
 </section>
 
+<style>
+  .slider { width: 100%; height: 420px; overflow: hidden; position: relative; background: #111; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  .slides { display: flex; width: 100%; height: 100%; transition: transform 0.8s ease; }
+  .slide { min-width: 100%; height: 100%; position: relative; flex-shrink: 0; }
+  .slide picture, .slide img { display: block; width: 100%; height: 100%; }
+  .slide img { object-fit: cover; }
+  .overlay { position: absolute; inset: 0; background: rgba(0, 0, 0, 0.35); }
+
+  .slide-content { position: absolute; left: 8%; bottom: 18%; z-index: 5; width: 90%; max-width: 40rem; color: #fff; }
+  .slide-content .tag { margin: 0 0 0.875rem; font-size: clamp(0.8rem, 1.2vw, 1.1rem); font-weight: 800; letter-spacing: 0.1em; line-height: 1.2; text-transform: uppercase; color: #ffb52e; }
+  .slide-content h1, .slide-content .h1 {
+    margin: 0 0 0.75rem; padding: 0; white-space: nowrap;
+    font-family: inherit; font-stretch: normal; letter-spacing: normal;
+    font-size: clamp(2rem, 4vw, 3.25rem); line-height: 1.08; font-weight: 800; color: #fff;
+  }
+  .slide-content .desc { margin: 0 0 1.5rem; padding: 0; max-width: 35rem; font-size: clamp(0.85rem, 1.2vw, 1rem); line-height: 1.5; font-weight: 400; color: #fff; }
+  .hero-btns { display: flex; align-items: center; justify-content: flex-start; }
+  .explore {
+    width: 10rem; min-height: 2.9rem; display: flex; align-items: center; justify-content: center;
+    padding: 0.7rem 1.5rem; margin: 0; border: 0.125rem solid #fff; border-radius: 2rem; box-sizing: border-box;
+    color: #fff; text-decoration: none; font-size: 0.875rem; font-weight: 700; letter-spacing: 0.02em; transition: 0.3s ease;
+  }
+  .explore:hover { background: #fff; color: #333; transform: translateY(-0.2rem); }
+
+  .btn {
+    position: absolute; top: 50%; transform: translateY(-50%); z-index: 6;
+    width: 45px; height: 45px; border: none; border-radius: 0.2rem;
+    background: rgba(0, 0, 0, 0.45); color: #fff; font-size: 1.25rem; line-height: 1; cursor: pointer;
+  }
+  .prev { left: 1.25rem; }
+  .next { right: 1.25rem; }
+
+  .dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 5; }
+  .dot { width: 10px; height: 10px; padding: 0; border: 0; border-radius: 50%; background: #fff; opacity: 0.5; cursor: pointer; transition: transform 0.3s, opacity 0.3s; }
+  .dot.active { opacity: 1; transform: scale(1.2); }
+
+  /* Tablet */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .slider { height: clamp(380px, 42vw, 420px); }
+    .slide-content { left: 6%; bottom: 15%; width: 70%; max-width: 650px; }
+    .slide-content .tag { font-size: clamp(12px, 1.4vw, 17px); }
+    .slide-content h1, .slide-content .h1 { font-size: clamp(30px, 4vw, 48px); white-space: normal; }
+    .slide-content .desc { max-width: 550px; font-size: clamp(13px, 1.4vw, 16px); }
+    .explore { width: clamp(145px, 17vw, 160px); min-height: 45px; font-size: 14px; }
+    .btn { width: clamp(38px, 5vw, 45px); height: clamp(38px, 5vw, 45px); font-size: clamp(18px, 2.5vw, 22px); border-radius: 0; }
+    .prev { left: 15px; }
+    .next { right: 15px; }
+  }
+
+  /* Phone */
+  @media (max-width: 767px) {
+    .slide-content { left: 50%; transform: translateX(-50%); bottom: 18%; width: auto; max-width: 220px; }
+    .slide-content .tag, .slide-content h1, .slide-content .h1 { text-align: center; }
+    .slide-content h1, .slide-content .h1 { white-space: normal; }
+    .slide-content .desc { display: none; }
+    .hero-btns { justify-content: center; margin-bottom: -20px; }
+    .explore { margin-top: 25px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) { .slides { transition: none; } }
+</style>
+
 <script>
   const root = document.querySelector<HTMLElement>('[data-slider]');
   if (root) {
+    const track = root.querySelector<HTMLElement>('[data-slides]')!;
     const slides = [...root.querySelectorAll<HTMLElement>('[data-slide]')];
     const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-dot]')];
-    let current = 0;
+    const total = slides.length;
+    let index = 0;
     let timer: number | undefined;
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const show = (n: number) => {
-      current = (n + slides.length) % slides.length;
-      slides.forEach((s, i) => {
-        s.classList.toggle('opacity-100', i === current);
-        s.classList.toggle('opacity-0', i !== current);
-        s.setAttribute('aria-hidden', String(i !== current));
+
+    const goToSlide = (i: number) => {
+      index = i >= total ? 0 : i < 0 ? total - 1 : i;
+      track.style.transform = `translateX(-${index * 100}%)`;
+      dots.forEach((d, n) => {
+        d.classList.toggle('active', n === index);
+        d.setAttribute('aria-current', String(n === index));
       });
-      dots.forEach((d, i) => d.setAttribute('aria-current', String(i === current)));
+      slides.forEach((s, n) => {
+        s.setAttribute('aria-hidden', String(n !== index));
+        s.querySelector<HTMLElement>('[data-explore]')?.setAttribute('tabindex', n === index ? '0' : '-1');
+      });
     };
-    const start = () => { if (!reduce) timer = window.setInterval(() => show(current + 1), 6000); };
-    const stop = () => window.clearInterval(timer);
-    dots.forEach((d) => d.addEventListener('click', () => { stop(); show(Number(d.dataset.dot)); start(); }));
-    root.addEventListener('mouseenter', stop);
-    root.addEventListener('mouseleave', start);
-    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
-    start();
+    const restart = () => {
+      window.clearInterval(timer);
+      timer = window.setInterval(() => goToSlide(index + 1), 6000);
+    };
+
+    root.querySelector('[data-next]')!.addEventListener('click', () => { goToSlide(index + 1); restart(); });
+    root.querySelector('[data-prev]')!.addEventListener('click', () => { goToSlide(index - 1); restart(); });
+    dots.forEach((d, n) => d.addEventListener('click', () => { goToSlide(n); restart(); }));
+
+    // EXPLORE scrolls down to the services strip, below the sticky header.
+    root.querySelectorAll<HTMLAnchorElement>('[data-explore]').forEach((a) =>
+      a.addEventListener('click', (e) => {
+        const target = document.getElementById('marqueeNav');
+        if (!target) return;
+        e.preventDefault();
+        const header = document.querySelector('header')?.getBoundingClientRect().height ?? 0;
+        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - header, behavior: 'smooth' });
+      }),
+    );
+
+    // Swipe on phones.
+    let startX = 0;
+    root.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) { goToSlide(index + (dx < 0 ? 1 : -1)); restart(); }
+    });
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) restart();
   }
 </script>

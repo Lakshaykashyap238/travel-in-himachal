@@ -2,6 +2,7 @@
 import CatalogueImage from '@/components/CatalogueImage.astro';
 import Base from '@/layouts/Base.astro';
 import HeroSlider from '@/components/HeroSlider.astro';
+import Marquee from '@/components/Marquee.astro';
 import TourCard from '@/components/TourCard.astro';
 import Icon from '@/components/Icon.astro';
 import { formatInr, getCatalogue, resolveImage } from '@/lib/catalogue';
@@ -16,13 +17,6 @@ const quickLinks = [
   { href: '/fleet', icon: 'car', label: 'Cabs', note: `${vehicles.length} cars` },
   { href: '/about', icon: 'info', label: 'About us', note: 'Who we are' },
   { href: '/contact', icon: 'phone', label: 'Contact', note: 'Call or WhatsApp' },
-] as const;
-
-const promises = [
-  { icon: 'car', text: 'Private cab with every tour' },
-  { icon: 'wallet', text: 'Fare agreed before you travel' },
-  { icon: 'shield', text: 'Verified, experienced drivers' },
-  { icon: 'headset', text: 'Call us before, during or after your trip' },
 ] as const;
 
 const reasons = [
@@ -43,6 +37,7 @@ const stats = [
   description={`${settings.tagline ?? 'Tours and cabs across Himachal Pradesh'}. Book Shimla, Manali, Spiti, Dharamshala, Kasol and more — ${tours.length} tour packages and private cabs.`}
 >
   <HeroSlider />
+  <Marquee />
 
   <!-- Every section, one tap from the home page -->
   <nav class="border-b border-black/10 bg-white" aria-label="Explore">
@@ -60,15 +55,6 @@ const stats = [
       ))}
     </ul>
   </nav>
-
-  <!-- What every trip includes: the promises a traveller cares about first -->
-  <section class="bg-night text-white" aria-label="Included with every trip">
-    <ul class="mx-auto grid max-w-7xl gap-x-8 gap-y-3 px-4 py-5 text-[15px] sm:grid-cols-2 lg:grid-cols-4">
-      {promises.map((p) => (
-        <li class="flex items-center gap-3"><Icon name={p.icon} class="h-5 w-5 shrink-0 text-accent" />{p.text}</li>
-      ))}
-    </ul>
-  </section>
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:py-20" aria-labelledby="tours-heading">
     <div class="flex flex-wrap items-end justify-between gap-4">

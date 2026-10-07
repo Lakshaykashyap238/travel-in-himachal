@@ -1,0 +1,84 @@
+---
+// Continuous scrolling strip under the hero, rebuilt from the original site:
+// dark #252525 bar, light 18px white text, Font Awesome icons, 1px per frame.
+// Icons are inlined as SVG at build time (the site's CSP blocks icon fonts from CDNs).
+import {
+  faTags, faPlane, faPeopleGroup, faPersonWalkingLuggage, faHotel, faTaxi,
+  faHeadset, faHandHoldingDollar, faShieldHalved, faGlobe,
+} from '@fortawesome/free-solid-svg-icons';
+import { faHeart } from '@fortawesome/free-regular-svg-icons';
+import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+
+interface Props { siteHost?: string }
+const { siteHost = 'www.travelinhimachal.in' } = Astro.props;
+
+const items: { icon: IconDefinition; text: string; strong?: string }[] = [
+  { icon: faTags, text: 'Customized Tour Packages' },
+  { icon: faPlane, text: 'Airport Pickup & Drop' },
+  { icon: faHeart, text: 'Honeymoon Packages' },
+  { icon: faPeopleGroup, text: 'Family Tours' },
+  { icon: faPersonWalkingLuggage, text: 'Adventure Trips' },
+  { icon: faHotel, text: 'Hotel Booking Assistance' },
+  { icon: faTaxi, text: 'Experienced Drivers' },
+  { icon: faHeadset, text: '24/7 Customer Support' },
+  { icon: faHandHoldingDollar, text: 'Affordable Pricing' },
+  { icon: faShieldHalved, text: 'Safe & Comfortable Travel' },
+  { icon: faGlobe, text: 'Visit Us:', strong: siteHost },
+];
+const svg = (d: IconDefinition) => {
+  const [w, h, , , path] = d.icon;
+  const p = Array.isArray(path) ? path.join(' ') : path;
+  return `<svg class="fa" viewBox="0 0 ${w} ${h}" style="width:${(w / h).toFixed(4)}em" aria-hidden="true" focusable="false"><path fill="currentColor" d="${p}"/></svg>`;
+};
+---
+<div class="marquee" id="marqueeNav" aria-label="Our services">
+  <div class="marquee-track" data-marquee-track>
+    <div class="marquee-item">
+      {items.map((it) => (
+        <span class="sep"><Fragment set:html={svg(it.icon)} /> {it.text}{it.strong && <> <strong>{it.strong}</strong></>}</span>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .marquee { width: 100%; overflow: hidden; background: #252525; padding: 12px 0; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  .marquee-track { display: flex; align-items: center; width: max-content; will-change: transform; }
+  .marquee-item { white-space: nowrap; color: #fff; font-weight: 300; padding-right: 60px; }
+  .marquee strong { color: #ddc511; }
+  .sep { padding: 0 40px; display: inline-block; font-size: 18px; line-height: 1.5; }
+  .sep :global(.fa) { display: inline-block; height: 1em; vertical-align: -0.125em; overflow: visible; }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .marquee-item { padding-right: 40px; }
+    .sep { padding: 0 25px; }
+  }
+</style>
+
+<script>
+  const track = document.querySelector<HTMLElement>('[data-marquee-track]');
+  const original = track?.querySelector<HTMLElement>('.marquee-item');
+  if (track && original) {
+    // Fill the strip with copies so it never runs out (same as the original site).
+    let guard = 0;
+    while (track.scrollWidth < window.innerWidth * 3 && guard++ < 20) {
+      const copy = original.cloneNode(true) as HTMLElement;
+      copy.setAttribute('aria-hidden', 'true');
+      track.appendChild(copy);
+    }
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let x = 0;
+      const speed = 1; // px per frame, as on the original
+      const animate = () => {
+        x -= speed;
+        const first = track.firstElementChild as HTMLElement;
+        if (-x >= first.offsetWidth) {
+          x += first.offsetWidth;
+          track.appendChild(first);
+        }
+        track.style.transform = `translateX(${x}px)`;
+        requestAnimationFrame(animate);
+      };
+      requestAnimationFrame(animate);
+    }
+  }
+</script>
