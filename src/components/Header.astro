@@ -34,7 +34,7 @@ const active = (href: string) => path === href || path.startsWith(`${href}/`);
           <Icon name="phone" class="h-4 w-4" /> Call us
         </a>
       )}
-      <a href="/book" class="whitespace-nowrap rounded-md bg-brand px-3 py-2 text-sm font-semibold text-white hover:bg-brand-dark sm:px-4"><span class="sm:hidden">Book</span><span class="hidden sm:inline">Book now</span></a>
+      <a href="/book" data-book-now class="book-now-btn relative overflow-hidden whitespace-nowrap rounded-md bg-brand px-3 py-2 text-sm font-semibold text-white hover:bg-brand-dark sm:px-4"><span class="sm:hidden">Book</span><span class="hidden sm:inline">Book now</span></a>
       <button
         type="button"
         class="rounded-lg p-2 text-slate-700 hover:bg-black/5 lg:hidden"

@@ -4,7 +4,6 @@ import Base from '@/layouts/Base.astro';
 import HeroSlider from '@/components/HeroSlider.astro';
 import Marquee from '@/components/Marquee.astro';
 import Preloader from '@/components/Preloader.astro';
-import QuickBooking from '@/components/QuickBooking.astro';
 import ReviewsSlider from '@/components/ReviewsSlider.astro';
 import WhyChooseUs from '@/components/WhyChooseUs.astro';
 import TourCard from '@/components/TourCard.astro';
@@ -13,11 +12,11 @@ import { getCatalogue, resolveImage } from '@/lib/catalogue';
 const { settings, tours, destinations, reviews } = await getCatalogue();
 ---
 <Base
+  autoBooking
   title={settings.business_name}
   description={`${settings.tagline ?? 'Tours and cabs across Himachal Pradesh'}. Book Shimla, Manali, Spiti, Dharamshala, Kasol and more — ${tours.length} tour packages and private cabs.`}
 >
   <Preloader />
-  <QuickBooking />
   <HeroSlider />
   <Marquee />
 

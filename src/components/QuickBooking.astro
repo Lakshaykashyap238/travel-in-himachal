@@ -8,8 +8,11 @@ import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import 'intl-tel-input/build/css/intlTelInput.css';
 import 'flatpickr/dist/flatpickr.min.css';
 import { faSvg } from '@/lib/fa';
+
+interface Props { auto?: boolean }
+const { auto = false } = Astro.props;
 ---
-<div class="qb-popup" id="quickBooking" role="dialog" aria-labelledby="qbTitle" hidden>
+<div class="qb-popup" id="quickBooking" role="dialog" aria-labelledby="qbTitle" data-auto={auto ? 'true' : 'false'} hidden>
   <div class="qb-header">
     <div>
       <h2 id="qbTitle">Book your ride</h2>
@@ -20,7 +23,7 @@ import { faSvg } from '@/lib/fa';
   <form class="qb-form" novalidate>
     <div class="qb-input">
       <label for="qbMobile">Mobile number</label>
-      <input type="tel" id="qbMobile" placeholder="Enter Your mobile number" autocomplete="tel-national" inputmode="numeric" maxlength="12" required />
+      <input type="tel" id="qbMobile" placeholder="Enter mobile number" autocomplete="tel-national" inputmode="numeric" maxlength="12" required />
     </div>
     <div class="qb-input">
       <label for="qbDate">Date of Booking</label>
@@ -70,7 +73,7 @@ import { faSvg } from '@/lib/fa';
   .qb-input input::placeholder { color: #999; }
   .qb-input input:focus { background: #fff; border-color: #111; box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04); }
   .qb-input :global(.iti) { width: 100%; }
-  .qb-input :global(.iti input) { padding-left: 90px; }
+  .qb-input :global(.iti input) { padding-right: 12px; text-indent: 6px; }
   #qbDate { cursor: pointer; }
   .qb-cal { position: absolute; right: 15px; bottom: 15px; color: #666; cursor: pointer; display: inline-flex; }
   .qb-cal :global(.fa) { display: inline-block; }
@@ -104,7 +107,23 @@ import { faSvg } from '@/lib/fa';
     .qb-input input { font-size: 12px; }
   }
   @media (prefers-reduced-motion: reduce) { .qb-popup.attention { animation: none; } }
-  :global(.flatpickr-calendar) { z-index: 10000 !important; }
+:global(.flatpickr-calendar) { z-index: 10000 !important; }
+  /* "Book now" shines after the visitor closes the popup, until they open it again. */
+  :global(.book-now-btn.book-shine) { animation: bookGlow 1.8s ease-in-out infinite; }
+  :global(.book-now-btn.book-shine)::after {
+    content: ''; position: absolute; top: 0; left: -75%; width: 50%; height: 100%; pointer-events: none;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.65), transparent);
+    transform: skewX(-20deg); animation: bookSheen 2.4s ease-in-out infinite;
+  }
+  @keyframes bookGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(31, 107, 58, 0.55); }
+    50% { box-shadow: 0 0 0 8px rgba(31, 107, 58, 0), 0 0 18px 4px rgba(233, 162, 59, 0.75); }
+  }
+  @keyframes bookSheen { 0% { left: -75%; } 60%, 100% { left: 130%; } }
+  @media (prefers-reduced-motion: reduce) {
+    :global(.book-now-btn.book-shine) { animation: none; box-shadow: 0 0 0 3px rgba(233, 162, 59, 0.9); }
+    :global(.book-now-btn.book-shine)::after { display: none; }
+  }
   :global(.iti__country-list) { z-index: 10000; }
 </style>
 
@@ -141,26 +160,52 @@ import { faSvg } from '@/lib/fa';
       popup.querySelector('[data-qb-cal]')!.addEventListener('click', () => picker?.open());
     })());
 
+  const auto = popup.dataset.auto === 'true';
+  const bookButtons = [...document.querySelectorAll<HTMLAnchorElement>('[data-book-now]')];
+  const SHINE_KEY = 'tih-qb-closed';
+  const setShine = (on: boolean) => {
+    bookButtons.forEach((b) => b.classList.toggle('book-shine', on));
+    try { on ? sessionStorage.setItem(SHINE_KEY, '1') : sessionStorage.removeItem(SHINE_KEY); } catch { /* ignore */ }
+  };
+  // Keep shining on every page once the visitor has closed the popup.
+  try { if (sessionStorage.getItem(SHINE_KEY) === '1') bookButtons.forEach((b) => b.classList.add('book-shine')); } catch { /* ignore */ }
+
   const open = async () => {
     await setup();
     popup.hidden = false;
     popup.classList.add('attention');
     isOpen = true;
+    setShine(false);
   };
-  const close = () => {
+  const close = (byVisitor = false) => {
     popup.hidden = true;
     popup.classList.remove('attention');
     isOpen = false;
     picker?.close();
+    if (byVisitor) setShine(true);
   };
+
+  // The top "Book now" button opens this popup (the link still works without JavaScript).
+  bookButtons.forEach((b) => b.addEventListener('click', (e) => {
+    e.preventDefault();
+    window.clearTimeout(timer);
+    closedByScroll = false;
+    if (isOpen) { mobile.focus(); return; }
+    void open().then(() => setTimeout(() => mobile.focus(), 50));
+  }));
   const autoOpen = (ms: number) => {
     window.clearTimeout(timer);
     timer = window.setTimeout(() => { if (!isOpen && window.scrollY === 0) void open(); }, ms);
   };
 
-  // First appearance: 3 s after the page has loaded (the loading screen takes 2.4 s).
-  if (document.readyState === 'complete') autoOpen(3000);
-  else window.addEventListener('load', () => autoOpen(3000));
+  // Home page: first appearance 3 s after the page has loaded (the loading screen takes 2.4 s),
+  // unless the visitor already closed it in this visit.
+  let closedBefore = false;
+  try { closedBefore = sessionStorage.getItem(SHINE_KEY) === '1'; } catch { /* ignore */ }
+  if (auto && !closedBefore) {
+    if (document.readyState === 'complete') autoOpen(3000);
+    else window.addEventListener('load', () => autoOpen(3000));
+  }
 
   window.addEventListener('scroll', () => {
     picker?.close();
@@ -168,15 +213,15 @@ import { faSvg } from '@/lib/fa';
       if (isOpen) { close(); closedByScroll = true; }
       return;
     }
-    if (window.scrollY === 0 && closedByScroll) {
+    if (auto && window.scrollY === 0 && closedByScroll) {
       closedByScroll = false;
       autoOpen(20000);
     }
   }, { passive: true });
 
-  popup.querySelector('[data-qb-close]')!.addEventListener('click', () => { close(); closedByScroll = false; window.clearTimeout(timer); });
+  popup.querySelector('[data-qb-close]')!.addEventListener('click', () => { close(true); closedByScroll = false; window.clearTimeout(timer); });
   popup.querySelectorAll('input').forEach((i) => i.addEventListener('focus', () => popup.classList.remove('attention')));
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen) { close(true); window.clearTimeout(timer); } });
 
   const phoneOk = () => {
     if (!iti || mobile.value.trim() === '') return false;
