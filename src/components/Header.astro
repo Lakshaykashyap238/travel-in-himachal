@@ -14,7 +14,7 @@ const active = (href: string) => path === href || path.startsWith(`${href}/`);
 ---
 <header class="sticky top-0 z-40 border-b border-black/10 bg-white/95 backdrop-blur">
   <nav class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4" aria-label="Main">
-    <a href="/" class="display truncate text-[1.25rem] uppercase text-brand min-[400px]:text-[1.4rem] sm:text-3xl">{businessName}</a>
+    <a href="/" class="truncate text-[1.35rem] font-bold tracking-tight text-brand min-[400px]:text-[1.5rem] sm:text-[1.85rem]">{businessName}</a>
 
     <ul class="hidden items-center gap-7 lg:flex">
       {links.map((l) => (
@@ -42,28 +42,77 @@ const active = (href: string) => path === href || path.startsWith(`${href}/`);
         aria-expanded="false"
         data-menu-toggle
       >
-        <span class="sr-only">Open menu</span>
-        <Icon name="menu" class="h-6 w-6" />
+        <span class="sr-only" data-menu-label>Open menu</span>
+        <span data-icon-open><Icon name="menu" class="h-6 w-6" /></span>
+        <span data-icon-close class="hidden"><Icon name="x" class="h-6 w-6" /></span>
       </button>
     </div>
   </nav>
 
-  <div id="mobile-menu" class="hidden border-t border-black/5 bg-white lg:hidden" data-menu>
-    <ul class="mx-auto max-w-7xl px-4 py-2">
-      {links.map((l) => (
-        <li><a href={l.href} class="block rounded-lg px-3 py-3 font-medium text-slate-800 hover:bg-slate-50" aria-current={active(l.href) ? 'page' : undefined}>{l.label}</a></li>
-      ))}
-      {phone && <li><a href={`tel:${phone}`} class="block rounded-lg px-3 py-3 font-medium text-brand">Call {phone}</a></li>}
-    </ul>
-  </div>
 </header>
+
+<!-- Phone menu: small dark panel that slides in from the right (as on the original site).
+     Lives outside <header> because the header's blur would trap a fixed panel inside it. -->
+<div class="menu-overlay lg:hidden" data-menu-overlay hidden></div>
+<nav id="mobile-menu" class="menu-drawer lg:hidden" aria-label="Menu" data-menu aria-hidden="true">
+  <ul>
+    <li><a href="/" aria-current={path === '/' ? 'page' : undefined}>Home</a></li>
+    {links.map((l) => (
+      <li><a href={l.href} aria-current={active(l.href) ? 'page' : undefined}>{l.label}</a></li>
+    ))}
+    <li><a href="/book" data-book-now>Booking</a></li>
+    {phone && <li><a href={`tel:${phone}`} class="menu-call"><Icon name="phone" class="h-4 w-4" /> Call us</a></li>}
+  </ul>
+</nav>
+
+<style>
+  .menu-overlay { position: fixed; inset: 4rem 0 0 0; z-index: 45; background: rgba(0, 0, 0, 0.45); opacity: 0; transition: opacity 0.3s ease; }
+  .menu-overlay.is-open { opacity: 1; }
+  .menu-drawer {
+    position: fixed; top: 4rem; right: 0; z-index: 46; width: min(62vw, 240px);
+    background: linear-gradient(160deg, #262626, #141414); border-bottom-left-radius: 14px;
+    box-shadow: -10px 14px 30px rgba(0, 0, 0, 0.35);
+    transform: translateX(105%); visibility: hidden; transition: transform 0.32s ease, visibility 0.32s;
+  }
+  .menu-drawer.is-open { transform: translateX(0); visibility: visible; }
+  .menu-drawer ul { list-style: none; margin: 0; padding: 10px 0 14px; }
+  .menu-drawer a {
+    display: flex; align-items: center; justify-content: center; gap: 8px; padding: 13px 16px;
+    color: #fff; font-size: 1.05rem; font-weight: 600; text-decoration: none; transition: background 0.2s, color 0.2s;
+  }
+  .menu-drawer a:hover, .menu-drawer a:focus-visible { background: rgba(255, 255, 255, 0.08); }
+  .menu-drawer a[aria-current='page'] { color: var(--color-accent); }
+  .menu-drawer .menu-call { margin: 8px 16px 0; border-radius: 9999px; background: var(--color-brand); padding: 11px 16px; }
+  @media (prefers-reduced-motion: reduce) { .menu-overlay, .menu-drawer { transition: none; } }
+</style>
 
 <script>
   const btn = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
   const menu = document.querySelector<HTMLElement>('[data-menu]');
-  btn?.addEventListener('click', () => {
-    const open = btn.getAttribute('aria-expanded') === 'true';
-    btn.setAttribute('aria-expanded', String(!open));
-    menu?.classList.toggle('hidden', open);
-  });
+  const overlay = document.querySelector<HTMLElement>('[data-menu-overlay]');
+  if (btn && menu && overlay) {
+    const label = btn.querySelector('[data-menu-label]')!;
+    const iconOpen = btn.querySelector('[data-icon-open]')!;
+    const iconClose = btn.querySelector('[data-icon-close]')!;
+    const setOpen = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      label.textContent = open ? 'Close menu' : 'Open menu';
+      iconOpen.classList.toggle('hidden', open);
+      iconClose.classList.toggle('hidden', !open);
+      menu.classList.toggle('is-open', open);
+      menu.setAttribute('aria-hidden', String(!open));
+      if (open) {
+        overlay.hidden = false;
+        requestAnimationFrame(() => overlay.classList.add('is-open'));
+      } else {
+        overlay.classList.remove('is-open');
+        setTimeout(() => { if (!menu.classList.contains('is-open')) overlay.hidden = true; }, 300);
+      }
+    };
+    btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'));
+    overlay.addEventListener('click', () => setOpen(false));            // tap outside closes it
+    menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && menu.classList.contains('is-open')) { setOpen(false); btn.focus(); } });
+    window.matchMedia('(min-width: 1024px)').addEventListener('change', (m) => { if (m.matches) setOpen(false); });
+  }
 </script>
