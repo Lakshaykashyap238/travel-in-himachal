@@ -97,3 +97,22 @@ export async function submitReview(input: {
     return 'network';
   }
 }
+
+export type NewsletterResult = 'ok' | 'invalid' | 'busy' | 'network';
+
+/** Footer "Get Travel Updates" sign-up. */
+export async function subscribeNewsletter(email: string): Promise<NewsletterResult> {
+  if (!backendConfigured) return 'network';
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/subscribe_newsletter`, {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify({ p_email: email }),
+      signal: AbortSignal.timeout(15_000),
+    });
+    if (!res.ok) return 'network';
+    return (await res.json()) as NewsletterResult;
+  } catch {
+    return 'network';
+  }
+}

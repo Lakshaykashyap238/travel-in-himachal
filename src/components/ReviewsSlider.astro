@@ -9,7 +9,7 @@ const { reviews, googleUrl } = Astro.props;
 const stars = (n: number) => '★'.repeat(n) + '☆'.repeat(5 - n);
 const avg = reviews.length ? reviews.reduce((a, r) => a + r.rating, 0) / reviews.length : 0;
 ---
-<section class="reviews-section" aria-labelledby="reviews-heading">
+<section class="reviews-section" id="reviews" aria-labelledby="reviews-heading">
   <div class="reviews-header">
     <span class="review-tag">⭐ Client Experiences</span>
     <h2 id="reviews-heading">Loved by Thousands of Travelers</h2>

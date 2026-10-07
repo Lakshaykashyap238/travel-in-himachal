@@ -14,6 +14,8 @@ const TEXT_FIELDS: { key: keyof SettingsRow; label: string; hint?: string; rows?
   { key: 'founder_name', label: 'Founder name (About page)' },
   { key: 'instagram_url', label: 'Instagram link', type: 'url' },
   { key: 'facebook_url', label: 'Facebook link', type: 'url' },
+  { key: 'x_url', label: 'X (Twitter) link', type: 'url' },
+  { key: 'youtube_url', label: 'YouTube link', type: 'url' },
   { key: 'google_review_url', label: 'Google reviews link', type: 'url', hint: 'From your Google Business Profile → “Ask for reviews”.' },
 ];
 
@@ -55,6 +57,7 @@ export function SettingsPage() {
   if (!s) return <div className="grid place-items-center py-16"><Spinner className="h-8 w-8 text-brand" /></div>;
 
   return (
+    <div className="space-y-10">
     <form onSubmit={save} className="space-y-6">
       <div><h2 className="text-2xl font-bold">Business details</h2><p className="text-sm text-slate-600">Shown across the website, in Google results and in customer emails.</p></div>
       <Card className="grid gap-4 p-5 sm:grid-cols-2">
@@ -82,5 +85,63 @@ export function SettingsPage() {
       <Button type="submit" variant="success" busy={busy}>Save details</Button>
       <p className="text-xs text-slate-500">Changes appear on the website after you press <strong>Publish changes</strong>.</p>
     </form>
+    <Subscribers />
+    </div>
+  );
+}
+
+/** Emails from the footer's "Get Travel Updates" box. */
+function Subscribers() {
+  const toast = useToast();
+  const [rows, setRows] = useState<{ id: number; email: string; created_at: string }[] | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const load = () =>
+    void supabase.from('newsletter_subscribers').select('id,email,created_at').order('created_at', { ascending: false })
+      .then(({ data, error }) => (error ? setError(friendlyError(error)) : setRows(data ?? [])));
+  useEffect(load, []);
+
+  async function copyAll() {
+    if (!rows?.length) return;
+    try {
+      await navigator.clipboard.writeText(rows.map((r) => r.email).join(', '));
+      toast(`${rows.length} emails copied`);
+    } catch {
+      toast('Couldn’t copy. Select the emails and copy them instead.');
+    }
+  }
+  async function remove(id: number, email: string) {
+    if (!confirm(`Remove ${email} from the list?`)) return;
+    const { error } = await supabase.from('newsletter_subscribers').delete().eq('id', id);
+    if (error) return toast(friendlyError(error));
+    setRows((r) => r?.filter((x) => x.id !== id) ?? null);
+  }
+
+  return (
+    <Card className="p-5">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h3 className="font-bold">Newsletter subscribers{rows ? ` (${rows.length})` : ''}</h3>
+          <p className="text-sm text-slate-600">People who signed up for travel updates in the website footer. Paste them into Gmail’s Bcc to send an offer.</p>
+        </div>
+        <Button type="button" variant="secondary" onClick={copyAll} disabled={!rows?.length}>Copy all emails</Button>
+      </div>
+      {error && <p className="mt-3 text-sm text-red-700">{error}</p>}
+      {!rows && !error && <div className="py-6"><Spinner className="h-6 w-6 text-brand" /></div>}
+      {rows && rows.length === 0 && <p className="mt-4 text-sm text-slate-500">No sign-ups yet.</p>}
+      {rows && rows.length > 0 && (
+        <ul className="mt-4 divide-y divide-slate-100 text-sm">
+          {rows.map((r) => (
+            <li key={r.id} className="flex items-center justify-between gap-3 py-2">
+              <span className="break-all">{r.email}</span>
+              <span className="flex shrink-0 items-center gap-3 text-slate-500">
+                {new Date(r.created_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                <button type="button" className="text-red-700 hover:underline" onClick={() => void remove(r.id, r.email)}>Remove</button>
+              </span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </Card>
   );
 }

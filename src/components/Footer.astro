@@ -1,53 +1,193 @@
 ---
-import Icon from './Icon.astro';
-import { formatPhone, whatsappLink, type SiteSettings } from '@/lib/catalogue';
+// Footer from the original site: centred brand, three columns (Quick Links,
+// Our Services, Contact Us), "Get Travel Updates" sign-up, coloured social
+// icons and a bottom bar with the policy links. Contact details and social
+// links come from Business details in the admin panel.
+import { faInstagram, faFacebook, faXTwitter, faYoutube } from '@fortawesome/free-brands-svg-icons';
+import { faEnvelope } from '@fortawesome/free-regular-svg-icons';
+import { faSvg } from '@/lib/fa';
+import { formatPhone, type SiteSettings } from '@/lib/catalogue';
+
 interface Props { settings: SiteSettings }
 const { settings: s } = Astro.props;
 const year = new Date().getFullYear();
+
+const socials = [
+  { url: s.instagram_url, icon: faInstagram, label: 'Instagram', color: '#E1306C' },
+  { url: s.facebook_url, icon: faFacebook, label: 'Facebook', color: '#1877F2' },
+  { url: s.x_url, icon: faXTwitter, label: 'X', color: '#ffffff' },
+  { url: s.youtube_url, icon: faYoutube, label: 'YouTube', color: '#FF0000' },
+].filter((x) => x.url);
 ---
-<footer class="bg-night text-white/75">
-  <div class="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:grid-cols-2 lg:grid-cols-4">
-    <div>
-      <p class="display text-3xl uppercase text-white">{s.business_name}</p>
-      {s.tagline && <p class="mt-2 text-sm text-white/60">{s.tagline}</p>}
-      <div class="mt-5 flex gap-3">
-        {s.instagram_url && <a href={s.instagram_url} class="rounded-full bg-white/10 p-2 hover:bg-white/20" rel="noopener" target="_blank"><Icon name="instagram" label="Instagram" /></a>}
-        {s.facebook_url && <a href={s.facebook_url} class="rounded-full bg-white/10 p-2 hover:bg-white/20" rel="noopener" target="_blank"><Icon name="facebook" label="Facebook" /></a>}
-        {s.whatsapp && <a href={whatsappLink(s.whatsapp)} class="rounded-full bg-white/10 p-2 hover:bg-white/20" rel="noopener" target="_blank"><Icon name="whatsapp" label="WhatsApp" /></a>}
-      </div>
-    </div>
-
-    <nav aria-label="Explore">
-      <p class="font-semibold text-white">Explore</p>
-      <ul class="mt-4 space-y-2 text-sm">
-        <li><a class="hover:text-white" href="/tours">Tour packages</a></li>
-        <li><a class="hover:text-white" href="/destinations">Destinations</a></li>
-        <li><a class="hover:text-white" href="/fleet">Cab booking</a></li>
-        <li><a class="hover:text-white" href="/book">Book a trip</a></li>
-        <li><a class="hover:text-white" href="/about">About us</a></li>
-      </ul>
-    </nav>
-
-    <div>
-      <p class="font-semibold text-white">Contact</p>
-      <ul class="mt-4 space-y-3 text-sm">
-        {s.address && <li class="flex gap-2"><Icon name="pin" class="mt-0.5 h-4 w-4 shrink-0" />{s.address}</li>}
-        {s.phone && <li><a class="flex gap-2 hover:text-white" href={`tel:${s.phone}`}><Icon name="phone" class="mt-0.5 h-4 w-4 shrink-0" />{formatPhone(s.phone)}</a></li>}
-        {s.email && <li><a class="flex gap-2 break-all hover:text-white" href={`mailto:${s.email}`}><Icon name="mail" class="mt-0.5 h-4 w-4 shrink-0" />{s.email}</a></li>}
-        {s.hours && <li class="flex gap-2"><Icon name="clock" class="mt-0.5 h-4 w-4 shrink-0" />{s.hours}</li>}
-      </ul>
-    </div>
-
-    <nav aria-label="Legal">
-      <p class="font-semibold text-white">Policies</p>
-      <ul class="mt-4 space-y-2 text-sm">
-        <li><a class="hover:text-white" href="/privacy">Privacy policy</a></li>
-        <li><a class="hover:text-white" href="/terms">Terms &amp; conditions</a></li>
-        <li><a class="hover:text-white" href="/cancellation-policy">Cancellation policy</a></li>
-      </ul>
-    </nav>
+<footer class="site-footer">
+  <div class="footer-brand">
+    <p class="footer-name">{s.business_name}</p>
+    <p class="footer-tagline">Explore | Dream | Discover</p>
+    {s.stat_travellers ? <small class="footer-rating">Trusted by {s.stat_travellers.toLocaleString('en-IN')}+ Travelers</small> : null}
   </div>
-  <div class="border-t border-white/10">
-    <p class="mx-auto max-w-7xl px-4 py-5 text-xs text-white/50">© {year} {s.business_name}. All rights reserved.</p>
+  <hr />
+
+  <div class="footer-container">
+    <nav class="footer-box" aria-label="Quick links">
+      <h3>Quick Links</h3>
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/destinations">Destinations</a></li>
+        <li><a href="/tours">Tour Packages</a></li>
+        <li><a href="/#reviews">Reviews</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </nav>
+    <div class="footer-box">
+      <h3>Our Services</h3>
+      <ul>
+        <li><a href="/fleet">Cab Booking</a></li>
+        <li>Local Sightseeing</li>
+        <li>Airport Pickup</li>
+        <li>Hotel Assistance</li>
+        <li><a href="/tours">Custom Tour Packages</a></li>
+      </ul>
+    </div>
+    <div class="footer-box">
+      <h3>Contact Us</h3>
+      {s.address && <p>{s.address}</p>}
+      {s.phone && <p><a href={`tel:${s.phone}`}>{formatPhone(s.phone)}</a></p>}
+      {s.email && <p><a href={`mailto:${s.email}`}>{s.email}</a></p>}
+    </div>
+  </div>
+
+  <div class="newsletter">
+    <h3>Get Travel Updates</h3>
+    <p>Subscribe to receive exclusive offers &amp; travel tips.</p>
+    <form class="newsletter-box" data-newsletter novalidate>
+      <div class="email-input">
+        <span class="email-icon"><Fragment set:html={faSvg(faEnvelope)} /></span>
+        <input type="email" name="email" placeholder="Enter email address" aria-label="Email address" autocomplete="email" maxlength="160" required />
+      </div>
+      <button type="submit">Subscribe</button>
+    </form>
+    <p class="newsletter-msg" role="status" data-newsletter-msg></p>
+  </div>
+
+  {socials.length > 0 && (
+    <div class="social-links">
+      {socials.map((x) => (
+        <a href={x.url} target="_blank" rel="noopener" aria-label={x.label} style={`color:${x.color}`}><Fragment set:html={faSvg(x.icon)} /></a>
+      ))}
+    </div>
+  )}
+
+  <div class="footer-bottom">
+    <hr />
+    <p>© {year} {s.business_name}. All Rights Reserved.</p>
+    <div>
+      <a href="/privacy">Privacy Policy</a>
+      <a href="/terms">Terms &amp; Conditions</a>
+      <a href="/cancellation-policy">Cancellation Policy</a>
+    </div>
   </div>
 </footer>
+
+<style>
+  .site-footer { background: #0f172a; color: #fff; padding: 20px 40px; width: 100%; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  .site-footer hr { width: 100%; height: 1px; background: rgb(200, 198, 198); margin: 45px auto; border: none; opacity: 0.6; }
+  .footer-brand { display: flex; flex-direction: column; align-items: center; text-align: center; margin: 0 0 18px; }
+  .footer-name { margin: 0.6em 0 0.4em; font-size: 1.5em; font-weight: 700; }
+  .footer-tagline { margin: 0 0 4px; letter-spacing: 1px; color: grey; font-size: 14px; }
+  .footer-rating { font-size: 12px; }
+  .footer-container { max-width: 1200px; margin: 0 auto; padding: 0 40px; display: grid; grid-template-columns: repeat(3, max-content); gap: 80px; align-items: start; justify-content: space-evenly; }
+  .footer-box { display: flex; flex-direction: column; align-items: flex-start; }
+  .footer-box h3 { margin: 0 0 18px; height: 30px; display: flex; align-items: flex-start; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: 1.17em; font-weight: 700; }
+  .footer-box ul { list-style: none; padding: 0; margin: 0; }
+  .footer-box ul li { margin: 14px 0; color: #cbd5e1; }
+  .footer-box p { margin: 14px 0; }
+  .footer-box a { color: #cbd5e1; position: relative; display: inline-block; text-decoration: none; transition: 0.3s; }
+  .footer-box p a { color: #fff; }
+  .footer-box a::after, .footer-bottom a::after { content: ''; position: absolute; left: 50%; bottom: -4px; width: 0; height: 1px; background: rgb(201, 197, 197); transform: translateX(-50%); transition: 0.35s; }
+  .footer-box a:hover::after, .footer-bottom a:hover::after { width: 100%; }
+
+  .newsletter { text-align: center; margin: 70px 0; }
+  .newsletter h3 { margin: 0 0 10px; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: 1.17em; font-weight: 700; }
+  .newsletter p { color: #cbd5e1; margin: 0; }
+  .newsletter-box { display: flex; justify-content: center; align-items: center; gap: 15px; margin-top: 25px; flex-wrap: wrap; }
+  .email-input { position: relative; }
+  .email-icon { position: absolute; left: 18px; top: 50%; transform: translateY(-50%); pointer-events: none; color: #888; font-size: 18px; display: inline-flex; }
+  .email-icon :global(.fa) { display: inline-block; }
+  .email-input input { width: 320px; max-width: 100%; height: 48px; padding: 0 18px 0 48px; border: none; border-radius: 50px; outline: none; font-size: 15px; background: #3a3a3a; color: #fff; }
+  .email-input input::placeholder { color: #9a9a9a; }
+  .email-input input:focus { box-shadow: 0 0 0 2px #ff9800; }
+  .newsletter-box button { padding: 15px 35px; border: none; border-radius: 50px; cursor: pointer; background: #ff9800; color: #fff; font-size: 15px; font-weight: 400; transition: 0.3s; }
+  .newsletter-box button.valid { background: rgb(16, 187, 16); transform: translateY(-3px); }
+  .newsletter-box button:disabled { opacity: 0.7; cursor: progress; }
+  .newsletter .newsletter-msg { margin-top: 14px; min-height: 1.5em; font-size: 14px; }
+  .newsletter-msg.ok { color: #4ade80; }
+  .newsletter-msg.err { color: #fca5a5; }
+
+  .social-links { display: flex; justify-content: center; gap: 25px; margin: 40px 0; }
+  .social-links a { font-size: 34px; line-height: 1; display: inline-flex; transition: 0.3s; }
+  .social-links a:hover { transform: translateY(-8px) scale(1.15); }
+  .social-links :global(.fa) { display: inline-block; }
+
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-top: 30px; }
+  .footer-bottom p { margin: 0; }
+  .footer-bottom a { color: #cbd5e1; margin-left: 20px; text-decoration: none; position: relative; display: inline-block; }
+  .footer-bottom hr { margin: 0; }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .site-footer { padding: 20px 30px; }
+    .footer-container { grid-template-columns: repeat(3, 1fr); gap: 40px; padding: 0; }
+    .newsletter { margin: 50px 0; }
+    .newsletter-box { gap: 12px; }
+  }
+  @media (max-width: 767px) {
+    .site-footer { padding: 20px 24px; }
+    .footer-container { grid-template-columns: max-content; gap: 40px; padding: 0; }
+    .footer-bottom { flex-direction: column; text-align: center; }
+    .footer-bottom div { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px 20px; }
+    .footer-bottom a { margin-left: 0; }
+  }
+  @media (max-width: 430px) {
+    .email-input, .email-input input { width: 100%; }
+    .email-input { flex: 1 1 100%; }
+  }
+</style>
+
+<script>
+  import { subscribeNewsletter } from '@/lib/api';
+
+  const form = document.querySelector<HTMLFormElement>('[data-newsletter]');
+  const msg = document.querySelector<HTMLElement>('[data-newsletter-msg]');
+  if (form && msg) {
+    const input = form.querySelector('input')!;
+    const button = form.querySelector('button')!;
+    const valid = () => input.value.trim() !== '' && input.checkValidity();
+    input.addEventListener('input', () => {
+      button.classList.toggle('valid', valid());
+      msg.textContent = '';
+    });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!valid()) {
+        input.reportValidity();
+        return;
+      }
+      button.disabled = true;
+      button.textContent = 'Subscribing…';
+      const res = await subscribeNewsletter(input.value.trim());
+      button.disabled = false;
+      button.textContent = 'Subscribe';
+      if (res === 'ok') {
+        msg.className = 'newsletter-msg ok';
+        msg.textContent = 'Thank you! You’re subscribed to travel updates.';
+        input.value = '';
+        button.classList.remove('valid');
+      } else {
+        msg.className = 'newsletter-msg err';
+        msg.textContent =
+          res === 'invalid' ? 'Please enter a valid email address.'
+          : res === 'busy' ? 'Too many sign-ups right now. Please try again later.'
+          : 'Couldn’t subscribe right now. Please check your connection and try again.';
+      }
+    });
+  }
+</script>

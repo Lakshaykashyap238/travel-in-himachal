@@ -104,6 +104,8 @@ export interface SettingsRow {
   founder_name: string | null;
   instagram_url: string | null;
   facebook_url: string | null;
+  x_url: string | null;
+  youtube_url: string | null;
   google_review_url: string | null;
   stat_travellers: number | null;
   stat_years: number | null;

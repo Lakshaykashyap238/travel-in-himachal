@@ -36,7 +36,7 @@ const business = {
   ...(settings.email && { email: settings.email }),
   areaServed: { '@type': 'State', name: 'Himachal Pradesh' },
   address: { '@type': 'PostalAddress', streetAddress: settings.address ?? undefined, addressRegion: 'Himachal Pradesh', addressCountry: 'IN' },
-  sameAs: [settings.instagram_url, settings.facebook_url].filter(Boolean),
+  sameAs: [settings.instagram_url, settings.facebook_url, settings.x_url, settings.youtube_url].filter(Boolean),
 };
 ---
 <!doctype html>
