@@ -88,6 +88,7 @@ export interface DestinationRow {
   description: string | null;
   places: string[];
   image_path: string | null;
+  gallery?: string[];
   is_active: boolean;
   sort_order: number;
 }

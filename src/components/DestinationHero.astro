@@ -1,0 +1,88 @@
+---
+// Top of a destination page: the photos cross-fade every 5 s with a slow
+// zoom. Slides = the destination's photo, its slideshow photos, then photos
+// of tours to that place (no duplicates, at most 8). One photo = no slideshow.
+import CatalogueImage from '@/components/CatalogueImage.astro';
+import { resolveImage } from '@/lib/catalogue';
+
+interface Props { name: string; paths: (string | null | undefined)[] }
+const { name, paths } = Astro.props;
+const seen = new Set<string>();
+const slides = paths
+  .filter((p): p is string => Boolean(p) && !seen.has(p!) && Boolean(seen.add(p!)))
+  .map((p) => resolveImage(p))
+  .filter((x): x is NonNullable<typeof x> => Boolean(x))
+  .slice(0, 8);
+---
+<div class="dest-hero relative h-[40vh] min-h-[280px] overflow-hidden bg-night" data-dest-hero aria-roledescription={slides.length > 1 ? 'carousel' : undefined} aria-label={`Photos of ${name}`}>
+  {slides.map((src, i) => (
+    <div class:list={['dest-slide absolute inset-0', { 'is-active': i === 0 }]} aria-hidden={i === 0 ? 'false' : 'true'} data-dest-slide>
+      <CatalogueImage
+        src={src}
+        alt={i === 0 ? name : ''}
+        widths={[640, 1024, 1600]}
+        sizes="100vw"
+        loading={i === 0 ? 'eager' : 'lazy'}
+        fetchpriority={i === 0 ? 'high' : 'low'}
+        class="h-full w-full object-cover opacity-90"
+      />
+    </div>
+  ))}
+  <div class="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent"></div>
+  <div class="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 pb-8 text-white">
+    <h1 class="text-4xl font-extrabold sm:text-5xl">{name}</h1>
+  </div>
+  {slides.length > 1 && (
+    <div class="absolute bottom-5 right-4 z-10 flex gap-2 sm:right-8">
+      {slides.map((_, i) => (
+        <button type="button" class:list={['dest-dot', { 'is-active': i === 0 }]} aria-label={`Show photo ${i + 1}`} data-dest-dot={i}></button>
+      ))}
+    </div>
+  )}
+</div>
+
+<style>
+  .dest-slide { opacity: 0; transition: opacity 1.2s ease; }
+  .dest-slide.is-active { opacity: 1; }
+  .dest-slide :global(img) { transform: scale(1); transition: transform 6s ease-out; }
+  .dest-slide.is-active :global(img) { transform: scale(1.08); }
+  .dest-dot { width: 10px; height: 10px; border-radius: 9999px; background: rgba(255, 255, 255, 0.5); transition: width 0.3s, background 0.3s; }
+  .dest-dot.is-active { width: 24px; background: #fff; }
+  @media (prefers-reduced-motion: reduce) {
+    .dest-slide, .dest-slide :global(img) { transition: none; }
+    .dest-slide.is-active :global(img) { transform: none; }
+  }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-dest-hero]').forEach((root) => {
+    const slides = [...root.querySelectorAll<HTMLElement>('[data-dest-slide]')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-dest-dot]')];
+    if (slides.length < 2) return;
+    // Lazy images in hidden slides: start loading them once the page is ready.
+    slides.forEach((s) => s.querySelector('img')?.setAttribute('loading', 'eager'));
+    let current = 0;
+    let timer: number | undefined;
+    const show = (n: number) => {
+      current = (n + slides.length) % slides.length;
+      slides.forEach((s, i) => {
+        s.classList.toggle('is-active', i === current);
+        s.setAttribute('aria-hidden', String(i !== current));
+      });
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === current));
+    };
+    const start = () => {
+      window.clearInterval(timer);
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) timer = window.setInterval(() => show(current + 1), 5000);
+    };
+    dots.forEach((d) => d.addEventListener('click', () => { show(Number(d.dataset.destDot)); start(); }));
+    let x0 = 0;
+    root.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    root.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 40) { show(current + (dx < 0 ? 1 : -1)); start(); }
+    });
+    document.addEventListener('visibilitychange', () => (document.hidden ? window.clearInterval(timer) : start()));
+    start();
+  });
+</script>

@@ -18,10 +18,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/shimla.jpg",
             "inclusions": [
@@ -48,10 +46,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/kangra.jpg",
             "inclusions": [
@@ -79,10 +75,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/dharamshala.jpg",
             "inclusions": [
@@ -110,10 +104,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/spiti.jpg",
             "inclusions": [
@@ -139,10 +131,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/mcleodganj.jpg",
             "inclusions": [
@@ -169,10 +159,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/kasauli.jpg",
             "inclusions": [
@@ -200,10 +188,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/manikaran.jpg",
             "inclusions": [
@@ -230,10 +216,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/dalhousie.jpg",
             "inclusions": [
@@ -259,10 +243,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/kinnaur.jpg",
             "inclusions": [
@@ -288,10 +270,8 @@
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/chamba.jpg",
             "inclusions": [
@@ -308,15 +288,12 @@
         {
             "name": "Tirthan Valley & Jibhi Tour",
             "slug": "tirthan-jibhi-3-days",
-            "places": [
-            ],
+            "places": [],
             "summary": null,
             "best_time": "Mar – Jun",
             "is_active": true,
-            "itinerary": [
-            ],
-            "exclusions": [
-            ],
+            "itinerary": [],
+            "exclusions": [],
             "group_size": "2 – 6 people",
             "image_path": "/images/tours/manali.jpg",
             "inclusions": [
@@ -408,7 +385,8 @@
             "is_active": true,
             "image_path": "/images/tours/shimla.jpg",
             "sort_order": 10,
-            "description": null
+            "description": null,
+            "gallery": []
         },
         {
             "name": "Manali",
@@ -427,7 +405,10 @@
             "is_active": true,
             "image_path": "/images/tours/manali.jpg",
             "sort_order": 20,
-            "description": null
+            "description": null,
+            "gallery": [
+                "/images/tours/manali-2.jpg"
+            ]
         },
         {
             "name": "Dharamshala",
@@ -444,7 +425,10 @@
             "is_active": true,
             "image_path": "/images/tours/dharamshala.jpg",
             "sort_order": 30,
-            "description": null
+            "description": null,
+            "gallery": [
+                "/images/tours/mcleodganj.jpg"
+            ]
         },
         {
             "name": "Spiti Valley",
@@ -461,7 +445,8 @@
             "is_active": true,
             "image_path": "/images/tours/spiti.jpg",
             "sort_order": 40,
-            "description": null
+            "description": null,
+            "gallery": []
         },
         {
             "name": "Kasol",
@@ -478,7 +463,10 @@
             "is_active": true,
             "image_path": "/images/tours/kasol.jpg",
             "sort_order": 50,
-            "description": null
+            "description": null,
+            "gallery": [
+                "/images/tours/manikaran.jpg"
+            ]
         },
         {
             "name": "Kangra",
@@ -494,7 +482,11 @@
             "is_active": true,
             "image_path": "/images/tours/kangra.jpg",
             "sort_order": 60,
-            "description": null
+            "description": null,
+            "gallery": [
+                "/images/tours/dharamshala.jpg",
+                "/images/tours/mcleodganj.jpg"
+            ]
         },
         {
             "name": "Dalhousie",
@@ -510,7 +502,10 @@
             "is_active": true,
             "image_path": "/images/tours/dalhousie.jpg",
             "sort_order": 70,
-            "description": null
+            "description": null,
+            "gallery": [
+                "/images/tours/chamba.jpg"
+            ]
         },
         {
             "name": "Mandi",
@@ -525,7 +520,8 @@
             "is_active": true,
             "image_path": "/images/tours/prashar-lake.jpg",
             "sort_order": 80,
-            "description": null
+            "description": null,
+            "gallery": []
         },
         {
             "name": "McLeodganj",
@@ -540,7 +536,10 @@
             "is_active": true,
             "image_path": "/images/tours/mcleodganj.jpg",
             "sort_order": 90,
-            "description": null
+            "description": null,
+            "gallery": [
+                "/images/tours/dharamshala.jpg"
+            ]
         },
         {
             "name": "Kinnaur",
@@ -555,7 +554,8 @@
             "is_active": true,
             "image_path": "/images/tours/kinnaur.jpg",
             "sort_order": 100,
-            "description": null
+            "description": null,
+            "gallery": []
         },
         {
             "name": "Chamba",
@@ -570,7 +570,10 @@
             "is_active": true,
             "image_path": "/images/tours/chamba.jpg",
             "sort_order": 110,
-            "description": null
+            "description": null,
+            "gallery": [
+                "/images/tours/dalhousie.jpg"
+            ]
         },
         {
             "name": "Kasauli",
@@ -586,7 +589,8 @@
             "is_active": true,
             "image_path": "/images/tours/kasauli.jpg",
             "sort_order": 120,
-            "description": null
+            "description": null,
+            "gallery": []
         }
     ]
 }

@@ -285,7 +285,7 @@ function DestinationForm({ initial, onDone }: { initial: Partial<DestinationRow>
   const isNew = !initial.id;
   const [f, setF] = useState({
     name: initial.name ?? '', slug: initial.slug ?? '', summary: initial.summary ?? '', description: initial.description ?? '',
-    places: (initial.places ?? []).join('\n'), image_path: initial.image_path ?? null as string | null, is_active: initial.is_active ?? true, sort_order: String(initial.sort_order ?? 100),
+    places: (initial.places ?? []).join('\n'), image_path: initial.image_path ?? null as string | null, gallery: initial.gallery ?? ([] as string[]), is_active: initial.is_active ?? true, sort_order: String(initial.sort_order ?? 100),
   });
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -297,7 +297,7 @@ function DestinationForm({ initial, onDone }: { initial: Partial<DestinationRow>
     const slug = (f.slug || slugify(f.name)).trim();
     if (f.name.trim().length < 2) return setError('Give the destination a name.');
     if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug)) return setError('The web address may only use lower-case letters, numbers and dashes.');
-    const row = { name: f.name.trim(), slug, summary: f.summary.trim() || null, description: f.description.trim() || null, places: lines(f.places), image_path: f.image_path, is_active: f.is_active, sort_order: numOrNull(f.sort_order) ?? 100 };
+    const row = { name: f.name.trim(), slug, summary: f.summary.trim() || null, description: f.description.trim() || null, places: lines(f.places), image_path: f.image_path, gallery: f.gallery, is_active: f.is_active, sort_order: numOrNull(f.sort_order) ?? 100 };
     setBusy(true);
     const { error } = isNew ? await supabase.from('destinations').insert(row) : await supabase.from('destinations').update(row).eq('id', initial.id!);
     setBusy(false);
@@ -321,6 +321,26 @@ function DestinationForm({ initial, onDone }: { initial: Partial<DestinationRow>
         <Field label="Web address" hint={`/destinations/${f.slug || slugify(f.name) || '…'}`}>{(id) => <input id={id} value={f.slug} placeholder={slugify(f.name)} onChange={(e) => set('slug')(e.target.value)} className={inputClass} />}</Field>
       </div>
       <Field label="Photo">{() => <PhotoPicker value={f.image_path} folder="destinations" onChange={(p) => set('image_path')(p)} />}</Field>
+      <Field label="Slideshow photos" hint="Extra photos that slide at the top of the destination page, after the main photo. Photos of tours to this place are added automatically. Up to 8.">
+        {() => (
+          <div className="space-y-3">
+            {f.gallery.length > 0 && (
+              <ul className="flex flex-wrap gap-3">
+                {f.gallery.map((g, i) => (
+                  <li key={g + i} className="relative h-20 w-28 overflow-hidden rounded-lg bg-slate-100 ring-1 ring-slate-200">
+                    {photoUrl(g) && <img src={photoUrl(g)!} alt="" className="h-full w-full object-cover" />}
+                    <button type="button" onClick={() => setF((x) => ({ ...x, gallery: x.gallery.filter((_, n) => n !== i) }))}
+                      className="absolute right-1 top-1 grid h-6 w-6 place-items-center rounded-full bg-black/70 text-sm text-white" aria-label="Remove photo">×</button>
+                  </li>
+                ))}
+              </ul>
+            )}
+            {f.gallery.length < 8 && (
+              <PhotoPicker value={null} folder="destinations" onChange={(p) => setF((x) => (x.gallery.includes(p) ? x : { ...x, gallery: [...x.gallery, p] }))} />
+            )}
+          </div>
+        )}
+      </Field>
       <Field label="Short summary" hint="Used as the Google description.">{(id) => <textarea id={id} rows={2} maxLength={300} value={f.summary} onChange={(e) => set('summary')(e.target.value)} className={inputClass} />}</Field>
       <Field label="Description">{(id) => <textarea id={id} rows={5} value={f.description} onChange={(e) => set('description')(e.target.value)} className={inputClass} />}</Field>
       <Field label="Places to see" hint="One per line.">{(id) => <textarea id={id} rows={6} value={f.places} onChange={(e) => set('places')(e.target.value)} className={inputClass} />}</Field>

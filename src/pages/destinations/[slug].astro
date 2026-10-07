@@ -1,6 +1,6 @@
 ---
 import { getImage } from 'astro:assets';
-import CatalogueImage from '@/components/CatalogueImage.astro';
+import DestinationHero from '@/components/DestinationHero.astro';
 import Base from '@/layouts/Base.astro';
 import Icon from '@/components/Icon.astro';
 import TourCard from '@/components/TourCard.astro';
@@ -30,13 +30,7 @@ const placeLd = {
 };
 ---
 <Base title={`${d.name} tour packages & cab booking`} description={description} image={og?.src} jsonLd={[placeLd, breadcrumbLd(Astro.site, crumbs)]}>
-  <div class="relative h-[40vh] min-h-[280px] overflow-hidden bg-night">
-    {img && <CatalogueImage src={img} alt={d.name} widths={[640, 1024, 1600]} sizes="100vw" loading="eager" fetchpriority="high" class="h-full w-full object-cover opacity-90" />}
-    <div class="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent"></div>
-    <div class="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-4 pb-8 text-white">
-      <h1 class="text-4xl font-extrabold sm:text-5xl">{d.name}</h1>
-    </div>
-  </div>
+  <DestinationHero name={d.name} paths={[d.image_path, ...(d.gallery ?? []), ...toursHere.map((t) => t.image_path)]} />
 
   <div class="mx-auto max-w-7xl space-y-12 px-4 py-10">
     {d.description && <p class="max-w-3xl whitespace-pre-line text-lg text-slate-700">{d.description}</p>}

@@ -71,6 +71,7 @@ export interface Destination {
   description: string | null;
   places: string[];
   image_path: string | null;
+  gallery?: string[];
   sort_order: number;
 }
 
