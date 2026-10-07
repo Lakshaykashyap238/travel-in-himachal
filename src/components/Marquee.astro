@@ -8,6 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faHeart } from '@fortawesome/free-regular-svg-icons';
 import type { IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { faSvg as svg } from '@/lib/fa';
 
 interface Props { siteHost?: string }
 const { siteHost = 'www.travelinhimachal.in' } = Astro.props;
@@ -25,11 +26,6 @@ const items: { icon: IconDefinition; text: string; strong?: string }[] = [
   { icon: faShieldHalved, text: 'Safe & Comfortable Travel' },
   { icon: faGlobe, text: 'Visit Us:', strong: siteHost },
 ];
-const svg = (d: IconDefinition) => {
-  const [w, h, , , path] = d.icon;
-  const p = Array.isArray(path) ? path.join(' ') : path;
-  return `<svg class="fa" viewBox="0 0 ${w} ${h}" style="width:${(w / h).toFixed(4)}em" aria-hidden="true" focusable="false"><path fill="currentColor" d="${p}"/></svg>`;
-};
 ---
 <div class="marquee" id="marqueeNav" aria-label="Our services">
   <div class="marquee-track" data-marquee-track>

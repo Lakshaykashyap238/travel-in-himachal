@@ -16,8 +16,11 @@
     "@fontsource/hind": "^5.3.0",
     "@supabase/supabase-js": "^2.117.2",
     "astro": "^7.3.5",
+    "flatpickr": "^4.6.13",
+    "intl-tel-input": "^17.0.19",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "sweetalert2": "^11.26.25",
     "zod": "^4.6.5"
   },
   "devDependencies": {

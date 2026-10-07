@@ -1,0 +1,716 @@
+---
+// "Book Your Ride" page, rebuilt from the original site: black top bar, blue
+// fleet section, car slider, vehicle card, and the two-step booking popup
+// (Details -> Summary) with the success sound and popup. Bookings are real:
+// they go to the create-booking function (Turnstile-checked) and return a
+// reference and private tracking link.
+import { getImage } from 'astro:assets';
+import { faCheck, faHandshake, faUser, faSuitcaseRolling, faAngleLeft } from '@fortawesome/free-solid-svg-icons';
+import { faSnowflake, faCalendar } from '@fortawesome/free-regular-svg-icons';
+import 'intl-tel-input/build/css/intlTelInput.css';
+import 'flatpickr/dist/flatpickr.min.css';
+import 'sweetalert2/dist/sweetalert2.min.css';
+import { durationLabel, formatInr, getCatalogue, resolveImage } from '@/lib/catalogue';
+import { faSvg } from '@/lib/fa';
+
+const { vehicles, tours, settings } = await getCatalogue();
+const DEFAULT_DESC = 'Spacious, comfortable and perfect for family trips in Himachal. Enjoy a smooth and safe journey.';
+
+const cars = await Promise.all(
+  vehicles.map(async (v) => {
+    const src = resolveImage(v.image_path);
+    const image = !src ? '' : typeof src === 'string' ? src : (await getImage({ src, width: 1360, format: 'webp', quality: 82 })).src;
+    return {
+      slug: v.slug,
+      name: v.name,
+      image,
+      price: v.price_per_day != null ? formatInr(v.price_per_day).replace('₹', '₹ ') : 'On request',
+      perDay: v.price_per_day != null,
+      seats: v.seats,
+      luggage: v.luggage,
+      features: v.features,
+      description: v.description || DEFAULT_DESC,
+    };
+  }),
+);
+const tourList = tours.map((t) => ({ slug: t.slug, name: t.name, duration: durationLabel(t) }));
+const first = cars[0];
+const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? '', phone: settings.phone }).replace(/</g, '\\u003c');
+---
+<div class="ride-page">
+  <div class="about-nav">
+    <a href="/" class="back-btn" aria-label="Go back" data-back><Fragment set:html={faSvg(faAngleLeft)} /></a>
+    <h2>BOOK YOUR RIDE</h2>
+  </div>
+
+  <section class="fleet-section">
+    <div class="fleet-main">
+      <div class="fleet-intro">
+        <h1>Premium Rides for <span>Every Journey</span></h1>
+        <p class="fleet-description">Choose from our well-maintained, comfortable and reliable cars for your Himachal adventure.</p>
+        <div class="fleet-trust">
+          <div class="trust-card">
+            <div class="trust-icon"><Fragment set:html={faSvg(faCheck)} /></div>
+            <div><h3>Well Maintained</h3><p>Regularly serviced for your safety</p></div>
+          </div>
+          <div class="trust-card">
+            <div class="trust-icon"><Fragment set:html={faSvg(faHandshake)} /></div>
+            <div><h3>Trusted Drivers</h3><p>Experienced &amp; verified drivers</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="car-showcase">
+        <button type="button" class="slider-btn prev-btn" id="prevCar" aria-label="Previous car" disabled>&#10094;</button>
+        <div class="car-stage">
+          {first && <img id="carImage" src={first.image} alt={first.name} width="680" height="430" fetchpriority="high" />}
+        </div>
+        <button type="button" class="slider-btn next-btn" id="nextCar" aria-label="Next car" disabled={cars.length < 2}>&#10095;</button>
+      </div>
+    </div>
+
+    {first ? (
+      <div class="vehicle-info" aria-live="polite">
+        <div class="vehicle-details">
+          <span class="vehicle-count">Vehicle <span id="currentVehicle">1</span> of <span id="totalVehicles">{cars.length}</span></span>
+          <h2 id="vehicleName">{first.name}</h2>
+          <div class="vehicle-specs">
+            <div class="spec"><span class="spec-icon"><Fragment set:html={faSvg(faUser)} /></span><span id="vehicleSeats">{first.seats} Seats</span></div>
+            <div class="spec"><span class="spec-icon"><Fragment set:html={faSvg(faSnowflake)} /></span><span>AC</span></div>
+            <div class="spec"><span class="spec-icon"><Fragment set:html={faSvg(faSuitcaseRolling)} /></span><span id="vehicleCapacity">{first.luggage} Luggage Capacity</span></div>
+          </div>
+          <p class="vehicle-description" id="vehicleDescription">{first.description}</p>
+        </div>
+        <div class="vehicle-features">
+          <h3>Features</h3>
+          <ul id="featureList">{first.features.map((f) => <li><span>✓</span>{f}</li>)}</ul>
+        </div>
+        <div class="vehicle-price">
+          <span class="price-label">Starting From</span>
+          <div class="price"><span id="vehiclePrice">{first.price}</span><small id="vehiclePer">{first.perDay ? '/ Day' : ''}</small></div>
+          <button type="button" class="book-btn" id="openBooking">Book Now</button>
+        </div>
+      </div>
+    ) : (
+      <div class="vehicle-info"><p>Cars are being updated. Please call {settings.phone ?? 'us'} to book.</p></div>
+    )}
+
+    <!-- Booking popup -->
+    <div class="booking-modal" id="bookingModal" role="dialog" aria-modal="true" aria-labelledby="popupTitle" aria-hidden="true">
+      <div class="booking-popup">
+        <div class="booking-popup-header">
+          <div>
+            <h2 id="popupTitle">Your Details</h2>
+            <p id="popupSubtitle">Enter your details to continue</p>
+          </div>
+          <button type="button" class="popup-close" id="closeBookingPopup" aria-label="Close">&times;</button>
+        </div>
+
+        <div class="booking-progress">
+          <div class="progress-step active" id="progressStep1"><span>1</span><small>Details</small></div>
+          <div class="progress-line" id="progressLine"></div>
+          <div class="progress-step" id="progressStep2"><span>2</span><small>Summary</small></div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="booking-step active" id="bookingStep1">
+          <div class="form-section-title">
+            <h3>Passenger Details</h3>
+            <p>Please provide your booking information</p>
+          </div>
+          <div class="booking-tour-pill" id="tourPill" hidden></div>
+          <div class="booking-fields-grid">
+            <div class="booking-input">
+              <label for="bookingName">Name</label>
+              <input type="text" id="bookingName" placeholder="Enter your Name" autocomplete="name" maxlength="80" />
+              <small class="field-error" data-err="name"></small>
+            </div>
+            <div class="booking-input">
+              <label for="userMobile">Mobile number</label>
+              <input type="tel" id="userMobile" placeholder="10-digit mobile number" maxlength="12" autocomplete="tel-national" inputmode="numeric" />
+              <small class="field-error" data-err="phone"></small>
+            </div>
+            <div class="booking-input">
+              <label for="bookingDate">Date of Booking</label>
+              <div class="date-input-wrapper">
+                <input type="text" id="bookingDate" title="Select the Date of Booking" placeholder="dd / mm / yy" autocomplete="off" readonly />
+                <span id="calendarIcon" class="cal-icon"><Fragment set:html={faSvg(faCalendar)} /></span>
+              </div>
+              <small class="field-error" data-err="date"></small>
+            </div>
+            <div class="booking-input">
+              <label>No. of Travellers <span>*</span></label>
+              <div class="traveller-counter">
+                <button type="button" id="minusTraveller" aria-label="Fewer travellers">−</button>
+                <div class="traveller-number"><strong id="travellerCount">1</strong><span id="travellerWord">Traveller</span></div>
+                <button type="button" id="plusTraveller" aria-label="More travellers">+</button>
+              </div>
+              <small class="traveller-limit">Maximum 6 travellers</small>
+            </div>
+            <div class="booking-input">
+              <label for="pickupLocation">Pickup location</label>
+              <input type="text" id="pickupLocation" placeholder="Enter pickup location" maxlength="200" />
+              <small class="field-error" data-err="pickup"></small>
+            </div>
+            <div class="booking-input" id="dropoffBookingField">
+              <label for="dropoffLocation">Drop-off location</label>
+              <input type="text" id="dropoffLocation" placeholder="Enter Drop-off location" maxlength="200" />
+              <small class="field-error" data-err="dropoff"></small>
+            </div>
+          </div>
+          <button type="button" class="booking-primary-btn" id="saveNextBtn">Save &amp; Next <span>→</span></button>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="booking-step" id="bookingStep2">
+          <div class="form-section-title"><p>Review your booking details</p></div>
+          <div class="booking-fields-grid">
+            <div class="summary-card">
+              <div class="summary-card-title"><h4>Passenger Details</h4></div>
+              <div class="summary-info-grid">
+                <div class="summary-item"><span>Name</span><strong id="summaryName">—</strong></div>
+                <div class="summary-item"><span>Mobile</span><strong id="summaryMobile">—</strong></div>
+                <div class="summary-item"><span>Travellers</span><strong id="summaryTravellers">1 Traveller</strong></div>
+              </div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-card-title"><h4>Journey Details</h4></div>
+              <div class="tour-inside-journey" id="tourInsideJourney" hidden>
+                <div class="tour-inside-title"><div><small>Selected Tour</small><strong id="tourName"></strong></div></div>
+                <div class="tour-duration" id="tourDuration"></div>
+              </div>
+              <div class="journey-route">
+                <div class="route-point"><span class="route-dot pickup-dot"></span><div><small>Pickup</small><strong id="summaryPickup">—</strong></div></div>
+                <div class="route-line" id="summaryRouteLine"></div>
+                <div class="route-point" id="summaryDropRow"><span class="route-dot drop-dot"></span><div><small>Drop-off</small><strong id="summaryDrop">—</strong></div></div>
+              </div>
+            </div>
+            <div class="summary-card">
+              <div class="summary-card-title"><h4>Travel Schedule</h4></div>
+              <div class="schedule-grid"><div class="schedule-item"><span>Date</span><strong id="summaryDate">—</strong></div></div>
+            </div>
+            <div class="summary-card car-summary">
+              <div class="summary-card-title"><h4>Selected Vehicle</h4></div>
+              <div class="selected-car-info">
+                <div class="car-summary-image"><img id="summaryCarImage" src={first?.image ?? ''} alt="Selected car" /></div>
+                <div><strong id="summaryCar">—</strong><span id="summaryCarDetails">—</span></div>
+              </div>
+            </div>
+          </div>
+          <p class="booking-alert" id="bookingAlert" role="alert" hidden></p>
+          <div class="summary-actions">
+            <button type="button" class="previous-btn" id="previousBtn">← Previous</button>
+            <button type="button" class="confirm-booking-btn" id="confirmBookingBtn">Confirm Booking</button>
+          </div>
+          <p class="privacy-note">By confirming, you agree that we use these details to handle your booking (<a href="/privacy" target="_blank">privacy policy</a>). No payment now.</p>
+        </div>
+
+        <div id="turnstileBox" class="turnstile-box"></div>
+      </div>
+      <audio id="bookingsuccessSound" preload="none"><source src="/audio/booking-success.mp3" type="audio/mpeg" /></audio>
+    </div>
+  </section>
+  <script type="application/json" id="rideData" set:html={data} />
+</div>
+
+<style is:global>
+  .ride-page { background: rgb(232, 226, 226); min-height: 100vh; overflow-x: hidden; }
+  .ride-page *, .ride-page *::before, .ride-page *::after { box-sizing: border-box; }
+  .ride-page .fa { display: inline-block; vertical-align: -0.125em; }
+
+  .about-nav { position: fixed; top: 0; left: 0; height: 60px; width: 100%; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; z-index: 900; }
+  .about-nav .back-btn { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 24px; color: #fff; line-height: 1; padding: 6px; }
+  .about-nav h2 { margin: 0; color: #fff; font-family: 'Times New Roman', Times, serif; font-weight: 700; font-stretch: normal; letter-spacing: normal; font-size: clamp(18px, 5vw, 30px); }
+
+  .fleet-section {
+    width: 100%; min-height: 100vh; margin-top: 40px; padding: 60px 30px 40px; position: relative; overflow: hidden;
+    background: linear-gradient(to bottom, rgb(3, 89, 164) 0%, rgb(3, 89, 164) 70%, #3f3e3eaf 100%);
+    color: #171717; font-family: 'Inter', 'Segoe UI', Arial, sans-serif; line-height: normal;
+  }
+  .fleet-main { width: 100%; max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+  .fleet-intro { width: 100%; display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; z-index: 5; }
+  .fleet-intro h1 {
+    max-width: 700px; margin: 0 auto; font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size: clamp(44px, 6vw, 52px); line-height: 1.08; font-weight: 750; font-stretch: normal; letter-spacing: -2px; color: #171717; text-align: center;
+  }
+  .fleet-intro h1 span { display: block; color: #fff; }
+  .fleet-description { max-width: 650px; margin: 22px auto 0; font-size: 17px; line-height: 1.6; color: #fff; text-align: center; }
+  .fleet-trust { width: 100%; max-width: 600px; margin: 28px auto 0; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .trust-card { width: 100%; min-height: 105px; padding: 17px; display: flex; align-items: center; gap: 15px; border: 1px solid #eee; border-radius: 15px; background: #fff; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06); transition: 0.3s ease; }
+  .trust-card:hover { transform: translateY(-4px); border-color: #ffc9a8; box-shadow: 0 12px 30px rgba(249, 115, 22, 0.1); }
+  .trust-icon { min-width: 47px; height: 47px; display: flex; align-items: center; justify-content: center; border-radius: 12px; background: linear-gradient(145deg, rgba(77, 78, 78, 0.879), rgb(6, 6, 6)); color: #fff; font-size: 23px; box-shadow: 0 6px 18px rgba(249, 115, 22, 0.25); }
+  .trust-card h3 { margin: 0 0 5px; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: 17px; font-weight: 650; color: #171717; }
+  .trust-card p { margin: 0; font-size: 14px; line-height: 1.5; color: #777; }
+
+  .car-showcase { width: 100%; min-height: 420px; position: relative; display: flex; align-items: flex-start; justify-content: center; }
+  .car-stage { width: 100%; max-width: 650px; height: 380px; position: relative; display: flex; align-items: flex-start; justify-content: center; z-index: 3; }
+  .car-stage img { width: 100%; max-width: 680px; height: auto; margin: 0 auto; object-fit: contain; position: relative; z-index: 4; filter: drop-shadow(0 25px 22px rgba(0, 0, 0, 0.25)); transition: opacity 0.35s ease, transform 0.35s ease; }
+  .car-stage img.swapping { opacity: 0; transform: translateX(20px); }
+  .slider-btn { position: absolute; top: 50%; transform: translateY(-50%); width: 64px; height: 64px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: none; background: #fff; color: #134327; font-size: 28px; cursor: pointer; z-index: 10; transition: 0.3s ease; box-shadow: 0 7px 25px rgba(0, 0, 0, 0.08); }
+  .slider-btn:hover:not(:disabled) { background: #143242; color: #fff; box-shadow: 0 8px 25px rgba(14, 13, 13, 0.3); transform: translateY(-50%) scale(1.08); }
+  .slider-btn:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); }
+  .prev-btn { left: 0; }
+  .next-btn { right: 0; }
+
+  .vehicle-info { max-width: 1400px; min-height: 340px; margin: 30px auto 0; padding: 35px 38px; display: grid; grid-template-columns: 1.65fr 1fr 1.05fr; gap: 40px; border: 1px solid #e8e8e8; border-radius: 20px; background: #fff; box-shadow: 0 15px 45px rgba(0, 0, 0, 0.07); position: relative; }
+  .vehicle-features { border-left: 1px solid #eee; border-right: 1px solid #eee; padding: 0 40px; }
+  .vehicle-count { display: inline-flex; padding: 8px 17px; border-radius: 30px; background: #0b1ef1c0; color: #fff; font-size: 14px; font-weight: 600; gap: 5px; margin-bottom: 20px; }
+  .vehicle-details h2 { margin: 0; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: 32px; line-height: 1.2; font-weight: 700; color: #171717; }
+  .vehicle-specs { display: flex; align-items: center; flex-wrap: wrap; gap: 28px; margin-top: 30px; }
+  .spec { display: flex; align-items: center; gap: 9px; font-size: 16px; color: #4f534f; white-space: nowrap; }
+  .spec-icon { font-size: 20px; color: #14213d; display: inline-flex; }
+  .vehicle-description { max-width: 520px; margin-top: 28px; font-size: 17px; line-height: 1.9; color: #6b6f6c; }
+  .vehicle-features h3 { margin: 0 0 20px; font-family: inherit; font-stretch: normal; letter-spacing: normal; color: green; font-size: 20px; font-weight: 650; }
+  .vehicle-features ul { padding: 0; margin: 0; list-style: none; display: flex; flex-direction: column; gap: 15px; }
+  .vehicle-features li { display: flex; align-items: center; gap: 12px; font-size: 16px; color: #0a0a0a; }
+  .vehicle-features li span { width: 21px; height: 21px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: green; color: #fff; font-size: 12px; font-weight: bold; flex-shrink: 0; }
+  .vehicle-price { display: flex; flex-direction: column; justify-content: center; align-items: center; padding-left: 10px; }
+  .price-label { color: #777; font-size: 17px; margin-bottom: 7px; }
+  .vehicle-price .price { display: flex; align-items: baseline; justify-content: center; gap: 5px; margin-bottom: 28px; white-space: nowrap; }
+  .vehicle-price .price span { font-size: 28px; font-weight: 700; letter-spacing: -1px; color: #171717db; }
+  .vehicle-price .price small { font-size: 14px; color: #777; }
+  .book-btn { width: 100%; min-height: 54px; border: none; border-radius: 11px; background: rgb(3, 5, 9); color: #fff; font-size: 18px; font-weight: 650; cursor: pointer; transition: 0.3s ease; }
+  .book-btn:hover { background: rgba(0, 0, 0, 0.803); }
+
+  /* Popup */
+  .booking-modal { position: fixed; inset: 0; background: rgba(5, 15, 30, 0.62); backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); display: flex; align-items: center; justify-content: center; padding: 20px; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease; z-index: 1000; }
+  .booking-modal.active { opacity: 1; visibility: visible; }
+  .booking-popup { width: 100%; max-width: 768px; max-height: 92vh; overflow-y: auto; background: #fff; border-radius: 24px; padding: 25px; box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35); transform: translateY(30px) scale(0.94); transition: transform 0.35s ease; scrollbar-width: none; }
+  .booking-popup::-webkit-scrollbar { display: none; }
+  .booking-modal.active .booking-popup { transform: translateY(0) scale(1); }
+  .booking-popup-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 20px; }
+  .booking-popup-header h2 { margin: 0; font-weight: 700; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: 24px; color: #172033; }
+  .booking-popup-header p { margin: 5px 0 0; font-size: 12px; color: #7d8795; }
+  .popup-close { width: 36px; height: 36px; border: none; border-radius: 50%; background: #f2f4f7; color: #252c38; font-size: 24px; line-height: 1; cursor: pointer; transition: 0.2s ease; }
+  .popup-close:hover { background: #e6e9ee; transform: rotate(90deg); }
+  .booking-progress { display: flex; align-items: center; width: 100%; margin-bottom: 24px; }
+  .progress-step { display: flex; align-items: center; gap: 7px; color: #a2a9b4; font-size: 12px; font-weight: 600; }
+  .progress-step span { width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: #edf0f4; color: #858d98; font-size: 12px; font-weight: 700; }
+  .progress-step.active { color: #1677ff; }
+  .progress-step.active span { background: green; color: #fff; }
+  .progress-line { flex: 1; height: 2px; background: #e6e9ee; margin: 0 12px; transition: 0.3s ease; }
+  .progress-line.active { background: rgba(23, 224, 23, 0.732); }
+  .booking-step { display: none; }
+  .booking-step.active { display: block; animation: stepFade 0.3s ease; }
+  @keyframes stepFade { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
+  .form-section-title { margin-bottom: 20px; }
+  .form-section-title h3 { margin: 0; font-weight: 700; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: 17px; color: #202735; }
+  .form-section-title p { margin: 5px 0 0; font-size: 12px; color: #8a929f; }
+  .booking-tour-pill { margin: -6px 0 16px; padding: 10px 14px; border-radius: 10px; background: #eef6ff; border: 1px solid #d9eaff; font-size: 13px; color: #1266c5; font-weight: 700; }
+  .booking-fields-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .booking-input { display: flex; flex-direction: column; gap: 6px; position: relative; width: 100%; }
+  .booking-input label { font-size: 11px; font-weight: 600; color: #555; }
+  .booking-input input { width: 100%; height: 47px; padding: 12px 45px 12px 15px; border: 1px solid #dedede; border-radius: 10px; outline: none; background: #f8f8f8; font-size: 13px; color: #111; transition: 0.2s; }
+  .booking-input input::placeholder { color: #999; }
+  .booking-input input:focus { background: #fff; border-color: #111; box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04); }
+  .booking-input input[aria-invalid='true'] { border-color: #d92d20; }
+  .booking-input .iti { width: 100%; }
+  .booking-input .iti input { padding-left: 90px; }
+  #bookingDate { cursor: pointer; }
+  .date-input-wrapper { position: relative; width: 100%; }
+  .cal-icon { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); color: #666; cursor: pointer; display: inline-flex; }
+  .field-error { color: #d92d20; font-size: 11px; min-height: 0; }
+  .field-error:empty { display: none; }
+  .traveller-counter { width: fit-content; height: 48px; display: flex; align-items: center; justify-content: center; gap: 12px; border: 1px solid #dfe4ea; border-radius: 12px; padding: 0 8px; background: #fff; }
+  .traveller-counter button { width: 30px; height: 30px; flex-shrink: 0; border: none; border-radius: 9px; background: #eef5ff; color: #131314; font-size: 22px; font-weight: 600; line-height: 1; cursor: pointer; }
+  .traveller-number { min-width: 55px; text-align: center; }
+  .traveller-number strong { display: block; color: #202735; font-size: 18px; }
+  .traveller-number span { color: #8a929f; font-size: 10px; }
+  .traveller-limit { font-size: 10px; color: #8a929f; }
+  .booking-primary-btn { width: 100%; height: 51px; border: none; border-radius: 12px; background: #1677ff; color: #fff; font-size: 14px; font-weight: 750; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 18px; transition: 0.25s ease; }
+  .booking-primary-btn:hover { background: #075fcf; transform: translateY(-1px); }
+
+  .summary-card { background: #f8fafc; border: 1px solid #edf0f4; border-radius: 14px; padding: 20px; margin-bottom: 11px; }
+  .summary-card-title { display: flex; align-items: center; gap: 9px; margin-bottom: 18px; }
+  .summary-card-title h4 { margin: 0; font-weight: 700; font-size: 13px; color: #303847; }
+  .summary-item { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+  .summary-item span { font-size: 10px; color: #8a929f; }
+  .summary-item strong { font-size: 12px; color: #252c38; word-break: break-word; }
+  .tour-inside-journey { margin-bottom: 16px; }
+  .tour-inside-journey small { display: block; font-size: 10px; color: #8a929f; margin-bottom: 4px; }
+  .tour-inside-journey strong { font-size: 14px; color: #1266c5; }
+  .tour-duration { font-size: 12px; color: #4c5563; margin-top: 4px; }
+  .journey-route { display: flex; flex-direction: column; padding-left: 15px; gap: 14px; }
+  .route-line { width: 2px; height: 25px; background: #707171; margin: 2px 0 2px 4px; }
+  .route-point { display: flex; align-items: center; gap: 10px; }
+  .route-point div { display: flex; flex-direction: column; gap: 3px; }
+  .route-point small { font-size: 10px; color: #8a929f; }
+  .route-point strong { font-size: 12px; color: #252c38; }
+  .route-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+  .pickup-dot { background: #000; }
+  .drop-dot { background: #ff7a00; }
+  .schedule-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .schedule-item { background: #fff; border-radius: 9px; padding: 10px; }
+  .schedule-item span { display: block; color: #8a929f; font-size: 10px; margin-bottom: 4px; }
+  .schedule-item strong { color: #252c38; font-size: 12px; }
+  .selected-car-info { display: flex; align-items: center; gap: 16px; }
+  .car-summary-image { width: 80px; height: 55px; border-radius: 10px; background: #fff; overflow: hidden; flex-shrink: 0; }
+  .car-summary-image img { width: 100%; height: 100%; object-fit: contain; }
+  .selected-car-info strong { display: block; font-size: 14px; color: #202735; margin-bottom: 4px; }
+  .selected-car-info span { display: block; font-size: 10px; color: #8a929f; }
+  .booking-alert { margin: 8px 0 0; padding: 12px 14px; border-radius: 10px; background: #fef3f2; color: #b42318; font-size: 13px; }
+  .summary-actions { display: grid; grid-template-columns: 0.8fr 1.5fr; gap: 10px; margin-top: 15px; }
+  .previous-btn { height: 50px; border: 1px solid #dce1e7; border-radius: 11px; background: #fff; color: #4c5563; font-size: 13px; font-weight: 650; cursor: pointer; transition: 0.2s ease; }
+  .previous-btn:hover { background: #f5f7f9; }
+  .confirm-booking-btn { height: 50px; border: none; border-radius: 11px; background: #1677ff; color: #fff; font-size: 13px; font-weight: 750; cursor: pointer; transition: 0.2s ease; }
+  .confirm-booking-btn:hover:not(:disabled) { background: #075fcf; transform: translateY(-1px); }
+  .confirm-booking-btn:disabled { opacity: 0.7; cursor: progress; }
+  .privacy-note { margin: 10px 0 0; font-size: 11px; color: #8a929f; text-align: center; }
+  .privacy-note a { color: #1677ff; text-decoration: underline; }
+  .turnstile-box { display: flex; justify-content: center; margin-top: 8px; }
+  .turnstile-box:empty { display: none; }
+  .swal2-container { z-index: 2147483647 !important; }
+  .flatpickr-calendar { z-index: 2000 !important; }
+  .iti__country-list { z-index: 2000; }
+
+  @media (max-width: 767px) {
+    .fleet-section { padding: 55px 18px 30px; }
+    .fleet-intro h1 { font-size: 38px; letter-spacing: -1px; }
+    .fleet-description { margin: 20px auto 0; font-size: 15px; }
+    .fleet-trust { display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 25px; }
+    .trust-card { max-width: 360px; text-align: left; }
+    .car-showcase { min-height: 350px; margin-top: 10px; align-items: center; }
+    .car-stage { height: 300px; align-items: center; }
+    .slider-btn { width: 48px; height: 48px; font-size: 21px; }
+    .vehicle-info { margin-top: 20px; padding: 25px 20px; grid-template-columns: 1fr; gap: 30px; border-radius: 16px; }
+    .vehicle-features { border-left: none; border-right: none; border-top: 1px solid rgba(128, 139, 168, 0.18); border-bottom: 1px solid rgba(128, 139, 168, 0.18); padding: 25px 0; }
+    .vehicle-details h2 { font-size: 26px; }
+    .vehicle-specs { gap: 15px; margin-top: 22px; }
+    .spec { font-size: 14px; }
+    .spec-icon { font-size: 21px; }
+    .vehicle-description { font-size: 15px; line-height: 1.7; }
+    .vehicle-price { padding: 0; align-items: stretch; }
+    .vehicle-price .price { justify-content: flex-start; }
+    .vehicle-price .price span { font-size: 36px; }
+    .booking-fields-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .booking-modal { padding: 10px; }
+    .booking-popup { max-height: 94vh; padding: 20px; border-radius: 20px; }
+    .booking-popup-header h2 { font-size: 21px; }
+    .summary-actions { grid-template-columns: 1fr 1.5fr; }
+  }
+  @media (max-width: 420px) {
+    .fleet-intro h1 { font-size: 32px; }
+    .fleet-description { font-size: 14px; }
+    .car-showcase { min-height: 300px; }
+    .car-stage { height: 260px; }
+    .vehicle-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 17px; }
+    .vehicle-price .price span { font-size: 32px; }
+  }
+  @media (max-width: 380px) {
+    .booking-popup { padding: 17px; }
+    .summary-actions { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .car-stage img, .booking-popup, .booking-step.active { transition: none; animation: none; }
+  }
+</style>
+
+<script>
+  import intlTelInput from 'intl-tel-input';
+  import flatpickr from 'flatpickr';
+  import Swal from 'sweetalert2';
+  import { backendConfigured, createBooking, rememberBooking } from '@/lib/api';
+
+  type Car = { slug: string; name: string; image: string; price: string; perDay: boolean; seats: number; luggage: number; features: string[]; description: string };
+  type Tour = { slug: string; name: string; duration: string };
+  type TurnstileApi = { render: (el: HTMLElement, o: Record<string, unknown>) => string; reset: (id?: string) => void };
+
+  const $ = <T extends HTMLElement = HTMLElement>(id: string) => document.getElementById(id) as T;
+  const data = JSON.parse($('rideData').textContent || '{}') as { cars: Car[]; tours: Tour[]; turnstileSiteKey: string; phone: string | null };
+  const cars = data.cars;
+  const params = new URLSearchParams(location.search);
+  const tour = data.tours.find((t) => t.slug === params.get('tour')) ?? null;
+  const isTourBooking = Boolean(tour);
+
+  // Back button: previous page if it was on this site, otherwise home.
+  document.querySelector('[data-back]')?.addEventListener('click', (e) => {
+    if (document.referrer && new URL(document.referrer).origin === location.origin && history.length > 1) {
+      e.preventDefault();
+      history.back();
+    }
+  });
+
+  // ── Car slider ──────────────────────────────────────────
+  let currentCar = Math.max(0, cars.findIndex((c) => c.slug === params.get('car')));
+  const carImage = $<HTMLImageElement>('carImage');
+  const prevCar = $<HTMLButtonElement>('prevCar');
+  const nextCar = $<HTMLButtonElement>('nextCar');
+
+  function showCar(index: number, animate = true) {
+    const car = cars[index];
+    if (!car || !carImage) return;
+    const apply = () => {
+      carImage.src = car.image;
+      carImage.alt = car.name;
+      carImage.classList.remove('swapping');
+    };
+    if (animate) {
+      carImage.classList.add('swapping');
+      window.setTimeout(apply, 200);
+    } else apply();
+    $('vehicleName').textContent = car.name;
+    $('vehiclePrice').textContent = car.price;
+    $('vehiclePer').textContent = car.perDay ? '/ Day' : '';
+    $('vehicleSeats').textContent = `${car.seats} Seats`;
+    $('vehicleCapacity').textContent = `${car.luggage} Luggage Capacity`;
+    $('vehicleDescription').textContent = car.description;
+    const list = $('featureList');
+    list.replaceChildren(
+      ...car.features.map((f) => {
+        const li = document.createElement('li');
+        const tick = document.createElement('span');
+        tick.textContent = '✓';
+        li.append(tick, f);
+        return li;
+      }),
+    );
+    $('currentVehicle').textContent = String(index + 1);
+    $('totalVehicles').textContent = String(cars.length);
+    prevCar.disabled = index === 0;
+    nextCar.disabled = index === cars.length - 1;
+  }
+  nextCar?.addEventListener('click', () => { if (currentCar < cars.length - 1) showCar(++currentCar); });
+  prevCar?.addEventListener('click', () => { if (currentCar > 0) showCar(--currentCar); });
+  if (cars.length) showCar(currentCar, false);
+
+  // ── Popup ───────────────────────────────────────────────
+  const modal = $('bookingModal');
+  const popup = modal.querySelector<HTMLElement>('.booking-popup')!;
+  const step1 = $('bookingStep1');
+  const step2 = $('bookingStep2');
+  const nameInput = $<HTMLInputElement>('bookingName');
+  const mobileInput = $<HTMLInputElement>('userMobile');
+  const dateInput = $<HTMLInputElement>('bookingDate');
+  const pickupInput = $<HTMLInputElement>('pickupLocation');
+  const dropInput = $<HTMLInputElement>('dropoffLocation');
+  const alertBox = $('bookingAlert');
+  const confirmBtn = $<HTMLButtonElement>('confirmBookingBtn');
+
+  if (isTourBooking && tour) {
+    $('dropoffBookingField').style.display = 'none';
+    const pill = $('tourPill');
+    pill.textContent = `Selected Tour: ${tour.name} · ${tour.duration}`;
+    pill.hidden = false;
+  }
+
+  const iti = intlTelInput(mobileInput, {
+    initialCountry: 'in',
+    separateDialCode: true,
+    preferredCountries: ['in', 'us', 'gb'],
+    nationalMode: true,
+    utilsScript: '/vendor/intl-tel-input/utils.js',
+  });
+  mobileInput.addEventListener('input', () => { mobileInput.value = mobileInput.value.replace(/\D/g, ''); });
+
+  const maxDate = new Date();
+  maxDate.setMonth(maxDate.getMonth() + 4);
+  const datePicker = flatpickr(dateInput, { dateFormat: 'd-m-Y', minDate: 'today', maxDate, disableMobile: true });
+  $('calendarIcon').addEventListener('click', () => datePicker.open());
+
+  let travellers = 1;
+  const updateTraveller = () => {
+    $('travellerCount').textContent = String(travellers);
+    $('travellerWord').textContent = travellers === 1 ? 'Traveller' : 'Travellers';
+  };
+  $('minusTraveller').addEventListener('click', () => { if (travellers > 1) { travellers--; updateTraveller(); } });
+  $('plusTraveller').addEventListener('click', () => { if (travellers < 6) { travellers++; updateTraveller(); } });
+
+  // Cloudflare Turnstile (invisible unless a challenge is needed)
+  let tsToken: string | null = null;
+  let tsId: string | undefined;
+  const ts = () => (window as unknown as { turnstile?: TurnstileApi }).turnstile;
+  function loadTurnstile() {
+    if (!backendConfigured || !data.turnstileSiteKey || tsId) return;
+    const render = () => {
+      const api = ts();
+      if (!api || tsId) return;
+      tsId = api.render($('turnstileBox'), {
+        sitekey: data.turnstileSiteKey,
+        action: 'booking',
+        appearance: 'interaction-only',
+        callback: (t: string) => { tsToken = t; },
+        'expired-callback': () => { tsToken = null; },
+        'error-callback': () => { tsToken = null; },
+      });
+    };
+    if (ts()) return render();
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    s.async = true;
+    s.onload = render;
+    document.head.appendChild(s);
+  }
+  const waitForToken = async (ms = 15000) => {
+    const end = Date.now() + ms;
+    while (!tsToken && Date.now() < end) await new Promise((r) => setTimeout(r, 250));
+    return tsToken;
+  };
+
+  function goToStep(n: 1 | 2) {
+    step1.classList.toggle('active', n === 1);
+    step2.classList.toggle('active', n === 2);
+    $('progressStep1').classList.toggle('active', n === 1);
+    $('progressStep2').classList.toggle('active', n === 2);
+    $('progressLine').classList.toggle('active', n === 2);
+    $('popupTitle').textContent = n === 1 ? 'Your Details' : 'Booking Summary';
+    $('popupSubtitle').textContent = n === 1 ? 'Enter your details to continue' : 'Please review your details before confirming';
+    popup.scrollTop = 0;
+  }
+  function openModal() {
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    loadTurnstile();
+    setTimeout(() => nameInput.focus(), 350);
+  }
+  function closeModal() {
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  $('openBooking')?.addEventListener('click', openModal);
+  $('closeBookingPopup').addEventListener('click', closeModal);
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+  // Validation (same messages as the original, shown under each field)
+  const setErr = (key: string, msg: string, input?: HTMLInputElement) => {
+    const el = modal.querySelector<HTMLElement>(`[data-err="${key}"]`);
+    if (el) el.textContent = msg;
+    input?.setAttribute('aria-invalid', msg ? 'true' : 'false');
+  };
+  // Clear a field's error as soon as it is corrected.
+  ([['name', nameInput], ['phone', mobileInput], ['pickup', pickupInput], ['dropoff', dropInput]] as const).forEach(([k, el]) =>
+    el.addEventListener('input', () => setErr(k, '', el)),
+  );
+  dateInput.addEventListener('change', () => setErr('date', '', dateInput));
+  const isoDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const phoneE164 = () => {
+    const n = iti.getNumber();
+    if (n && n.startsWith('+')) return n;
+    return `+${iti.getSelectedCountryData().dialCode}${mobileInput.value.replace(/^0+/, '')}`;
+  };
+  const phoneValid = () => {
+    const v = iti.isValidNumber();
+    if (v !== null) return v;
+    const { iso2 } = iti.getSelectedCountryData();
+    return iso2 === 'in' ? /^[6-9]\d{9}$/.test(mobileInput.value) : mobileInput.value.length >= 6;
+  };
+
+  function validate(): boolean {
+    let firstBad: HTMLInputElement | null = null;
+    const check = (key: string, ok: boolean, msg: string, input: HTMLInputElement) => {
+      setErr(key, ok ? '' : msg, input);
+      if (!ok && !firstBad) firstBad = input;
+    };
+    check('name', nameInput.value.trim().length >= 2, 'Please enter your full name.', nameInput);
+    const mobile = mobileInput.value.trim();
+    check('phone', mobile !== '' && phoneValid(), mobile === '' ? 'Please enter your mobile number.' : 'Please enter a valid mobile number.', mobileInput);
+    check('date', datePicker.selectedDates.length > 0, 'Please select your booking date.', dateInput);
+    check('pickup', pickupInput.value.trim().length >= 2, 'Please enter pickup location.', pickupInput);
+    if (!isTourBooking) check('dropoff', dropInput.value.trim().length >= 2, 'Please enter drop-off location.', dropInput);
+    if (firstBad) {
+      (firstBad as HTMLInputElement).focus();
+      if (firstBad === dateInput) datePicker.open();
+      return false;
+    }
+    return true;
+  }
+
+  $('saveNextBtn').addEventListener('click', () => {
+    if (!validate()) return;
+    const car = cars[currentCar];
+    $('summaryName').textContent = nameInput.value.trim();
+    $('summaryMobile').textContent = phoneE164();
+    $('summaryTravellers').textContent = `${travellers} ${travellers === 1 ? 'Traveller' : 'Travellers'}`;
+    $('summaryPickup').textContent = pickupInput.value.trim();
+    $('summaryDate').textContent = dateInput.value;
+    if (isTourBooking && tour) {
+      $('tourInsideJourney').hidden = false;
+      $('tourName').textContent = tour.name;
+      $('tourDuration').textContent = tour.duration;
+      $('summaryDropRow').style.display = 'none';
+      $('summaryRouteLine').style.display = 'none';
+    } else {
+      $('tourInsideJourney').hidden = true;
+      $('summaryDropRow').style.display = 'flex';
+      $('summaryRouteLine').style.display = 'block';
+      $('summaryDrop').textContent = dropInput.value.trim();
+    }
+    $('summaryCar').textContent = car.name;
+    $('summaryCarDetails').textContent = `${car.seats} Seats • ${car.luggage} Luggage`;
+    $<HTMLImageElement>('summaryCarImage').src = car.image;
+    alertBox.hidden = true;
+    goToStep(2);
+  });
+  $('previousBtn').addEventListener('click', () => goToStep(1));
+
+  const ERRORS: Record<string, string> = {
+    invalid_input: 'Some details need fixing. Please go back and check them.',
+    bot_check_failed: 'The security check didn’t pass. Please try again.',
+    rate_limited: 'Too many requests from this number or connection. Please call us instead, or try again later.',
+    unavailable_item: 'That tour or car is no longer available. Please choose another.',
+    invalid_date: 'Please choose a date between today and 6 months from now.',
+    server_error: 'Something went wrong on our side. Please try again, or call us.',
+    network: 'Couldn’t reach our server. Check your internet connection and try again.',
+  };
+  const showAlert = (msg: string) => { alertBox.textContent = msg; alertBox.hidden = false; };
+
+  confirmBtn.addEventListener('click', async () => {
+    if (!backendConfigured) {
+      showAlert(`Online booking is being set up. Please call ${data.phone ?? 'us'} to book.`);
+      return;
+    }
+    confirmBtn.disabled = true;
+    confirmBtn.textContent = 'Confirming…';
+    alertBox.hidden = true;
+    const token = tsToken ?? (await waitForToken());
+    if (!token) {
+      confirmBtn.disabled = false;
+      confirmBtn.textContent = 'Confirm Booking';
+      showAlert('Please wait a moment for the security check to finish, then try again.');
+      return;
+    }
+    const car = cars[currentCar];
+    const res = await createBooking({
+      type: isTourBooking ? 'tour' : 'cab',
+      packageSlug: tour?.slug,
+      vehicleSlug: car.slug,
+      customerName: nameInput.value.trim(),
+      phone: phoneE164(),
+      travelDate: isoDate(datePicker.selectedDates[0]),
+      travellers,
+      pickup: pickupInput.value.trim(),
+      dropoff: isTourBooking ? undefined : dropInput.value.trim(),
+      consent: true,
+      turnstileToken: token,
+    });
+    confirmBtn.disabled = false;
+    confirmBtn.textContent = 'Confirm Booking';
+    tsToken = null;
+    if (tsId) ts()?.reset(tsId);
+
+    if (!res.ok) {
+      showAlert(ERRORS[res.code] ?? ERRORS.server_error);
+      return;
+    }
+
+    rememberBooking(res.booking);
+    closeModal();
+    const sound = $<HTMLAudioElement>('bookingsuccessSound');
+    sound.currentTime = 0;
+    sound.play().catch(() => {});
+    const trackUrl = `/track#${res.booking.trackingToken}`;
+    await Swal.fire({
+      icon: 'success',
+      title: 'Thank You! 🎉',
+      html: `Your booking request <b>${res.booking.reference}</b> has been received.<br>Our travel partner will call you back within 5 to 6 hrs to confirm.`,
+      confirmButtonText: 'Awesome',
+      timer: 8000,
+      timerProgressBar: true,
+    });
+    location.href = trackUrl;
+  });
+</script>
