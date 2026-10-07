@@ -8,17 +8,9 @@ import QuickBooking from '@/components/QuickBooking.astro';
 import ReviewsSlider from '@/components/ReviewsSlider.astro';
 import TourCard from '@/components/TourCard.astro';
 import Icon from '@/components/Icon.astro';
-import { formatInr, getCatalogue, resolveImage } from '@/lib/catalogue';
+import { getCatalogue, resolveImage } from '@/lib/catalogue';
 
-const { settings, tours, destinations, vehicles, reviews } = await getCatalogue();
-
-const quickLinks = [
-  { href: '/tours', icon: 'mountain', label: 'Tours', note: `${tours.length} tours` },
-  { href: '/destinations', icon: 'pin', label: 'Destinations', note: `${destinations.length} places` },
-  { href: '/fleet', icon: 'car', label: 'Cabs', note: `${vehicles.length} cars` },
-  { href: '/about', icon: 'info', label: 'About us', note: 'Who we are' },
-  { href: '/contact', icon: 'phone', label: 'Contact', note: 'Call or WhatsApp' },
-] as const;
+const { settings, tours, destinations, reviews } = await getCatalogue();
 
 const reasons = [
   { icon: 'click', title: 'Easy booking', text: 'Book a tour or cab online in a few minutes, and track your booking status on your own link.' },
@@ -42,22 +34,6 @@ const stats = [
   <HeroSlider />
   <Marquee />
 
-  <!-- Every section, one tap from the home page -->
-  <nav class="border-b border-black/10 bg-white" aria-label="Explore">
-    <ul class="mx-auto flex max-w-7xl snap-x gap-3 overflow-x-auto px-4 py-4 [scrollbar-width:none] lg:grid lg:grid-cols-5 lg:overflow-visible">
-      {quickLinks.map((q) => (
-        <li class="w-[42%] shrink-0 snap-start sm:w-[30%] lg:w-auto">
-          <a href={q.href} class="flex h-full items-center gap-3 rounded-xl border border-black/10 p-3 hover:border-brand hover:bg-mist">
-            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-lg bg-brand text-white"><Icon name={q.icon} class="h-6 w-6" /></span>
-            <span class="min-w-0">
-              <span class="block font-semibold leading-tight text-ink">{q.label}</span>
-              <span class="block truncate text-sm text-stone">{q.note}</span>
-            </span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </nav>
 
   <section class="mx-auto max-w-7xl px-4 py-16 sm:py-20" aria-labelledby="tours-heading">
     <div class="flex flex-wrap items-end justify-between gap-4">
@@ -123,42 +99,5 @@ const stats = [
     </div>
   </section>
 
-  {vehicles.length > 0 && (
-    <section class="bg-night py-16 text-white sm:py-20" aria-labelledby="fleet-heading">
-      <div class="mx-auto max-w-7xl px-4">
-        <h2 id="fleet-heading" class="display text-4xl uppercase sm:text-6xl">Private cabs</h2>
-        <p class="mt-3 max-w-2xl text-lg text-white/80">Clean, well-kept cars with verified drivers, for one-way trips, round trips, airport pickups and local sightseeing.</p>
-        <div class="mt-10 grid gap-6 md:grid-cols-2">
-          {vehicles.map((v) => {
-            const img = resolveImage(v.image_path);
-            return (
-              <div class="flex items-center gap-5 rounded-xl bg-white/[0.06] p-5 ring-1 ring-white/10">
-                {img && <CatalogueImage src={img} alt={v.name} widths={[240, 400]} sizes="200px" class="w-40 shrink-0 object-contain sm:w-52" />}
-                <div>
-                  <h3 class="text-3xl font-bold">{v.name}</h3>
-                  <p class="mt-1 text-white/75">{v.seats} seats, {v.luggage} bags, AC</p>
-                  <p class="mt-2">{v.price_per_day != null ? <><span class="text-xl font-semibold">{formatInr(v.price_per_day)}</span><span class="text-white/75"> per day</span></> : <span class="text-white/75">Price on request</span>}</p>
-                  <a href={`/book?type=cab&car=${v.slug}`} class="mt-4 inline-block rounded-md bg-accent px-5 py-2 font-semibold text-ink hover:bg-white">Book this car</a>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  )}
-
-  <section class="mx-auto max-w-7xl px-4 py-16 sm:py-24">
-    <div class="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-end">
-      <div>
-        <h2 class="display text-5xl uppercase sm:text-7xl">Ready to plan your trip?</h2>
-        <p class="mt-4 max-w-xl text-lg text-stone">Send a booking request in two minutes. We'll confirm the fare and call you back. No payment needed now.</p>
-      </div>
-      <div class="flex flex-wrap gap-3 lg:justify-end">
-        <a href="/book" class="rounded-md bg-brand px-7 py-3.5 text-lg font-semibold text-white hover:bg-brand-dark">Send a booking request</a>
-        {settings.phone && <a href={`tel:${settings.phone}`} class="rounded-md border-2 border-ink px-7 py-3.5 text-lg font-semibold hover:bg-ink hover:text-white">Call us</a>}
-      </div>
-    </div>
-  </section>
 </Base>
 
