@@ -37,6 +37,15 @@ export function photoUrl(path: string | null | undefined): string | null {
   return null;
 }
 
+/** Photos from the original website in one folder (tours or fleet), as "/images/..." paths. */
+export function originalPhotos(folder: 'tours' | 'fleet'): { path: string; url: string }[] {
+  const prefix = `/src/assets/${folder}/`;
+  return Object.entries(bundledPhotos)
+    .filter(([k]) => k.startsWith(prefix))
+    .map(([k, url]) => ({ path: `/images/${k.slice('/src/assets/'.length)}`, url }))
+    .sort((a, b) => a.path.localeCompare(b.path));
+}
+
 const bundledPhotos = import.meta.glob<string>('/src/assets/**/*.{jpg,jpeg,png,webp}', { eager: true, query: '?url', import: 'default' });
 
 /** Turn a database error into a sentence for the admin. */
