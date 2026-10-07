@@ -1,0 +1,213 @@
+---
+// "Book your ride" quick popup from the original home page. It slides in at
+// the right 3 s after the page loads (only when the visitor is at the top),
+// gently bounces for attention, closes when they scroll down, and comes back
+// 20 s after they return to the top. "See prices" carries mobile, date,
+// pickup and drop-off to the Book Your Ride page, which fills them in.
+import { faCalendar } from '@fortawesome/free-regular-svg-icons';
+import 'intl-tel-input/build/css/intlTelInput.css';
+import 'flatpickr/dist/flatpickr.min.css';
+import { faSvg } from '@/lib/fa';
+---
+<div class="qb-popup" id="quickBooking" role="dialog" aria-labelledby="qbTitle" hidden>
+  <div class="qb-header">
+    <div>
+      <h2 id="qbTitle">Book your ride</h2>
+      <p>Enter your trip details</p>
+    </div>
+    <button class="qb-close" type="button" aria-label="Close" data-qb-close>&times;</button>
+  </div>
+  <form class="qb-form" novalidate>
+    <div class="qb-input">
+      <label for="qbMobile">Mobile number</label>
+      <input type="tel" id="qbMobile" placeholder="Enter Your mobile number" autocomplete="tel-national" inputmode="numeric" maxlength="12" required />
+    </div>
+    <div class="qb-input">
+      <label for="qbDate">Date of Booking</label>
+      <input type="text" id="qbDate" title="Select the Date of Booking" placeholder="dd / mm / yy" autocomplete="off" required />
+      <span class="qb-cal" data-qb-cal><Fragment set:html={faSvg(faCalendar)} /></span>
+    </div>
+    <div class="qb-input qb-location">
+      <span class="qb-loc-icon qb-pickup-icon"></span>
+      <div>
+        <label for="qbPickup">Pickup location</label>
+        <input type="text" id="qbPickup" placeholder="Enter pickup location" maxlength="200" required />
+      </div>
+    </div>
+    <div class="qb-input qb-location">
+      <span class="qb-loc-icon qb-drop-icon"></span>
+      <div>
+        <label for="qbDrop">Drop-off location</label>
+        <input type="text" id="qbDrop" placeholder="Where to?" maxlength="200" required />
+      </div>
+    </div>
+    <button type="submit" class="qb-submit">See prices <span>→</span></button>
+  </form>
+</div>
+
+<style>
+  .qb-popup {
+    position: fixed; top: 50%; right: 28px; transform: translateY(-50%); width: 320px; z-index: 9999;
+    background: #fff; padding: 24px; border-radius: 20px; border: 1px solid #e8e8e8; box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+    font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; max-height: calc(100vh - 30px); overflow-y: auto;
+  }
+  .qb-popup[hidden] { display: none; }
+  .qb-popup.attention { animation: qbAttention 2s ease-in-out infinite; }
+  @keyframes qbAttention {
+    0%, 70%, 100% { transform: translateY(-50%); }
+    80% { transform: translateY(calc(-50% - 8px)); }
+    90% { transform: translateY(calc(-50% + 6px)); }
+  }
+  .qb-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 22px; }
+  .qb-header h2 { margin: 5px 0 4px; font-family: inherit; font-stretch: normal; font-size: 24px; font-weight: 700; letter-spacing: -0.7px; color: #111; }
+  .qb-header p { margin: 0; font-size: 12px; color: #777; }
+  .qb-close { width: 30px; height: 30px; flex-shrink: 0; border: none; background: #f3f3f3; border-radius: 50%; font-size: 20px; line-height: 1; cursor: pointer; color: #333; transition: 0.2s; }
+  .qb-close:hover { background: #111; color: #fff; }
+  .qb-form { display: flex; flex-direction: column; gap: 13px; }
+  .qb-input { display: flex; flex-direction: column; gap: 6px; position: relative; width: 100%; }
+  .qb-input label { font-size: 11px; font-weight: 600; color: #555; }
+  .qb-input input { width: 100%; height: 47px; padding: 12px 45px 12px 15px; border: 1px solid #dedede; border-radius: 10px; outline: none; background: #f8f8f8; font-size: 13px; color: #111; transition: 0.2s; }
+  .qb-input input::placeholder { color: #999; }
+  .qb-input input:focus { background: #fff; border-color: #111; box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.04); }
+  .qb-input :global(.iti) { width: 100%; }
+  .qb-input :global(.iti input) { padding-left: 90px; }
+  #qbDate { cursor: pointer; }
+  .qb-cal { position: absolute; right: 15px; bottom: 15px; color: #666; cursor: pointer; display: inline-flex; }
+  .qb-cal :global(.fa) { display: inline-block; }
+  .qb-location { flex-direction: row; align-items: center; gap: 12px; padding: 10px 12px; border: 1px solid #dedede; border-radius: 10px; background: #f8f8f8; }
+  .qb-location > div { width: 100%; }
+  .qb-location label { display: block; margin-bottom: 3px; }
+  .qb-location input { height: 24px; padding: 0; border: none; background: transparent; }
+  .qb-location input:focus { border: none; box-shadow: none; background: transparent; }
+  .qb-loc-icon { flex-shrink: 0; width: 14px; height: 14px; position: relative; border: 3px solid #111; border-radius: 50%; }
+  .qb-pickup-icon::after { content: ''; position: absolute; width: 5px; height: 5px; background: #111; border-radius: 50%; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+  .qb-drop-icon { border-radius: 2px; background: #111; border: none; }
+  .qb-submit { width: 100%; height: 50px; margin-top: 5px; border: none; border-radius: 11px; background: #ff7a00; color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 12px; transition: 0.25s; }
+  .qb-submit span { font-size: 18px; transition: 0.25s; }
+  .qb-submit.form-valid:hover { background: rgba(2, 168, 2, 0.837); transform: translateY(-2px); }
+  .qb-submit.form-valid:hover span { transform: translateX(4px); }
+
+  @media (min-width: 1024px) { .qb-popup { right: 28px; width: 320px; } }
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .qb-popup { right: clamp(15px, 3vw, 28px); width: clamp(280px, 32vw, 320px); max-width: calc(100vw - 30px); padding: clamp(18px, 2.5vw, 24px); }
+    .qb-header { margin-bottom: 18px; }
+    .qb-header h2 { font-size: clamp(20px, 2.5vw, 24px); }
+    .qb-form { gap: 12px; }
+    .qb-input input { height: 45px; padding: 10px 42px 10px 13px; }
+    .qb-submit { height: 48px; font-size: 13px; }
+  }
+  @media (max-width: 767px) { .qb-popup { left: 15px; right: 15px; width: auto; } }
+  @media (max-width: 430px) {
+    .qb-popup { left: 8px; right: 8px; padding: 16px; border-radius: 16px; }
+    .qb-header h2 { font-size: 20px; }
+    .qb-input label { font-size: 10px; }
+    .qb-input input { font-size: 12px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .qb-popup.attention { animation: none; } }
+  :global(.flatpickr-calendar) { z-index: 10000 !important; }
+  :global(.iti__country-list) { z-index: 10000; }
+</style>
+
+<script>
+  type Iti = { getNumber(): string; isValidNumber(): boolean | null; getSelectedCountryData(): { iso2: string; dialCode: string } };
+  type Picker = { open(): void; close(): void; selectedDates: Date[]; input: HTMLInputElement };
+
+  const popup = document.getElementById('quickBooking')!;
+  const form = popup.querySelector('form')!;
+  const submit = popup.querySelector<HTMLButtonElement>('.qb-submit')!;
+  const mobile = document.getElementById('qbMobile') as HTMLInputElement;
+  const date = document.getElementById('qbDate') as HTMLInputElement;
+  const pickup = document.getElementById('qbPickup') as HTMLInputElement;
+  const drop = document.getElementById('qbDrop') as HTMLInputElement;
+
+  let iti: Iti | null = null;
+  let picker: Picker | null = null;
+  let isOpen = false;
+  let closedByScroll = false;
+  let timer: number | undefined;
+
+  // The phone and date widgets load only when the popup is first needed.
+  let ready: Promise<void> | null = null;
+  const setup = () =>
+    (ready ??= (async () => {
+      const [{ default: intlTelInput }, { default: flatpickr }] = await Promise.all([import('intl-tel-input'), import('flatpickr')]);
+      iti = intlTelInput(mobile, {
+        initialCountry: 'in', separateDialCode: true, preferredCountries: ['in', 'us', 'gb'], nationalMode: true,
+        utilsScript: '/vendor/intl-tel-input/utils.js',
+      }) as unknown as Iti;
+      const max = new Date();
+      max.setMonth(max.getMonth() + 4);
+      picker = flatpickr(date, { dateFormat: 'd-m-Y', minDate: 'today', maxDate: max, disableMobile: true, onChange: () => checkForm() }) as unknown as Picker;
+      popup.querySelector('[data-qb-cal]')!.addEventListener('click', () => picker?.open());
+    })());
+
+  const open = async () => {
+    await setup();
+    popup.hidden = false;
+    popup.classList.add('attention');
+    isOpen = true;
+  };
+  const close = () => {
+    popup.hidden = true;
+    popup.classList.remove('attention');
+    isOpen = false;
+    picker?.close();
+  };
+  const autoOpen = (ms: number) => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => { if (!isOpen && window.scrollY === 0) void open(); }, ms);
+  };
+
+  // First appearance: 3 s after the page has loaded (the loading screen takes 2.4 s).
+  if (document.readyState === 'complete') autoOpen(3000);
+  else window.addEventListener('load', () => autoOpen(3000));
+
+  window.addEventListener('scroll', () => {
+    picker?.close();
+    if (window.scrollY > window.innerHeight) {
+      if (isOpen) { close(); closedByScroll = true; }
+      return;
+    }
+    if (window.scrollY === 0 && closedByScroll) {
+      closedByScroll = false;
+      autoOpen(20000);
+    }
+  }, { passive: true });
+
+  popup.querySelector('[data-qb-close]')!.addEventListener('click', () => { close(); closedByScroll = false; window.clearTimeout(timer); });
+  popup.querySelectorAll('input').forEach((i) => i.addEventListener('focus', () => popup.classList.remove('attention')));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && isOpen) close(); });
+
+  const phoneOk = () => {
+    if (!iti || mobile.value.trim() === '') return false;
+    const v = iti.isValidNumber();
+    if (v !== null) return v;
+    return iti.getSelectedCountryData().iso2 === 'in' ? /^[6-9]\d{9}$/.test(mobile.value) : mobile.value.length >= 6;
+  };
+  function checkForm() {
+    const filled = [pickup, drop].every((i) => i.value.trim() !== '') && (picker?.selectedDates.length ?? 0) > 0;
+    submit.classList.toggle('form-valid', filled && phoneOk());
+  }
+  mobile.addEventListener('input', () => { mobile.value = mobile.value.replace(/\D/g, ''); mobile.setCustomValidity(''); checkForm(); });
+  [pickup, drop].forEach((i) => i.addEventListener('input', checkForm));
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (mobile.value.trim() === '' || !phoneOk()) {
+      mobile.setCustomValidity(mobile.value.trim() === '' ? 'Please enter your mobile number.' : 'Please enter a valid mobile number.');
+      mobile.reportValidity();
+      return;
+    }
+    if (!picker?.selectedDates.length) { picker?.open(); return; }
+    for (const i of [pickup, drop]) {
+      if (i.value.trim() === '') { i.reportValidity(); return; }
+    }
+    try {
+      sessionStorage.setItem('cabMobile', iti!.getNumber() || `+${iti!.getSelectedCountryData().dialCode}${mobile.value}`);
+      sessionStorage.setItem('cabDate', date.value.trim());
+      sessionStorage.setItem('cabPickup', pickup.value.trim());
+      sessionStorage.setItem('cabDropoff', drop.value.trim());
+    } catch { /* private mode: the booking page simply starts empty */ }
+    location.href = '/fleet';
+  });
+</script>

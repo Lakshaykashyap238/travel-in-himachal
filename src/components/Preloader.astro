@@ -1,0 +1,43 @@
+---
+// Loading screen from the original site: dark screen, italic "Himachal",
+// gold tagline and a 1.8-second gold progress bar, then a 0.6-second fade.
+// Shown on the first home-page visit of a browser session only, so going
+// back to the home page later is instant.
+---
+<div id="preloader" aria-hidden="true">
+  <div class="loader-content">
+    <p class="loader-title">Himachal</p>
+    <p class="loader-tag">Prayer Flags • Pine Woods</p>
+    <div class="loader-progress"><div class="loader-bar"></div></div>
+  </div>
+</div>
+<noscript><style>#preloader { display: none !important; }</style></noscript>
+<script is:inline>
+  (function () {
+    var el = document.getElementById('preloader');
+    var seen = false;
+    try { seen = sessionStorage.getItem('tih-loader') === '1'; sessionStorage.setItem('tih-loader', '1'); } catch (e) {}
+    if (seen || matchMedia('(prefers-reduced-motion: reduce)').matches) { el.style.display = 'none'; return; }
+    document.documentElement.style.overflow = 'hidden';
+    var done = function () {
+      el.classList.add('hide');
+      document.documentElement.style.overflow = '';
+      setTimeout(function () { el.style.display = 'none'; }, 600);
+    };
+    var start = function () { setTimeout(done, 1800); };
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start); else start();
+  })();
+</script>
+
+<style is:global>
+  #preloader { position: fixed; inset: 0; background: #111; display: flex; justify-content: center; align-items: center; z-index: 99999; transition: opacity 0.6s ease, visibility 0.6s ease; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  #preloader.hide { opacity: 0; visibility: hidden; }
+  #preloader .loader-content { text-align: center; color: #fff; }
+  #preloader .loader-title { font-size: 60px; font-style: italic; font-weight: 700; line-height: 1.2; margin: 0; animation: tihSlideUp 0.8s ease forwards; }
+  #preloader .loader-tag { margin: 15px 0 25px; color: #d4af37; letter-spacing: 3px; font-size: 12px; text-transform: uppercase; opacity: 0; animation: tihFadeIn 0.8s 0.5s forwards; }
+  #preloader .loader-progress { width: 220px; height: 3px; background: #333; border-radius: 20px; overflow: hidden; margin: auto; }
+  #preloader .loader-bar { width: 0; height: 100%; background: #d4af37; animation: tihLoading 1.8s linear forwards; }
+  @keyframes tihSlideUp { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+  @keyframes tihFadeIn { to { opacity: 1; } }
+  @keyframes tihLoading { from { width: 0; } to { width: 100%; } }
+</style>

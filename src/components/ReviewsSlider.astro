@@ -1,0 +1,163 @@
+---
+// "Loved by Thousands of Travelers" reviews slider, rebuilt from the original
+// site: tag pill, overall stars, card slider with round arrows and dots.
+// Reviews are the approved ones from the admin panel.
+import type { Review } from '@/lib/catalogue';
+
+interface Props { reviews: Review[]; googleUrl?: string | null }
+const { reviews, googleUrl } = Astro.props;
+const stars = (n: number) => '★'.repeat(n) + '☆'.repeat(5 - n);
+const avg = reviews.length ? reviews.reduce((a, r) => a + r.rating, 0) / reviews.length : 0;
+---
+<section class="reviews-section" aria-labelledby="reviews-heading">
+  <div class="reviews-header">
+    <span class="review-tag">⭐ Client Experiences</span>
+    <h2 id="reviews-heading">Loved by Thousands of Travelers</h2>
+    {reviews.length > 0 && (
+      <>
+        <div class="overall-rating">
+          <span class="overall-stars" aria-hidden="true">{stars(Math.round(avg))}</span>
+          <span class="overall-score">{avg.toFixed(1)}/5</span>
+        </div>
+        <p class="review-count">Based on {reviews.length} traveler {reviews.length === 1 ? 'review' : 'reviews'}</p>
+      </>
+    )}
+  </div>
+
+  {reviews.length > 0 ? (
+    <>
+      <div class="slider-controls">
+        <button type="button" class="rs-btn" aria-label="Previous reviews" data-rs-prev>❮</button>
+        <div class="reviews-slider" data-rs-viewport>
+          <ul class="review-track" data-rs-track>
+            {reviews.map((r) => (
+              <li class="review-card">
+                <div class="quote" aria-hidden="true">"</div>
+                <p class="review-text" data-rs-text>{r.body}</p>
+                <div class="review-stars" aria-label={`${r.rating} out of 5 stars`}>{stars(r.rating)}</div>
+                <div class="review-footer">
+                  <div class="avatar" aria-hidden="true">{r.name.trim().charAt(0).toUpperCase()}</div>
+                  <div class="review-user">
+                    <h4>{r.name}<span class="verified">{r.source === 'Website' ? '✔️ Verified' : `✔️ ${r.source}`}</span></h4>
+                    {(r.place || r.trip) && <span>{r.place || r.trip}</span>}
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <button type="button" class="rs-btn" aria-label="Next reviews" data-rs-next>❯</button>
+      </div>
+      <div class="slider-dots" data-rs-dots></div>
+    </>
+  ) : (
+    <p class="review-empty">Travelled with us? Be the first to tell other travellers how your trip went.</p>
+  )}
+
+  <a href="/review" class="review-btn">Write a Review</a>
+  {googleUrl && <a href={googleUrl} target="_blank" rel="noopener" class="review-google">Read our reviews on Google</a>}
+</section>
+
+<style>
+  .reviews-section { width: 100%; padding: 80px 8%; background: #fff; overflow: hidden; font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; }
+  .reviews-header { text-align: center; margin-bottom: 55px; }
+  .review-tag { display: inline-block; padding: 8px 18px; background: #eef5ff; color: #0b5ed7; border-radius: 50px; font-size: 14px; font-weight: 600; letter-spacing: 1px; }
+  .reviews-header h2 { margin: 18px 0 0; font-family: inherit; font-stretch: normal; letter-spacing: normal; font-size: 34px; line-height: 1.2; color: #222; font-weight: 700; }
+  .overall-rating { margin: 18px 0; display: flex; justify-content: center; align-items: center; gap: 12px; }
+  .overall-stars { color: #ffc107; font-size: 25px; letter-spacing: 3px; }
+  .overall-score { font-size: 24px; font-weight: 700; color: #222; }
+  .review-count { color: #666; font-size: 17px; margin: 0; }
+  .slider-controls { display: flex; align-items: center; gap: 20px; }
+  .reviews-slider { width: 100%; overflow: hidden; padding: 12px 0 24px; }
+  .review-track { display: flex; gap: 25px; margin: 0; padding: 0; list-style: none; transition: 0.6s ease; }
+  .rs-btn { width: 45px; height: 45px; border-radius: 50%; border: none; background: rgba(0, 0, 0, 0.838); color: #fff; font-size: 25px; line-height: 1; cursor: pointer; flex-shrink: 0; transition: 0.3s; }
+  .rs-btn:hover { transform: scale(1.1); }
+  .review-card { flex: 0 0 calc((100% - 25px) / 2); background: #fff; padding: 28px; border: 1px solid #eee; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08); transition: 0.35s; }
+  .review-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); }
+  .quote { font-size: 42px; line-height: 1; color: #ddd; }
+  .review-text { color: #555; line-height: 1.7; font-size: 16px; margin: 12px 0; display: -webkit-box; -webkit-line-clamp: 3; line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; cursor: pointer; }
+  .review-text.expanded { display: block; overflow: visible; }
+  .review-stars { color: #ffc107; font-size: 18px; letter-spacing: 3px; margin-bottom: 20px; }
+  .review-footer { display: flex; align-items: center; gap: 15px; }
+  .avatar { width: 55px; height: 55px; flex-shrink: 0; border-radius: 50%; background: #0b5ed7; color: #fff; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 22px; }
+  .review-user h4 { margin: 0 0 5px; font-family: inherit; font-stretch: normal; letter-spacing: normal; color: #222; font-size: 17px; font-weight: 700; }
+  .verified { color: #555; font-size: 13px; margin-left: 8px; font-weight: 600; }
+  .review-user span { display: block; color: #666; font-size: 14px; }
+  .slider-dots { display: flex; justify-content: center; gap: 10px; margin-top: 35px; }
+  .slider-dots :global(button) { width: 10px; height: 10px; padding: 0; border: 0; border-radius: 50%; background: #d0d0d0; cursor: pointer; transition: 0.3s; }
+  .slider-dots :global(button[aria-current='true']) { background: #222; transform: scale(1.2); }
+  .review-empty { text-align: center; color: #666; font-size: 17px; }
+  .review-btn { display: block; width: fit-content; margin: 45px auto 0; padding: 10px 25px; border-radius: 50px; background: gold; color: #000; font-size: 14px; font-weight: 600; text-decoration: none; transition: 0.3s; }
+  .review-btn:hover { transform: translateY(-3px); }
+  .review-google { display: block; width: fit-content; margin: 14px auto 0; color: #0b5ed7; font-size: 14px; text-decoration: underline; }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .reviews-header h2 { font-size: clamp(28px, 3.5vw, 34px); }
+  }
+  @media (max-width: 767px) {
+    .reviews-section { padding: 60px 5%; }
+    .review-card { flex: 0 0 100%; }
+    .review-card:hover { transform: none; }
+  }
+  @media (max-width: 430px) {
+    .slider-controls { gap: 10px; }
+    .rs-btn { width: 35px; height: 35px; font-size: 18px; }
+    .overall-rating { flex-direction: column; }
+    .avatar { width: 44px; height: 44px; font-size: 18px; font-weight: 500; }
+    .review-card { padding: 22px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .review-track, .review-card { transition: none; } }
+</style>
+
+<script>
+  const track = document.querySelector<HTMLElement>('[data-rs-track]');
+  const viewport = document.querySelector<HTMLElement>('[data-rs-viewport]');
+  const dotsBox = document.querySelector<HTMLElement>('[data-rs-dots]');
+  if (track && viewport && dotsBox) {
+    const cards = [...track.children] as HTMLElement[];
+    let current = 0;
+    const visible = () => Math.max(1, Math.round(viewport.clientWidth / (cards[0].offsetWidth + 25)));
+    const positions = () => Math.max(1, cards.length - visible() + 1);
+
+    const buildDots = () => {
+      dotsBox.replaceChildren(
+        ...Array.from({ length: positions() }, (_, i) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', `Show review ${i + 1}`);
+          b.addEventListener('click', () => go(i));
+          return b;
+        }),
+      );
+      dotsBox.hidden = positions() < 2;
+    };
+    const go = (i: number) => {
+      const max = positions() - 1;
+      current = i > max ? 0 : i < 0 ? max : i;
+      track.style.transform = `translateX(-${current * (cards[0].offsetWidth + 25)}px)`;
+      [...dotsBox.children].forEach((d, n) => d.setAttribute('aria-current', String(n === current)));
+    };
+
+    document.querySelector('[data-rs-next]')!.addEventListener('click', () => go(current + 1));
+    document.querySelector('[data-rs-prev]')!.addEventListener('click', () => go(current - 1));
+    track.querySelectorAll<HTMLElement>('[data-rs-text]').forEach((p) => p.addEventListener('click', () => p.classList.toggle('expanded')));
+
+    // Swipe on phones.
+    let startX = 0;
+    viewport.addEventListener('touchstart', (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    viewport.addEventListener('touchend', (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) go(current + (dx < 0 ? 1 : -1));
+    });
+
+    let w = window.innerWidth;
+    window.addEventListener('resize', () => {
+      if (window.innerWidth === w) return;
+      w = window.innerWidth;
+      buildDots();
+      go(Math.min(current, positions() - 1));
+    });
+    buildDots();
+    go(0);
+  }
+</script>

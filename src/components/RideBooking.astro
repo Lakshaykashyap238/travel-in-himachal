@@ -511,6 +511,18 @@ const data = JSON.stringify({ cars, tours: tourList, turnstileSiteKey: import.me
   const datePicker = flatpickr(dateInput, { dateFormat: 'd-m-Y', minDate: 'today', maxDate, disableMobile: true });
   $('calendarIcon').addEventListener('click', () => datePicker.open());
 
+  // Details typed in the home page's quick "Book your ride" popup.
+  if (!isTourBooking) {
+    try {
+      const m = sessionStorage.getItem('cabMobile');
+      const d = sessionStorage.getItem('cabDate');
+      if (m) iti.setNumber(m);
+      if (d) datePicker.setDate(d, false, 'd-m-Y');
+      pickupInput.value = sessionStorage.getItem('cabPickup') ?? '';
+      dropInput.value = sessionStorage.getItem('cabDropoff') ?? '';
+    } catch { /* storage unavailable */ }
+  }
+
   let travellers = 1;
   const updateTraveller = () => {
     $('travellerCount').textContent = String(travellers);
