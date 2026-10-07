@@ -49,7 +49,7 @@ const { settings, tours, destinations, reviews } = await getCatalogue();
           <a href={`/destinations/${d.slug}`} class="group relative aspect-[3/4] overflow-hidden rounded-xl bg-night">
             {img && <CatalogueImage src={img} alt="" widths={[240, 400]} sizes="(min-width: 1024px) 16vw, 50vw" class="h-full w-full object-cover transition duration-700 group-hover:scale-[1.03] motion-reduce:transition-none" />}
             <span class="absolute inset-0 bg-gradient-to-t from-night/85 to-transparent"></span>
-            <span class="display absolute bottom-3 left-3 text-2xl uppercase text-white">{d.name}</span>
+            <span class="display absolute bottom-3 left-3 right-3 text-lg uppercase leading-tight break-words xl:text-xl text-white">{d.name}</span>
           </a>
         );
       })}

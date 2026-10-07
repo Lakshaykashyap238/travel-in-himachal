@@ -12,8 +12,6 @@
   "dependencies": {
     "@astrojs/react": "^7.0.0",
     "@astrojs/sitemap": "^3.7.4",
-    "@fontsource-variable/archivo": "^5.3.0",
-    "@fontsource/hind": "^5.3.0",
     "@supabase/supabase-js": "^2.117.2",
     "astro": "^7.3.5",
     "flatpickr": "^4.6.13",

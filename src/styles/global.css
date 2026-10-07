@@ -1,15 +1,10 @@
 @import "tailwindcss";
-@import "@fontsource-variable/archivo/wdth.css";
-@import "@fontsource/hind/400.css";
-@import "@fontsource/hind/500.css";
-@import "@fontsource/hind/600.css";
 
 /*
   Visual system: "mountain road signage".
   Pine green from the deodar forests, marigold from prayer flags and
-  roadside shrines, a cool mist background. Headlines are set in a
-  condensed, heavy Archivo, like the painted milestones on Himachal roads;
-  body text is Hind, made by an Indian type foundry for Latin + Devanagari.
+  roadside shrines, a cool mist background. Text uses the system font,
+  as the original site did.
 */
 @theme {
   --color-brand: #1f6b3a;       /* pine */
@@ -20,23 +15,24 @@
   --color-mist: #f3f6f3;
   --color-stone: #5e6b63;
 
-  --font-sans: "Hind", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Archivo Variable", "Archivo", "Arial Narrow", system-ui, sans-serif;
+  /* Same as the original site: the device's own system font (Segoe UI on
+     Windows, San Francisco on iPhone/Mac, Roboto on Android). Nothing to download. */
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-display: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 html { scroll-behavior: smooth; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
-body { font-size: 1.0625rem; line-height: 1.6; }
+body { font-size: 1rem; line-height: 1.6; }
 
-/* Headline voice: condensed and heavy, tight but legible. */
+/* Headline voice: heavy and tight. */
 .display {
   font-family: var(--font-display);
-  font-stretch: 78%;
   font-weight: 800;
   letter-spacing: -0.005em;
-  line-height: 1.02;
+  line-height: 1.1;
 }
-h1, h2, h3 { font-family: var(--font-display); font-stretch: 85%; letter-spacing: -0.005em; }
+h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.005em; }
 
 :focus-visible { outline: 3px solid var(--color-accent); outline-offset: 2px; }
