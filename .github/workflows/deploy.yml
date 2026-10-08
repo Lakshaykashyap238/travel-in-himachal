@@ -66,6 +66,8 @@ jobs:
           PUBLIC_SUPABASE_ANON_KEY: ${{ vars.PUBLIC_SUPABASE_ANON_KEY }}
           PUBLIC_TURNSTILE_SITE_KEY: ${{ vars.PUBLIC_TURNSTILE_SITE_KEY }}
           PUBLIC_VAPID_PUBLIC_KEY: ${{ vars.PUBLIC_VAPID_PUBLIC_KEY }}
+          # Use the real business details from admin; never ship the built-in sample data.
+          REQUIRE_LIVE_CATALOGUE: 'true'
       - name: Create the Pages project on first deploy (no-op afterwards)
         run: npx --yes wrangler@4 pages project create "${{ vars.CLOUDFLARE_PAGES_PROJECT }}" --production-branch=main || true
         env:
