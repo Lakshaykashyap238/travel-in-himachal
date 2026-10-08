@@ -14,7 +14,7 @@ const crumbs = [{ href: '/contact', label: 'Contact' }];
     {s.phone && (
       <a href={`tel:${s.phone}`} class="flex items-start gap-4 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-black/5 hover:ring-brand">
         <span class="rounded-xl bg-brand/10 p-3 text-brand"><Icon name="phone" class="h-6 w-6" /></span>
-        <span><span class="block text-sm text-slate-500">Call us</span><span class="text-lg font-semibold">{formatPhone(s.phone)}</span></span>
+        <span><span class="block text-sm text-slate-500">Call us</span><span class="text-lg font-semibold">{formatPhone(s.phone)}</span>{s.founder_name && <span class="mt-1 block text-sm text-slate-500">{s.founder_name} (Owner)</span>}</span>
       </a>
     )}
     {(s.whatsapp ?? s.phone) && (

@@ -11,7 +11,7 @@ const TEXT_FIELDS: { key: keyof SettingsRow; label: string; hint?: string; rows?
   { key: 'email', label: 'Email for customers', type: 'email' },
   { key: 'address', label: 'Address' },
   { key: 'hours', label: 'Opening hours', hint: 'e.g. Every day, 7 am – 10 pm' },
-  { key: 'founder_name', label: 'Founder name (About page)' },
+  { key: 'founder_name', label: 'Owner name (shown on the website)' },
   { key: 'instagram_url', label: 'Instagram link', type: 'url' },
   { key: 'facebook_url', label: 'Facebook link', type: 'url' },
   { key: 'x_url', label: 'X (Twitter) link', type: 'url' },
