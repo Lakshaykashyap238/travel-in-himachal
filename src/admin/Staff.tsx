@@ -17,9 +17,10 @@ export function StaffPage({ me }: { me: StaffMember }) {
   async function update(s: StaffMember, patch: Partial<StaffMember>, done: string) {
     setError(null);
     const { error } = await supabase.from('staff').update(patch).eq('user_id', s.user_id);
-    if (error) return setError(friendlyError(error));
+    if (error) { setError(friendlyError(error)); return false; }
     toast(done);
     void reload();
+    return true;
   }
 
   return (
@@ -37,6 +38,14 @@ export function StaffPage({ me }: { me: StaffMember }) {
                   {!s.is_active && <Badge className="bg-red-50 text-red-700 ring-red-200">No access</Badge>}
                 </div>
               </div>
+              <Button variant="ghost" onClick={() => {
+                const name = window.prompt('Name shown in the admin panel', s.full_name)?.trim();
+                if (!name || name === s.full_name) return;
+                if (name.length < 2 || name.length > 80) { window.alert('Please enter 2 to 80 characters.'); return; }
+                void update(s, { full_name: name }, 'Name changed').then((ok) => { if (ok && s.user_id === me.user_id) window.location.reload(); });
+              }}>
+                Change name
+              </Button>
               <Button variant="ghost" onClick={() => void update(s, { role: s.role === 'owner' ? 'staff' : 'owner' }, 'Role changed')}>
                 Make {s.role === 'owner' ? 'staff' : 'owner'}
               </Button>

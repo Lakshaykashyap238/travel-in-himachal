@@ -101,7 +101,10 @@ function Dashboard({ me, signOut }: { me: StaffMember; signOut: () => void }) {
     <div className="min-h-screen bg-slate-100 pb-20 lg:pb-0">
       <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-3 px-4">
-          <a href="#/bookings" className="font-bold text-brand">Admin</a>
+          <a href="#/bookings" className="flex min-w-0 flex-col leading-tight">
+            <span className="font-bold text-brand">Admin</span>
+            <span className="max-w-[9.5rem] truncate text-xs text-slate-500 sm:max-w-[14rem]" title={me.full_name}>👤 {me.full_name} · {isOwner ? 'Owner' : 'Staff'}</span>
+          </a>
           <nav className="hidden gap-1 lg:flex" aria-label="Admin">
             {allowed.map((n) => (
               <a key={n.page} href={`#/${n.page}`} aria-current={page === n.page ? 'page' : undefined}
