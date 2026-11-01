@@ -109,7 +109,7 @@ export default function TrackBooking({ phone }: Props) {
             <p className="text-xs text-slate-500">{checkedAt && `Updated ${checkedAt.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })} · refreshes automatically`}</p>
             <div className="flex flex-wrap gap-2">
               {(booking.status === 'accepted' || booking.status === 'completed') && (
-                <a href={`/review?ref=${encodeURIComponent(booking.reference)}`} className="rounded-md bg-brand px-5 py-2 text-sm font-semibold text-white hover:bg-brand-dark">Write a review</a>
+                <a href="/review" className="rounded-md bg-brand px-5 py-2 text-sm font-semibold text-white hover:bg-brand-dark">Write a review</a>
               )}
               {phone && <a href={`tel:${phone}`} className="rounded-md border border-slate-300 px-5 py-2 text-sm font-semibold hover:bg-mist">Call us about this booking</a>}
             </div>

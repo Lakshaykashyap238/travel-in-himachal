@@ -75,20 +75,16 @@ export function rememberBooking(b: BookingCreated) {
   }
 }
 
-export type SubmitReviewResult = 'ok' | 'invalid' | 'not_found' | 'not_eligible' | 'already_reviewed' | 'busy' | 'network';
+export type SubmitReviewResult = 'ok' | 'invalid' | 'busy' | 'network';
 
-export async function submitReview(input: {
-  reference: string; phone: string; name: string; place: string; rating: number; body: string;
-}): Promise<SubmitReviewResult> {
+/** Anyone can send a review (online, phone or walk-in customers). It stays hidden until the owner approves it. */
+export async function submitReview(input: { name: string; place: string; rating: number; body: string }): Promise<SubmitReviewResult> {
   if (!backendConfigured) return 'network';
   try {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/submit_review`, {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/submit_open_review`, {
       method: 'POST',
       headers: headers(),
-      body: JSON.stringify({
-        p_reference: input.reference, p_phone: input.phone, p_name: input.name,
-        p_place: input.place, p_rating: input.rating, p_body: input.body,
-      }),
+      body: JSON.stringify({ p_name: input.name, p_place: input.place, p_rating: input.rating, p_body: input.body }),
       signal: AbortSignal.timeout(15_000),
     });
     if (!res.ok) return 'network';

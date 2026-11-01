@@ -38,7 +38,7 @@ const avg = reviews.length ? reviews.reduce((a, r) => a + r.rating, 0) / reviews
                 <div class="review-footer">
                   <div class="avatar" aria-hidden="true">{r.name.trim().charAt(0).toUpperCase()}</div>
                   <div class="review-user">
-                    <h4>{r.name}<span class="verified">{r.source === 'Website' ? '✔️ Verified' : `✔️ ${r.source}`}</span></h4>
+                    <h4>{r.name}<span class="verified">{r.source === 'Website' ? '✔️ Customer' : `✔️ ${r.source}`}</span></h4>
                     {(r.place || r.trip) && <span>{r.place || r.trip}</span>}
                   </div>
                 </div>

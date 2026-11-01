@@ -478,3 +478,34 @@ describe('owner safety', () => {
     expect((await as('authenticated', 'select * from public.bookings', [], staffId)).rowCount).toBeGreaterThan(0);
   });
 });
+
+describe('open reviews (no booking needed)', () => {
+  const send = (name: string, rating: number, body: string, place = '') =>
+    as('anon', `select public.submit_open_review($1, $2, $3, $4) as r`, [name, place, rating, body]).then((x) => x.rows[0].r);
+
+  it('anyone can send a review; it stays hidden until approved', async () => {
+    expect(await send('Walk-in Customer', 5, 'Booked by phone, lovely Shimla trip!', 'Ludhiana')).toBe('ok');
+    const seen = await as('anon', `select 1 from public.reviews where name = 'Walk-in Customer'`);
+    expect(seen.rowCount).toBe(0);
+    const row = await as('service_role', `select is_active, from_customer, source, place from public.reviews where name = 'Walk-in Customer'`);
+    expect(row.rows).toEqual([{ is_active: false, from_customer: true, source: 'Website', place: 'Ludhiana' }]);
+  });
+
+  it('a double-sent review is stored once', async () => {
+    expect(await send('Twice Sent', 4, 'Pressed send two times by mistake.')).toBe('ok');
+    expect(await send('Twice Sent', 4, 'Pressed send two times by mistake.')).toBe('ok');
+    const n = await as('service_role', `select count(*)::int as n from public.reviews where name = 'Twice Sent'`);
+    expect(n.rows[0].n).toBe(1);
+  });
+
+  it('rejects a missing name, a bad rating or a too-short review', async () => {
+    expect(await send('A', 5, 'Name too short here.')).toBe('invalid');
+    expect(await send('Asha', 0, 'Rating is not valid.')).toBe('invalid');
+    expect(await send('Asha', 6, 'Rating is not valid.')).toBe('invalid');
+    expect(await send('Asha', 5, 'short')).toBe('invalid');
+  });
+
+  it('visitors still cannot insert or approve reviews directly', async () => {
+    await expect(as('anon', `insert into public.reviews (name, rating, body, is_active) values ('Hacker', 5, 'Self-approved review!', true)`)).rejects.toThrow();
+  });
+});

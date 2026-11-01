@@ -1,11 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { submitReview, type SubmitReviewResult } from '@/lib/api';
 
 const MESSAGES: Record<Exclude<SubmitReviewResult, 'ok'>, string> = {
-  invalid: 'Please fill in every field: your name, a star rating and at least one sentence.',
-  not_found: 'We couldn’t find a booking with that reference and phone number. Check both and try again.',
-  not_eligible: 'This booking isn’t confirmed yet. You can write a review once your trip is confirmed.',
-  already_reviewed: 'A review for this booking has already been sent. Thank you!',
+  invalid: 'Please fill in your name, a star rating and at least one sentence.',
   busy: 'We’re receiving a lot of reviews right now. Please try again in an hour.',
   network: 'Couldn’t send your review. Check your internet connection and try again.',
 };
@@ -13,29 +10,23 @@ const MESSAGES: Record<Exclude<SubmitReviewResult, 'ok'>, string> = {
 const LABELS = ['', 'Poor', 'Okay', 'Good', 'Very good', 'Excellent'];
 
 export default function ReviewForm() {
-  const [f, setF] = useState({ reference: '', phone: '', name: '', place: '', body: '' });
+  const [f, setF] = useState({ name: '', place: '', body: '', website: '' });
   const [rating, setRating] = useState(0);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
   const set = (k: keyof typeof f) => (e: { target: { value: string } }) => setF((x) => ({ ...x, [k]: e.target.value }));
 
-  // A link like /review?ref=TIH-10023 fills in the reference.
-  useEffect(() => {
-    const ref = new URLSearchParams(window.location.search).get('ref');
-    if (ref && /^TIH-\d{1,9}$/i.test(ref)) setF((x) => ({ ...x, reference: ref.toUpperCase() }));
-  }, []);
-
   async function send(e: { preventDefault(): void }) {
     e.preventDefault();
     setError(null);
-    if (!/^TIH-\d{1,9}$/i.test(f.reference.trim())) return setError('Enter your booking reference, for example TIH-10023.');
-    if (f.phone.replace(/\D/g, '').length < 10) return setError('Enter the 10-digit phone number you booked with.');
     if (f.name.trim().length < 2) return setError('Enter your name.');
     if (!rating) return setError('Choose a star rating.');
     if (f.body.trim().length < 10) return setError('Write at least one sentence about your trip.');
+    // Hidden field only bots fill in: pretend it worked, send nothing.
+    if (f.website) return setDone(true);
     setBusy(true);
-    const result = await submitReview({ ...f, reference: f.reference.trim(), rating });
+    const result = await submitReview({ name: f.name.trim(), place: f.place.trim(), rating, body: f.body.trim() });
     setBusy(false);
     if (result === 'ok') setDone(true);
     else setError(MESSAGES[result]);
@@ -53,14 +44,8 @@ export default function ReviewForm() {
     );
 
   return (
-    <form onSubmit={send} className="space-y-5" noValidate>
+    <form onSubmit={send} className="relative space-y-5" noValidate>
       <div className="grid gap-5 sm:grid-cols-2">
-        <label className="block font-medium">Booking reference
-          <input value={f.reference} onChange={set('reference')} placeholder="TIH-10023" autoCapitalize="characters" className={input} />
-        </label>
-        <label className="block font-medium">Phone number you booked with
-          <input value={f.phone} onChange={set('phone')} inputMode="tel" autoComplete="tel" placeholder="98765 43210" className={input} />
-        </label>
         <label className="block font-medium">Your name
           <input value={f.name} onChange={set('name')} maxLength={60} autoComplete="name" className={input} />
         </label>
@@ -68,6 +53,8 @@ export default function ReviewForm() {
           <input value={f.place} onChange={set('place')} maxLength={60} placeholder="Delhi" className={input} />
         </label>
       </div>
+
+      <input type="text" name="website" value={f.website} onChange={set('website')} tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px] h-px w-px opacity-0" />
 
       <fieldset>
         <legend className="font-medium">How was your trip?</legend>
@@ -91,7 +78,7 @@ export default function ReviewForm() {
       <button type="submit" disabled={busy} className="w-full rounded-md bg-brand px-6 py-3.5 text-lg font-semibold text-white hover:bg-brand-dark disabled:opacity-60 sm:w-auto">
         {busy ? 'Sending…' : 'Send review'}
       </button>
-      <p className="text-sm text-stone">We check every review before it appears. Your phone number is only used to match your booking and is never shown.</p>
+      <p className="text-sm text-stone">Booked online, by phone or in person? Everyone is welcome to share their experience. We read every review before it appears on the website.</p>
     </form>
   );
 }
