@@ -11,8 +11,14 @@ import { Button, Card, Field, Spinner, inputClass } from './ui';
 const linkType =
   typeof window !== 'undefined' ? new URLSearchParams(window.location.hash.replace(/^#/, '')).get('type') : null;
 
+/** True when a login is saved on this device (even if it couldn't be refreshed just now). */
+function hasSavedLogin(): boolean {
+  try { return Boolean(localStorage.getItem('tih-admin-auth')); } catch { return false; }
+}
+
 type Stage =
   | { name: 'loading' }
+  | { name: 'offline' }
   | { name: 'signed-out' }
   | { name: 'set-password' }
   | { name: 'mfa-enroll' }
@@ -37,19 +43,25 @@ export function AuthGate({ children }: { children: (me: StaffMember, signOut: ()
   const [needsPassword, setNeedsPassword] = useState(linkType === 'invite' || linkType === 'recovery');
 
   const evaluate = useCallback(async () => {
-    const { data: s } = await supabase.auth.getSession();
+    const { data: s, error: sessionError } = await supabase.auth.getSession();
     const session = s.session;
-    if (!session) return setStage({ name: 'signed-out' });
+    // No session because the phone couldn't reach the server (waking from sleep,
+    // weak signal) is not the same as being signed out: the saved login is still
+    // on this device, so wait and retry instead of asking for the password again.
+    if (!session) return setStage(sessionError && hasSavedLogin() ? { name: 'offline' } : { name: 'signed-out' });
     if (needsPassword) return setStage({ name: 'set-password' });
 
-    const { data: aal } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    const { data: aal, error: aalError } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+    if (aalError) return setStage({ name: 'offline' });
     if (aal?.currentLevel !== 'aal2') {
-      const { data: f } = await supabase.auth.mfa.listFactors();
+      const { data: f, error: factorsError } = await supabase.auth.mfa.listFactors();
+      if (factorsError) return setStage({ name: 'offline' });
       const verified = f?.totp?.find((x) => x.status === 'verified');
       return setStage(verified ? { name: 'mfa-verify', factorId: verified.id } : { name: 'mfa-enroll' });
     }
 
-    const { data: me } = await supabase.from('staff').select('user_id, full_name, role, is_active').eq('user_id', session.user.id).maybeSingle();
+    const { data: me, error: staffError } = await supabase.from('staff').select('user_id, full_name, role, is_active').eq('user_id', session.user.id).maybeSingle();
+    if (staffError) return setStage({ name: 'offline' });
     if (!me || !me.is_active) return setStage({ name: 'no-access' });
     setStage({ name: 'ready', me: me as StaffMember, session });
   }, [needsPassword]);
@@ -64,6 +76,15 @@ export function AuthGate({ children }: { children: (me: StaffMember, signOut: ()
     return () => data.subscription.unsubscribe();
   }, [evaluate]);
 
+  // While offline, try again every 5 seconds and as soon as the phone is back online.
+  useEffect(() => {
+    if (stage.name !== 'offline') return;
+    const retry = () => void evaluate();
+    const timer = window.setInterval(retry, 5000);
+    window.addEventListener('online', retry);
+    return () => { window.clearInterval(timer); window.removeEventListener('online', retry); };
+  }, [stage.name, evaluate]);
+
   const signOut = useCallback(() => void supabase.auth.signOut(), []);
 
   if (!adminConfigured)
@@ -72,6 +93,14 @@ export function AuthGate({ children }: { children: (me: StaffMember, signOut: ()
   switch (stage.name) {
     case 'loading':
       return <main className="grid min-h-screen place-items-center"><Spinner className="h-8 w-8 text-brand" /></main>;
+    case 'offline':
+      return (
+        <Shell title="Reconnecting…">
+          <p className="text-slate-600">You’re still signed in. We can’t reach the server right now, so we’ll keep trying. Check your internet connection.</p>
+          <div className="mt-6 flex justify-center"><Spinner className="h-6 w-6 text-brand" /></div>
+          <Button className="mt-6 w-full" variant="secondary" onClick={() => void evaluate()}>Try again now</Button>
+        </Shell>
+      );
     case 'signed-out':
       return <SignIn onDone={evaluate} />;
     case 'set-password':
